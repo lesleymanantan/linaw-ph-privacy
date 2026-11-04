@@ -14,5 +14,6 @@ export UV_PYTHON_BIN_DIR="$ROOT/.tools/python-bin"
 export UV_TOOL_DIR="$ROOT/.tools/uv-tools"
 export UV_TOOL_BIN_DIR="$ROOT/.tools/uv-tools-bin"
 export UV_PYTHON_PREFERENCE=only-managed
-mkdir -p "$HOME"
+export TMPDIR="$ROOT/.tools/tmp"
+mkdir -p "$HOME" "$TMPDIR"
 exec "$ROOT/.tools/bin/uv" "$@"

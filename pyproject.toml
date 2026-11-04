@@ -6,7 +6,10 @@ readme = "README.md"
 license = "Apache-2.0"
 requires-python = "==3.12.*"
 dependencies = [
+    "numpy==2.5.4",
+    "onnxruntime==1.31.1",
     "pdfplumber==0.11.7",
+    "tokenizers==0.23.3",
 ]
 
 [dependency-groups]
@@ -26,3 +29,5 @@ python-preference = "only-managed"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Temp files stay inside the project.
+addopts = "--basetemp=.tools/tmp/pytest"
