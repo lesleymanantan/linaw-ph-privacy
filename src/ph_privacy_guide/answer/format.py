@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 from ph_privacy_guide.answer.warnings import STATUS_WORDS
-from ph_privacy_guide.config import ANNOTATION_LABEL, CONTACT_URL
+from ph_privacy_guide.config import ANNOTATION_LABEL, BLOCK_HEADINGS, CONTACT_URL
 from ph_privacy_guide.retrieve.search import SearchResult
 
 RULE = "-" * 78
 LIMIT_NOTE = "Not legal advice. Read the full instrument and check privacy.gov.ph for current versions."
+UNCALIBRATED_NOTE = ('"Not sure" is not active yet: its threshold has not been set. '
+                     "These passages may not answer your question.")
 
 
 def format_hit(rank: int, hit) -> str:
@@ -20,6 +22,7 @@ def format_hit(rank: int, hit) -> str:
     if c["title"] and c["kind"] in ("section", "part"):
         lines.append(f"    Heading: {c['title']}")
     lines += [f"    WARNING: {w}" for w in c["warnings"]]
+    lines += [f"    Note: {n}" for n in c.get("notes", [])]
     lines += [RULE, c["text"], RULE]
     for note in c["annotations"]:
         lines += [f"{ANNOTATION_LABEL} {note['number']} (not the provision's text):", note["text"], RULE]
@@ -31,5 +34,11 @@ def format_result(query: str, result: SearchResult) -> str:
     if result.not_sure:
         return (f"{head}\n\nNot sure. {result.reason.capitalize()}. No passage is shown.\n"
                 f"You can ask the National Privacy Commission: {CONTACT_URL}\n\n{LIMIT_NOTE}")
-    body = "\n\n".join(format_hit(i, h) for i, h in enumerate(result.hits, 1))
-    return f"{head}\n\n{body}\n\n{LIMIT_NOTE}"
+    parts = [format_hit(i, h) for i, h in enumerate(result.hits, 1)]
+    next_rank = len(result.hits) + 1
+    for block, hit in result.side:
+        heading = BLOCK_HEADINGS[block]
+        parts.append(f"=== {heading} ===\n{format_hit(next_rank, hit)}")
+        next_rank += 1
+    note = "" if result.calibrated else f"{UNCALIBRATED_NOTE}\n\n"
+    return f"{head}\n\n{note}" + "\n\n".join(parts) + f"\n\n{LIMIT_NOTE}"

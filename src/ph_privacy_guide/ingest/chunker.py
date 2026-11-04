@@ -6,30 +6,41 @@ Run ph_privacy_guide.ingest.sectioner first.
 Writes:
   data/processed/chunks.jsonl            one record per chunk (gitignored)
   data/processed/chunk_validation.md     checks and per-document summary
+  eval/gold_labels.csv                   every valid gold label, for people labelling questions
 
 One chunk per section, or per subsection when a section is over MAX_WORDS. Definition sections are
 always split, one chunk per defined term. Where there are no subsections, long text is packed into
-paragraph groups. `text` is verbatim; `index_text` adds the heading and re-joins hyphenated line
-breaks for search only. Annex 1 of Circular 2022-04 is never split.
+paragraph groups. A chunk still too long for the embedding model is split by token count, with about one
+sentence of overlap. `text` is verbatim; `index_text` adds the heading and re-joins hyphenated line
+breaks for search only. Annex 1 of Circular 2022-04 is never split: only its first 512 tokens are
+embedded, and it stays keyword-searchable beyond that.
+
+Needs the embedding model's tokenizer, so run scripts/download_model.py first.
 """
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import re
 import statistics
 from collections import Counter
 
+from tokenizers import Tokenizer
+
 from ph_privacy_guide import catalogue
 from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings
-from ph_privacy_guide.config import (ANNOTATION_LABEL, DRAFT_LABEL, PROCESSED, REPEALED_FOOTNOTE_WARNINGS,
-                                     RANK_TIER_DRAFT, RANK_TIER_SUMMARY, SEARCHABLE_KINDS, SUMMARY_LABEL,
-                                     allowed_pdfs, rank_tier)
+from ph_privacy_guide.config import (ANNOTATION_LABEL, BLOCK_MAIN, BLOCK_PENDING, BLOCK_SUMMARY, DRAFT_LABEL,
+                                     EMBEDDING_MAX_TOKENS, EMBEDDING_MODEL_DIR, EMBEDDING_PASSAGE_PREFIX,
+                                     KEYWORD_ONLY_NOTE, MAX_OVERLAP_TOKENS, PROCESSED, REPEALED_FOOTNOTE_WARNINGS, ROOT,
+                                     SEARCHABLE_KINDS, SUMMARY_LABEL, TOKEN_SAFETY_MARGIN, allowed_pdfs, result_block)
 from ph_privacy_guide.ingest.sectioner import WHOLE_DOC_TYPES, _marker_re, nonspace_len
 
 MAX_WORDS = 350
 MIN_LEAD_WORDS = 15
 CHUNKS = PROCESSED / "chunks.jsonl"
+GOLD_LABELS = ROOT / "eval" / "gold_labels.csv"
+SENTENCE_END_RE = re.compile(r"(?<=[.;?!])\s+")
 DEFINITION_RE = re.compile(r"definition", re.I)
 INLINE_FIRST_ITEM_RE = re.compile(r"^(.*?[.–—-]\s*)(\(a\)\s.*)$")
 
@@ -123,6 +134,72 @@ def split_lines(lines: list[str], limit: int = MAX_WORDS, force: bool = False, s
     return [(f"{suffix}, part {n}" if len(groups) > 1 else suffix, g) for n, g in enumerate(groups, 1)]
 
 
+def _tokenizer() -> Tokenizer:
+    return Tokenizer.from_file(str(EMBEDDING_MODEL_DIR / "onnx" / "tokenizer.json"))
+
+
+def _overlap(lines: list[str], count) -> list[str]:
+    """About one sentence from the end of a piece, as verbatim fragments of its lines."""
+    last = SENTENCE_END_RE.split("\n".join(lines))[-1].strip()
+    if count(last) > MAX_OVERLAP_TOKENS:
+        last = lines[-1]
+    if count(last) > MAX_OVERLAP_TOKENS:
+        last = " ".join(lines[-1].split()[-30:])
+    return last.split("\n")
+
+
+def _fit_lines(lines: list[str], budget: int, count) -> list[str]:
+    """Break any single line longer than the budget at word boundaries."""
+    out: list[str] = []
+    for line in lines:
+        if count(line) <= budget:
+            out.append(line)
+            continue
+        cur: list[str] = []
+        for word in line.split():
+            if cur and count(" ".join(cur + [word])) > budget:
+                out.append(" ".join(cur))
+                cur = []
+            cur.append(word)
+        if cur:
+            out.append(" ".join(cur))
+    return out
+
+
+def split_by_tokens(lines: list[str], budget: int, count) -> list[tuple[list[str], int]]:
+    """Split lines to fit `budget` tokens. Returns (lines, number of leading overlap lines) pieces."""
+    if count("\n".join(lines)) <= budget:
+        return [(lines, 0)]
+    pieces: list[tuple[list[str], int]] = []
+    cur: list[str] = []
+    overlap = 0
+    for line in _fit_lines(lines, budget, count):
+        if cur and count("\n".join(cur + [line])) > budget:
+            pieces.append((cur, overlap))
+            carried = _overlap(cur, count)
+            if count("\n".join(carried + [line])) > budget:
+                carried = []
+            cur, overlap = list(carried), len(carried)
+        cur.append(line)
+    pieces.append((cur, overlap))
+    return pieces
+
+
+def _part_suffix(suffix: str, n: int) -> str:
+    m = re.search(r", part (\d+)$", suffix)
+    return f"{suffix}.{n}" if m else f"{suffix}, part {n}"
+
+
+def gold_path(kind: str, section: str, suffix: str) -> str:
+    """The stable part of a gold label: survives re-chunking, because it comes from the document."""
+    parens = "".join(re.findall(r"\([^)]*\)", suffix))
+    if kind == "section":
+        return f"s.{section}{parens}"
+    if kind == "part":
+        return f"part:{section}{parens}"
+    return kind if kind in ("annex", "summary") else ""
+
+
 def _slug(s: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "-", s).strip("-").lower()
 
@@ -150,6 +227,8 @@ def build_chunks() -> list[dict]:
     rows = catalogue.load()
     cites = {r["doc_id"]: r["short_cite"] for r in rows}
     chunks: list[dict] = []
+    tokenizer = _tokenizer()
+    count = lambda text: len(tokenizer.encode(text).ids)
     for row in rows:
         if row["in_corpus"] != "yes":
             continue
@@ -170,11 +249,26 @@ def build_chunks() -> list[dict]:
                 pieces = split_lines(lines, force=force)
             label_tail = f" ({rec['label']})" if rec["label"] else ""
             core = rec["citation"][: -len(label_tail)] if label_tail else rec["citation"]
+            keep_whole = row["type"] in WHOLE_DOC_TYPES
+            if rec["kind"] in SEARCHABLE_KINDS and not keep_whole:
+                head = index_text(rec["title"], rec["division"], "")
+                budget = EMBEDDING_MAX_TOKENS - count(EMBEDDING_PASSAGE_PREFIX + head) - TOKEN_SAFETY_MARGIN
+                fitted: list[tuple[str, list[str], int]] = []
+                for suffix, piece in pieces:
+                    # Split only what is really over the limit. The margin applies only when splitting.
+                    whole = EMBEDDING_PASSAGE_PREFIX + index_text(rec["title"], rec["division"], "\n".join(piece))
+                    parts = split_by_tokens(piece, budget, count) if count(whole) > EMBEDDING_MAX_TOKENS else [(piece, 0)]
+                    if len(parts) == 1:
+                        fitted.append((suffix, piece, 0))
+                    else:
+                        fitted += [(_part_suffix(suffix, n), ls, ov) for n, (ls, ov) in enumerate(parts, 1)]
+            else:
+                fitted = [(suffix, piece, 0) for suffix, piece in pieces]
             seen: Counter[str] = Counter()
             cursor = rec["page_start"]
-            for position, (suffix, piece) in enumerate(pieces):
+            for position, (suffix, piece, overlap_lines) in enumerate(fitted):
                 # A bare heading ahead of its subsections has nothing to show, but ranks high for being short.
-                heading_only = position == 0 and len(pieces) > 1 and not suffix and _join_words(piece) < MIN_LEAD_WORDS
+                heading_only = position == 0 and len(fitted) > 1 and not suffix and _join_words(piece) < MIN_LEAD_WORDS
                 seen[suffix] += 1
                 key = suffix if seen[suffix] == 1 else f"{suffix}-{seen[suffix]}"
                 text = "\n".join(piece)
@@ -194,7 +288,11 @@ def build_chunks() -> list[dict]:
                     "page_start": page_start, "page_end": page_end,
                     "searchable": rec["kind"] in SEARCHABLE_KINDS and not is_draft_annex and not heading_only,
                     "switch": "draft_annex" if is_draft_annex else "",
-                    "rank_tier": rank_tier(rec["kind"], rec["status"]),
+                    "block": result_block(rec["kind"], rec["status"]),
+                    "gold_label": (f"{row['instrument_key']} {gold_path(rec['kind'], rec['section'], suffix)}"
+                                   if gold_path(rec["kind"], rec["section"], suffix) else ""),
+                    "overlap_chars": nonspace_len("\n".join(piece[:overlap_lines])),
+                    "notes": [KEYWORD_ONLY_NOTE] if keep_whole and count(EMBEDDING_PASSAGE_PREFIX + index_text(rec["title"], rec["division"], text)) > EMBEDDING_MAX_TOKENS else [],
                     "annotations": [], "text": text, "index_text": index_text(rec["title"], rec["division"], text),
                     "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
                 }
@@ -215,7 +313,8 @@ def build_chunks() -> list[dict]:
                 "title": note["title"], "division": "", "citation": note["citation"],
                 "label": ANNOTATION_LABEL, "draft_label": note.get("draft_label", ""),
                 "page_start": note["page_start"], "page_end": note["page_end"], "searchable": False, "switch": "",
-                "rank_tier": 0, "parent_chunk_id": holder["chunk_id"], "annotations": [], "text": note["text"],
+                "block": BLOCK_MAIN, "gold_label": "", "overlap_chars": 0, "notes": [],
+                "parent_chunk_id": holder["chunk_id"], "annotations": [], "text": note["text"],
                 "index_text": "", "text_sha256": hashlib.sha256(note["text"].encode()).hexdigest(),
             })
         for chunk in doc_chunks:
@@ -259,14 +358,32 @@ def validate(chunks: list[dict]) -> list[dict]:
     # No text lost or duplicated between section records and chunks.
     by_doc: dict[str, int] = Counter()
     for c in chunks:
-        by_doc[c["doc_id"]] += nonspace_len(c["text"])
+        by_doc[c["doc_id"]] += nonspace_len(c["text"]) - c["overlap_chars"]
     diffs = {}
     for doc in corpus:
         with open(PROCESSED / "sections" / f"{doc}.jsonl") as f:
             source = sum(nonspace_len(json.loads(line)["text"]) for line in f)
         if source != by_doc[doc]:
             diffs[doc] = source - by_doc[doc]
-    add("Chunk text adds up to section text", not diffs, f"differences {diffs or 'none'}")
+    add("Chunk text adds up to section text, not counting overlap", not diffs, f"differences {diffs or 'none'}")
+
+    # Everything the model reads fits its limit, except Annex 1 by decision.
+    tokenizer = _tokenizer()
+    count = lambda text: len(tokenizer.encode(text).ids)
+    indexed = [c for c in chunks if c["kind"] in SEARCHABLE_KINDS and c["index_text"]]
+    too_long = [c for c in indexed if count(EMBEDDING_PASSAGE_PREFIX + c["index_text"]) > EMBEDDING_MAX_TOKENS]
+    allowed_long = {"NPC_Circular_2022-04_Annex1:annex:annex"}
+    add(f"Indexed chunks fit {EMBEDDING_MAX_TOKENS} tokens, except Annex 1", {c["chunk_id"] for c in too_long} == allowed_long,
+        f"over the limit: {[c['chunk_id'] for c in too_long]}")
+    annex_note = [c for c in chunks if KEYWORD_ONLY_NOTE in c["notes"]]
+    add("Annex 1 marked keyword-searchable beyond the limit", [c["chunk_id"] for c in annex_note] == sorted(allowed_long),
+        f"{len(annex_note)} chunk marked")
+    overlapped = [c for c in chunks if c["overlap_chars"]]
+    add("Token-split chunks carry about a sentence of overlap", bool(overlapped), f"{len(overlapped)} chunks with overlap: {[c['citation'] for c in overlapped]}")
+
+    # Every indexed chunk has a stable gold label.
+    no_label = [c["chunk_id"] for c in indexed if not c["gold_label"]]
+    add("Every indexed chunk has a gold label", not no_label, f"{len(no_label)} without")
 
     # Every chunk line appears verbatim on the page it came from.
     page_lines: dict[str, list[str]] = {}
@@ -284,16 +401,18 @@ def validate(chunks: list[dict]) -> list[dict]:
     other = [c["chunk_id"] for c in chunks if c["collection"] != "drafts" and DRAFT_LABEL in c["citation"]]
     add("No draft label elsewhere", not other, f"{len(other)} wrongly labelled")
 
-    tiers = [c["chunk_id"] for c in chunks if c["kind"] != "footnote"
-             and (c["rank_tier"] == RANK_TIER_DRAFT) != (c["status"] == "draft")]
-    add("Every draft chunk, and only those, is in the lowest rank tier", not tiers, f"{len(tiers)} wrong")
+    wrong_block = [c["chunk_id"] for c in chunks if c["kind"] != "footnote"
+                   and (c["block"] == BLOCK_PENDING) != (c["status"] == "draft")]
+    add("Every draft chunk, and only those, goes in the pending block", not wrong_block, f"{len(wrong_block)} wrong")
+    main_kinds = {c["status"] for c in chunks if c["block"] == BLOCK_MAIN and c["kind"] != "footnote"}
+    add("Main block holds no draft or repealed text", not main_kinds & {"draft", "repealed"}, f"statuses in main: {sorted(main_kinds)}")
 
     annex = [c for c in chunks if c["switch"] == "draft_annex"]
     add("Draft Annex A not searchable by default", bool(annex) and not any(c["searchable"] for c in annex), f"{len(annex)} chunks behind the switch")
 
     summary = [c for c in chunks if c["kind"] == "summary"]
-    add("16-03 Summary labelled and ranked below sections",
-        bool(summary) and all(c["rank_tier"] == RANK_TIER_SUMMARY and c["label"] == SUMMARY_LABEL for c in summary)
+    add("16-03 Summary labelled and in its own block",
+        bool(summary) and all(c["block"] == BLOCK_SUMMARY and c["label"] == SUMMARY_LABEL for c in summary)
         and {c["doc_id"] for c in summary} == {"NPC_Circular_16-03_Breach_Management"}, f"{len(summary)} chunks")
 
     notes = [c for c in chunks if c["kind"] == "footnote"]
@@ -363,8 +482,30 @@ def write_report(chunks: list[dict], checks: list[dict]) -> str:
     return text
 
 
+def write_gold_labels(chunks: list[dict]) -> int:
+    """List every label a person can use: whole sections, and subsections."""
+    labels: dict[str, dict] = {}
+    for c in chunks:
+        if c["kind"] not in SEARCHABLE_KINDS or not c["gold_label"]:
+            continue
+        label = c["gold_label"]
+        stems = [label[:m.start()] for m in re.finditer(r"\(", label)] + [label]
+        for stem in stems:
+            entry = labels.setdefault(stem, {"instrument": c["short_cite"], "heading": c["title"], "chunks": 0, "block": c["block"],
+                                             "searchable_by_default": c["searchable"]})
+            entry["chunks"] += 1
+            entry["searchable_by_default"] = entry["searchable_by_default"] or c["searchable"]
+    with open(GOLD_LABELS, "w", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["gold_label", "instrument", "heading", "chunks", "block", "searchable_by_default"])
+        for label, e in labels.items():
+            w.writerow([label, e["instrument"], e["heading"], e["chunks"], e["block"], "yes" if e["searchable_by_default"] else "no"])
+    return len(labels)
+
+
 def main() -> None:
     chunks = build_chunks()
+    write_gold_labels(chunks)
     with open(CHUNKS, "w") as f:
         for c in chunks:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")

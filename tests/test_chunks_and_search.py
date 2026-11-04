@@ -1,4 +1,5 @@
 """Chunk validation and search behaviour on the real corpus, plus synthetic splitting cases."""
+import csv
 import json
 import subprocess
 import sys
@@ -6,12 +7,14 @@ import sys
 import pytest
 
 from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings
-from ph_privacy_guide.config import DRAFT_LABEL, PROCESSED, RANK_TIER_DRAFT, RRF_K, SUMMARY_LABEL
+from ph_privacy_guide.config import (BLOCK_MAIN, BLOCK_PENDING, BLOCK_SUMMARY, DRAFT_LABEL, KEYWORD_ONLY_NOTE, MAIN_RESULTS,
+                                     PROCESSED, ROOT, RRF_K, SIDE_BLOCK_MAX, SUMMARY_LABEL)
 from ph_privacy_guide.index import bm25
-from ph_privacy_guide.index.embed import VECTORS
+from ph_privacy_guide.index.embed import VECTORS, VECTORS_META
 from ph_privacy_guide.ingest import chunker
 from ph_privacy_guide.answer.format import format_result
-from ph_privacy_guide.retrieve.search import Searcher, fuse
+from ph_privacy_guide.retrieve.confidence import combine, compute_features, is_not_sure
+from ph_privacy_guide.retrieve.search import Searcher, fuse, select_side
 
 needs_index = pytest.mark.skipif(not bm25.INDEX.exists() or not VECTORS.exists(), reason="build the indexes first")
 
@@ -63,10 +66,12 @@ def test_real_irr_notes_citing_16_01_warn_on_s30_and_s49():
     assert {c["section"] for c in warned} == {"30", "49"}
 
 
-def test_every_draft_chunk_is_in_the_draft_tier():
+def test_every_chunk_is_in_the_right_block():
     for c in _chunks():
-        if c["kind"] != "footnote":
-            assert (c["rank_tier"] == RANK_TIER_DRAFT) == (c["status"] == "draft"), c["chunk_id"]
+        if c["kind"] == "footnote":
+            continue
+        expected = BLOCK_PENDING if c["status"] == "draft" else BLOCK_SUMMARY if c["kind"] == "summary" else BLOCK_MAIN
+        assert c["block"] == expected, c["chunk_id"]
 
 
 def test_fusion_uses_reciprocal_ranks_with_equal_weights():
@@ -82,48 +87,196 @@ def test_chunk_validation_has_no_failures():
     assert failed == []
 
 
+def test_token_split_fits_budget_keeps_all_lines_and_overlaps_one_sentence():
+    count = lambda text: len(text.split())
+    lines = [f"First sentence {i} here. Second sentence {i} here." for i in range(10)]
+    pieces = chunker.split_by_tokens(lines, 30, count)
+    assert len(pieces) > 1
+    assert all(count("\n".join(ls)) <= 30 for ls, _ in pieces)
+    assert pieces[0][1] == 0 and all(ov > 0 for _, ov in pieces[1:])
+    # Without the overlap, the pieces rebuild the original exactly.
+    assert [l for ls, ov in pieces for l in ls[ov:]] == lines
+    # The overlap is the previous piece's last sentence.
+    assert pieces[1][0][0] == pieces[0][0][-1].split(". ")[-1]
+
+
+def test_short_text_is_not_token_split():
+    assert chunker.split_by_tokens(["a b c"], 30, lambda t: len(t.split())) == [(["a b c"], 0)]
+
+
+def test_a_single_overlong_line_is_broken_at_words():
+    line = " ".join(f"w{i}" for i in range(100))
+    pieces = chunker.split_by_tokens([line], 30, lambda t: len(t.split()))
+    assert all(len(" ".join(ls).split()) <= 30 for ls, _ in pieces)
+
+
+def test_only_annex_1_goes_past_the_model_limit():
+    if not VECTORS_META.exists():
+        pytest.skip("build the indexes first")
+    assert json.loads(VECTORS_META.read_text())["truncated_chunks"] == ["NPC_Circular_2022-04_Annex1:annex:annex"]
+    marked = [c["chunk_id"] for c in _chunks() if KEYWORD_ONLY_NOTE in c["notes"]]
+    assert marked == ["NPC_Circular_2022-04_Annex1:annex:annex"]
+
+
+def test_the_four_long_chunks_were_split_with_overlap():
+    by_id = {c["chunk_id"]: c for c in _chunks()}
+    for stem in ("NPC_Advisory_2021-01_Data_Subject_Rights:annex:annex:part-1", "NPC_Advisory_2021-01_Data_Subject_Rights:annex:annex:part-2",
+                 "NPC_Advisory_2024-01_Cross_Border_Clauses:section:3", "DRAFT_Updated_PIA_Guidelines_Circular:section:4:a"):
+        assert stem not in by_id, stem
+        parts = [c for cid, c in by_id.items() if cid.startswith((stem + "-", stem + ":part-")) and c["kind"] != "footnote"]
+        assert len(parts) >= 2, stem
+        assert any(c["overlap_chars"] for c in parts), stem
+
+
+def test_only_those_four_were_split_by_tokens():
+    overlapped = {c["doc_id"] + " s." + c["section"] for c in _chunks() if c["overlap_chars"]}
+    assert overlapped == {"NPC_Advisory_2021-01_Data_Subject_Rights s.annex", "NPC_Advisory_2024-01_Cross_Border_Clauses s.3",
+                          "DRAFT_Updated_PIA_Guidelines_Circular s.4"}
+
+
+def test_gold_paths():
+    assert chunker.gold_path("section", "3", "(l)") == "s.3(l)"
+    assert chunker.gold_path("section", "7", ", part 2") == "s.7"
+    assert chunker.gold_path("section", "4", "(a), part 1") == "s.4(a)"
+    assert chunker.gold_path("part", "scope", "(m)") == "part:scope(m)"
+    assert chunker.gold_path("annex", "annex", ", part 1.2") == "annex"
+    assert chunker.gold_path("summary", "summary", "") == "summary"
+    assert chunker.gold_path("preamble", "preamble", "") == ""
+
+
+def test_gold_labels_file_lists_sections_and_subsections():
+    with open(ROOT / "eval" / "gold_labels.csv", newline="") as f:
+        labels = {r["gold_label"]: r for r in csv.DictReader(f)}
+    for label in ("NPC_Circular_2022-04 s.7", "RA10173 s.3", "RA10173 s.3(l)", "IRR_RA10173 s.47", "NPC_Circular_2022-04_Annex1 annex",
+                  "NPC_Circular_16-03 summary", "DRAFT_PIA_Circular annex", "NPC_Advisory_2017-01 part:scope"):
+        assert label in labels, label
+    assert labels["RA10173 s.3(l)"]["chunks"] == "1"
+    assert int(labels["RA10173 s.3"]["chunks"]) > 10
+    assert labels["DRAFT_PIA_Circular annex"]["searchable_by_default"] == "no"
+
+
+def test_select_side_needs_the_bar_and_takes_one_per_block():
+    blocks = {1: BLOCK_MAIN, 2: BLOCK_PENDING, 3: BLOCK_PENDING, 4: BLOCK_SUMMARY, 5: BLOCK_MAIN}
+    score = {1: 0.9, 2: 0.7, 3: 0.6, 4: 0.2, 5: 0.5}
+    assert select_side([1, 2, 3, 5, 4], score, blocks.get, 0.5) == [(BLOCK_PENDING, 2)]
+    assert select_side([1, 2, 3, 5, 4], score, blocks.get, 0.1) == [(BLOCK_PENDING, 2), (BLOCK_SUMMARY, 4)]
+    assert select_side([1, 2, 3, 5, 4], score, blocks.get, 0.95) == []
+    assert select_side([1, 2, 3, 5, 4], score, blocks.get, None) == []
+    assert SIDE_BLOCK_MAX == 1 and MAIN_RESULTS == 3
+
+
+def test_confidence_features():
+    best = 2 / (RRF_K + 1)
+    f = compute_features([best, best / 2], [7, 8], [7, 9], 0.8, 0.5)
+    assert f["top_fused"] == pytest.approx(1.0) and f["margin"] == pytest.approx(0.5)
+    assert f["agreement"] == 1.0 and f["top_cosine"] == 0.8 and f["term_coverage"] == 0.5
+    assert compute_features([best], [1, 2, 3], [4, 2, 3], 0.5, 0)["agreement"] == pytest.approx(0.4)
+    assert compute_features([], [], [], -0.2, 0)["top_cosine"] == 0.0
+
+
+def test_term_overlap_is_one_feature_and_cannot_gate_alone():
+    features = {"top_fused": 1.0, "margin": 1.0, "agreement": 1.0, "top_cosine": 1.0, "term_coverage": 0.0}
+    assert combine(features) == pytest.approx(0.8)
+    assert not is_not_sure(combine(features), 0.5)
+
+
+def test_threshold_none_withholds_nothing():
+    assert not is_not_sure(0.0, None)
+    assert is_not_sure(0.4, 0.5) and not is_not_sure(0.5, 0.5)
+
+
+def test_threshold_is_not_set_before_the_dev_set_exists():
+    from ph_privacy_guide import config
+    from ph_privacy_guide.evaluate.questions import load_split
+
+    if not load_split("dev"):
+        assert config.NOT_SURE_CONFIDENCE_THRESHOLD is None
+
+
 @needs_index
 def test_only_searchable_kinds_in_results(searcher):
     for query in ("whereas constitution", "approved commissioner", "see national privacy commission"):
-        for h in searcher.search(query, k=20).hits:
+        result = searcher.search(query, k=20)
+        for h in result.hits + [h for _, h in result.side]:
             assert h.chunk["kind"] in ("section", "part", "annex", "summary")
 
 
 @needs_index
 def test_draft_annex_behind_switch(searcher):
-    query = "privacy impact assessment template recommendatory"
-    assert all(h.chunk["switch"] != "draft_annex" for h in searcher.search(query, k=966).hits)
-    assert any(h.chunk["switch"] == "draft_annex" for h in searcher.search(query, k=966, include_draft_annex=True).hits)
+    annex = [c for c in searcher.index_chunks if c["switch"] == "draft_annex"]
+    assert annex and not any(searcher._allowed(c, False) for c in annex) and all(searcher._allowed(c, True) for c in annex)
+    result = searcher.search("privacy impact assessment template recommendatory")
+    assert all(h.chunk["switch"] != "draft_annex" for _, h in result.side)
 
 
 @needs_index
-def test_shown_passages_are_ordered_by_tier(searcher):
-    hits = searcher.search("privacy impact assessment notification breach", k=966).hits
-    tiers = [h.chunk["rank_tier"] for h in hits]
-    assert tiers == sorted(tiers)
-    assert set(tiers) == {0, 1, 2}
-    assert all(h.chunk["label"] == SUMMARY_LABEL for h in hits if h.chunk["rank_tier"] == 1)
-    assert all(DRAFT_LABEL in h.chunk["citation"] for h in hits if h.chunk["rank_tier"] == 2)
+def test_main_block_never_holds_a_draft_or_the_summary(searcher):
+    for query in ("privacy impact assessment threshold analysis", "summary notification requirements breach"):
+        for h in searcher.search(query, k=966).hits:
+            assert h.chunk["block"] == BLOCK_MAIN and h.chunk["status"] != "draft" and h.chunk["kind"] != "summary"
 
 
 @needs_index
-def test_not_sure_shows_no_passage(searcher):
+def test_main_block_shows_three_by_default(searcher):
+    assert len(searcher.search("data sharing agreement").hits) == MAIN_RESULTS
+
+
+@needs_index
+def test_side_blocks_are_labelled_capped_and_clear_the_bar(searcher):
+    result = searcher.search("threshold analysis privacy impact assessment")
+    pending = [h for block, h in result.side if block == BLOCK_PENDING]
+    assert len(pending) == 1 and DRAFT_LABEL in pending[0].chunk["citation"]
+    assert pending[0].score >= result.hits[-1].score
+    text = format_result("x", result)
+    assert "=== Pending change: draft, not law ===" in text
+    assert text.index("=== Pending change") > text.index("[3]")
+
+
+@needs_index
+def test_the_bar_does_not_move_with_k(searcher):
+    query = "threshold analysis privacy impact assessment"
+    assert [h.chunk["chunk_id"] for _, h in searcher.search(query, k=5).side] == [h.chunk["chunk_id"] for _, h in searcher.search(query).side]
+
+
+@needs_index
+def test_without_a_threshold_passages_show_with_a_plain_note(searcher):
     result = searcher.search("xyzzy plugh")
-    assert result.not_sure
-    text = format_result("xyzzy plugh", result)
-    assert "Not sure" in text and "Authority:" not in text
-    assert "https://privacy.gov.ph/contactus/" in text
+    assert not result.not_sure and not result.calibrated and result.hits
+    assert '"Not sure" is not active yet' in format_result("xyzzy plugh", result)
 
 
 @needs_index
-def test_not_sure_threshold_comes_from_config(searcher, monkeypatch):
+def test_filipino_terms_are_not_gated_on_english_overlap(searcher):
+    result = searcher.search("pahintulot karapatan")
+    assert result.features["term_coverage"] == 0.0
+    assert not result.not_sure and result.hits
+
+
+@needs_index
+def test_empty_search_is_not_sure(searcher):
+    assert searcher.search("   ").not_sure
+
+
+@needs_index
+def test_threshold_comes_from_config_and_hides_passages(searcher, monkeypatch):
     from ph_privacy_guide.retrieve import search as module
 
-    terms = "data sharing xyzzy plugh quux"  # 2 of 5 terms can match
-    monkeypatch.setattr(module, "NOT_SURE_MIN_TERM_COVERAGE", 0.5)
-    assert searcher.search(terms).not_sure
-    monkeypatch.setattr(module, "NOT_SURE_MIN_TERM_COVERAGE", 0.3)
-    assert not searcher.search(terms).not_sure
+    monkeypatch.setattr(module, "NOT_SURE_CONFIDENCE_THRESHOLD", 1.01)
+    result = searcher.search("data sharing agreement")
+    assert result.not_sure and result.calibrated
+    text = format_result("data sharing agreement", result)
+    assert "Not sure" in text and "Authority:" not in text and "https://privacy.gov.ph/contactus/" in text
+    monkeypatch.setattr(module, "NOT_SURE_CONFIDENCE_THRESHOLD", 0.0)
+    result = searcher.search("data sharing agreement")
+    assert not result.not_sure and "not active" not in format_result("x", result)
+
+
+@needs_index
+def test_confidence_is_reported_with_every_feature(searcher):
+    result = searcher.search("data sharing agreement")
+    assert set(result.features) == {"top_fused", "margin", "agreement", "top_cosine", "term_coverage"}
+    assert 0.0 <= result.confidence <= 1.0
+    assert all(0.0 <= v <= 1.0 for v in result.features.values())
 
 
 @needs_index

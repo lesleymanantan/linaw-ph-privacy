@@ -14,14 +14,16 @@ from ph_privacy_guide.retrieve.search import SearchResult
 
 CHUNK = {"citation": "<Cite> s.1", "authority": "rule", "status": "unverified", "date_issued": "2020-01-01",
          "page_start": 1, "page_end": 2, "warnings": ["A <warning>"], "text": "Exact <text>\nsecond line",
-         "annotations": [{"number": 1, "text": "A note"}]}
+         "annotations": [{"number": 1, "text": "A note"}], "notes": ["A plain note"]}
 
 
 class FakeSearcher:
     def search(self, query, k):
         if query == "unsure":
             return SearchResult([], [SimpleNamespace(chunk=CHUNK, score=1, matched=[])], True, "the reason")
-        return SearchResult([query], [SimpleNamespace(chunk=CHUNK, score=1, matched=[])], False, "")
+        hit = SimpleNamespace(chunk=CHUNK, score=1, matched=[])
+        side = [("pending", hit), ("summary", hit)] if query == "sides" else []
+        return SearchResult([query], [hit], False, "", side=side, calibrated=query == "calibrated")
 
 
 @pytest.fixture()
@@ -63,6 +65,18 @@ def test_not_sure_shows_contact_link_and_no_passage(base_url):
     _, body, _ = _get(base_url + "/?q=unsure")
     assert "Not sure" in body and f'<a href="{CONTACT_URL}">' in body
     assert "Exact" not in body
+
+
+def test_side_blocks_have_their_own_headings_below_the_main_results(base_url):
+    _, body, _ = _get(base_url + "/?q=sides")
+    assert body.index("Pending change: draft, not law") > body.index("1. &lt;Cite&gt;")
+    assert body.index("NPC summary, not the rule text") > body.index("Pending change")
+
+
+def test_page_says_when_not_sure_is_not_active(base_url):
+    assert "is not active yet" in _get(base_url + "/?q=term")[1].replace("&quot;", '"')
+    assert "is not active yet" not in _get(base_url + "/?q=calibrated")[1].replace("&quot;", '"')
+    assert "A plain note" in _get(base_url + "/?q=term")[1]
 
 
 def test_query_is_escaped(base_url):

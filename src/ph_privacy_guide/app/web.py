@@ -11,7 +11,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
 
 from ph_privacy_guide.answer.warnings import STATUS_WORDS
-from ph_privacy_guide.config import ANNOTATION_LABEL, CONTACT_URL, RESULTS_SHOWN, WEB_HOST, WEB_PORT
+from ph_privacy_guide.answer.format import UNCALIBRATED_NOTE
+from ph_privacy_guide.config import ANNOTATION_LABEL, BLOCK_HEADINGS, CONTACT_URL, MAIN_RESULTS, WEB_HOST, WEB_PORT
 from ph_privacy_guide.offline import enforce_offline
 
 PAGE_STYLE = """
@@ -23,6 +24,7 @@ PAGE_STYLE = """
 body { font: 16px/1.5 system-ui, sans-serif; color: var(--ink); background: var(--bg); margin: 0 auto;
        max-width: 46rem; padding: 1.5rem 1rem; }
 h1 { font-size: 1.4rem; margin: 0 0 .25rem; } h2 { font-size: 1.05rem; margin: 0; }
+h3.block { font-size: 1rem; margin: 1.5rem 0 0; padding-top: .75rem; border-top: 3px solid var(--muted); }
 form { display: flex; gap: .5rem; margin: 1rem 0; flex-wrap: wrap; }
 input[type=text] { flex: 1 1 16rem; font: inherit; padding: .5rem; color: var(--ink); background: var(--bg);
                    border: 1px solid var(--muted); border-radius: 4px; }
@@ -48,6 +50,7 @@ def _hit_html(rank: int, hit) -> str:
     parts = [f'<div class="result"><h2>{rank}. {esc(c["citation"])}</h2>',
              f'<div class="meta">{esc(" | ".join(meta))}</div>']
     parts += [f'<div class="warning">{esc(w)}</div>' for w in c["warnings"]]
+    parts += [f'<div class="meta">{esc(n)}</div>' for n in c.get("notes", [])]
     parts.append(f"<pre>{esc(c['text'])}</pre>")
     for note in c["annotations"]:
         parts.append(f"<details><summary>{esc(ANNOTATION_LABEL)} {note['number']} (not the provision's text)</summary>"
@@ -64,7 +67,13 @@ def render_page(query: str = "", result=None) -> str:
             body = (f'<div class="result"><h2>Not sure</h2><p>{esc(result.reason.capitalize())}. No passage is shown.</p>'
                     f'<p>You can ask the National Privacy Commission: <a href="{esc(CONTACT_URL)}">{esc(CONTACT_URL)}</a></p></div>')
         else:
-            body = "".join(_hit_html(i, h) for i, h in enumerate(result.hits, 1))
+            items = [_hit_html(i, h) for i, h in enumerate(result.hits, 1)]
+            rank = len(result.hits) + 1
+            for block, hit in result.side:
+                items.append(f'<h3 class="block">{esc(BLOCK_HEADINGS[block])}</h3>{_hit_html(rank, hit)}')
+                rank += 1
+            note = "" if result.calibrated else f'<div class="warning">{esc(UNCALIBRATED_NOTE)}</div>'
+            body = note + "".join(items)
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
@@ -90,7 +99,7 @@ def make_server(searcher, port: int = WEB_PORT) -> HTTPServer:
             if url.path != "/":
                 return self._send(404, "Not found")
             query = parse_qs(url.query).get("q", [""])[0].strip()
-            result = searcher.search(query, k=RESULTS_SHOWN) if query else None
+            result = searcher.search(query, k=MAIN_RESULTS) if query else None
             return self._send(200, render_page(query, result))
 
         def _send(self, status: int, text: str) -> None:

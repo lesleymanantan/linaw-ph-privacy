@@ -5,7 +5,7 @@ import csv
 import json
 from pathlib import Path
 
-from ph_privacy_guide.config import PROCESSED, ROOT, SEARCHABLE_KINDS
+from ph_privacy_guide.config import PROCESSED, ROOT
 
 QUESTIONS_DIR = ROOT / "eval" / "questions"
 SPLITS = ("train", "dev", "test")
@@ -23,6 +23,17 @@ CSV_COLUMNS = ["id", "question", "language", "type", "answerable", "gold", "sour
 def load_chunks() -> dict[str, dict]:
     with open(PROCESSED / "chunks.jsonl") as f:
         return {c["chunk_id"]: c for c in map(json.loads, f)}
+
+
+def resolve_label(label: str, chunks: dict[str, dict]) -> list[str]:
+    """Chunk ids for a gold label such as 'NPC_Circular_2022-04 s.7'. Any chunk of that section counts."""
+    return [cid for cid, c in chunks.items()
+            if c.get("gold_label") and (c["gold_label"] == label or c["gold_label"].startswith(label + "("))
+            and (c["searchable"] or c["switch"])]
+
+
+def resolve_gold_ids(row: dict, chunks: dict[str, dict]) -> set[str]:
+    return {cid for label in row["gold"] for cid in resolve_label(label, chunks)}
 
 
 def validate_row(row: dict, chunks: dict[str, dict]) -> list[str]:
@@ -49,12 +60,9 @@ def validate_row(row: dict, chunks: dict[str, dict]) -> list[str]:
         errs.append("answerable question has no gold")
     if row["answerable"] is False and row["gold"]:
         errs.append("unanswerable question has gold")
-    for g in row["gold"]:
-        chunk = chunks.get(g)
-        if chunk is None:
-            errs.append(f"gold chunk does not exist: {g}")
-        elif chunk["kind"] not in SEARCHABLE_KINDS:
-            errs.append(f"gold chunk is never searchable: {g}")
+    for label in row["gold"]:
+        if not resolve_label(label, chunks):
+            errs.append(f"gold label does not resolve to a searchable passage: {label}")
     if row["source"] not in SOURCES:
         errs.append(f"bad source {row['source']!r}")
     if row["source"] == "rule":
@@ -96,26 +104,12 @@ def load_split(split: str, directory: Path = QUESTIONS_DIR) -> list[dict]:
         return [json.loads(line) for line in f if line.strip()]
 
 
-def resolve_gold(cell: str, chunks: dict[str, dict]) -> tuple[list[str], list[str]]:
-    """Gold cells hold citations as printed by the tool, or chunk ids, separated by ';'."""
-    by_citation: dict[str, list[str]] = {}
-    for cid, c in chunks.items():
-        by_citation.setdefault(c["citation"], []).append(cid)
-    ids, errs = [], []
-    for item in filter(None, (p.strip() for p in cell.split(";"))):
-        if item in chunks:
-            ids.append(item)
-        elif item in by_citation and len(by_citation[item]) == 1:
-            ids.append(by_citation[item][0])
-        elif item in by_citation:
-            errs.append(f"citation matches several chunks, use a chunk id: {item}")
-        else:
-            errs.append(f"gold not found: {item}")
-    return ids, errs
+def split_gold_cell(cell: str) -> list[str]:
+    return [p.strip() for p in cell.split(";") if p.strip()]
 
 
 def csv_to_rows(path: Path, split: str, chunks: dict[str, dict]) -> tuple[list[dict], list[str]]:
-    rows, errs = [], []
+    rows, errs = [], []  # unresolved gold is caught by validate_row, and fails the whole import
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
         absent = [c for c in CSV_COLUMNS if c not in (reader.fieldnames or [])]
@@ -123,13 +117,11 @@ def csv_to_rows(path: Path, split: str, chunks: dict[str, dict]) -> tuple[list[d
             return [], [f"CSV is missing columns: {absent}"]
         for number, raw in enumerate(reader, 2):
             answerable = {"true": True, "false": False}.get(raw["answerable"].strip().lower(), raw["answerable"])
-            gold, gold_errs = resolve_gold(raw["gold"], chunks)
-            label = raw["id"].strip() or f"line {number}"
-            errs += [f"{label}: {e}" for e in gold_errs]
+            gold = split_gold_cell(raw["gold"])
             rows.append({
                 "id": raw["id"].strip(), "split": split, "question": raw["question"].strip(),
                 "language": raw["language"].strip(), "type": raw["type"].strip(), "answerable": answerable,
-                "gold": gold, "gold_doc_ids": sorted({chunks[g]["doc_id"] for g in gold}),
+                "gold": gold, "gold_doc_ids": sorted({chunks[c]["doc_id"] for g in gold for c in resolve_label(g, chunks)}),
                 "source": raw["source"].strip() or "human", "origin": raw["origin"].strip(),
                 "author": raw["author"].strip(), "reviewer": raw["reviewer"].strip(),
                 "pair_id": raw["pair_id"].strip(), "topic": raw["topic"].strip(), "notes": raw["notes"].strip(),

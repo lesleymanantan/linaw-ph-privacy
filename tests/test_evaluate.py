@@ -3,21 +3,27 @@ import csv
 import json
 import subprocess
 import sys
+from types import SimpleNamespace
 
 import pytest
 
+from ph_privacy_guide import config
 from ph_privacy_guide.config import ROOT
 from ph_privacy_guide.evaluate import metrics
 from ph_privacy_guide.evaluate import questions as Q
 
-CHUNKS = {"c1": {"doc_id": "D1", "kind": "section", "citation": "Cite 1"},
-          "c2": {"doc_id": "D2", "kind": "section", "citation": "Cite 2"},
-          "c3": {"doc_id": "D2", "kind": "footnote", "citation": "Note"}}
+def _chunk(doc, label, searchable=True, switch=""):
+    return {"doc_id": doc, "gold_label": label, "searchable": searchable, "switch": switch}
+
+
+CHUNKS = {"c1": _chunk("D1", "D1 s.1"), "c2": _chunk("D2", "D2 s.2"),
+          "c3a": _chunk("D2", "D2 s.3(a)"), "c3b": _chunk("D2", "D2 s.3(b)"), "c12": _chunk("D2", "D2 s.12"),
+          "c9": _chunk("D2", "D2 s.9", searchable=False), "c8": _chunk("D3", "D3 annex", searchable=False, switch="draft_annex")}
 
 
 def row(**over):
     base = {"id": "PLACEHOLDER-1", "split": "dev", "question": "PLACEHOLDER", "language": "en", "type": "definition",
-            "answerable": True, "gold": ["c1"], "gold_doc_ids": ["D1"], "source": "human", "origin": "human",
+            "answerable": True, "gold": ["D1 s.1"], "gold_doc_ids": ["D1"], "source": "human", "origin": "human",
             "author": "a", "reviewer": "r", "pair_id": "", "topic": "", "notes": ""}
     return {**base, **over}
 
@@ -47,8 +53,8 @@ def test_valid_row_passes():
     ({"reviewer": ""}, "reviewer is required"),
     ({"language": "xx"}, "bad language"),
     ({"gold": []}, "no gold"),
-    ({"gold": ["missing"]}, "does not exist"),
-    ({"gold": ["c3"]}, "never searchable"),
+    ({"gold": ["D1 s.99"]}, "does not resolve"),
+    ({"gold": ["D2 s.9"]}, "does not resolve"),
     ({"answerable": False}, "unanswerable question has gold"),
     ({"type": "out_of_scope"}, "answerable must be false"),
     ({"source": "rule"}, "train only"),
@@ -76,23 +82,38 @@ def _write_csv(path, rows):
 
 def _csv_row(**over):
     base = {"id": "PLACEHOLDER-1", "question": "PLACEHOLDER", "language": "fil", "type": "definition", "answerable": "true",
-            "gold": "Cite 1; c2", "source": "", "origin": "human", "author": "a", "reviewer": "r", "pair_id": "", "topic": "", "notes": ""}
+            "gold": "D1 s.1; D2 s.2", "source": "", "origin": "human", "author": "a", "reviewer": "r", "pair_id": "", "topic": "", "notes": ""}
     return {**base, **over}
 
 
-def test_import_resolves_citations_and_writes(tmp_path, monkeypatch):
+def test_label_resolves_to_any_chunk_of_its_section():
+    assert Q.resolve_label("D2 s.3", CHUNKS) == ["c3a", "c3b"]
+    assert Q.resolve_label("D2 s.3(a)", CHUNKS) == ["c3a"]
+    assert Q.resolve_label("D1 s.1", CHUNKS) == ["c1"]  # not s.12 of anything
+    assert Q.resolve_label("D2 s.1", CHUNKS) == []  # s.12 does not count for s.1
+    assert Q.resolve_label("D3 annex", CHUNKS) == ["c8"]
+
+
+def test_label_from_the_owners_example_resolves_on_the_real_corpus():
+    chunks = Q.load_chunks()
+    assert Q.resolve_label("NPC_Circular_2022-04 s.7", chunks)
+    assert Q.resolve_label("RA10173 s.3(l)", chunks)
+    assert len(Q.resolve_label("RA10173 s.3", chunks)) > 10
+
+
+def test_import_resolves_labels_and_writes(tmp_path, monkeypatch):
     monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
     _write_csv(tmp_path / "in.csv", [_csv_row()])
     out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
     assert errs == []
     written = Q.load_split("dev", tmp_path)[0]
-    assert written["gold"] == ["c1", "c2"] and written["gold_doc_ids"] == ["D1", "D2"]
+    assert written["gold"] == ["D1 s.1", "D2 s.2"] and written["gold_doc_ids"] == ["D1", "D2"]
     assert written["source"] == "human" and out.name == "dev.jsonl"
 
 
 def test_import_writes_nothing_if_any_row_is_bad(tmp_path, monkeypatch):
     monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
-    _write_csv(tmp_path / "in.csv", [_csv_row(), _csv_row(id="PLACEHOLDER-2", gold="nowhere")])
+    _write_csv(tmp_path / "in.csv", [_csv_row(), _csv_row(id="PLACEHOLDER-2", gold="D9 s.1")])
     out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
     assert out is None and errs and not (tmp_path / "dev.jsonl").exists()
 
@@ -105,8 +126,10 @@ def test_frozen_test_split_cannot_be_replaced(tmp_path, monkeypatch):
     assert out is None and "frozen" in errs[0]
 
 
-def _s(language="en", answerable=True, rank=None, not_sure=False):
-    return {"id": "x", "language": language, "answerable": answerable, "not_sure": not_sure, "gold_rank": rank, "top": []}
+def _s(language="en", answerable=True, rank=None, not_sure=False, confidence=0.5):
+    features = dict.fromkeys(config.CONFIDENCE_WEIGHTS, confidence)
+    return {"id": "x", "language": language, "answerable": answerable, "not_sure": not_sure, "gold_rank": rank, "top": [],
+            "confidence": confidence, "features": features}
 
 
 def test_recall_and_mrr():
@@ -131,8 +154,34 @@ def test_language_groups_are_separate():
     assert groups["taglish"]["n"] == 0 and groups["taglish"]["recall@1"] is None
 
 
-def test_gold_rank_uses_the_order_shown():
-    assert metrics.score_question(row(gold=["b"]), ["a", "b"], False)["gold_rank"] == 2
+def _result(main, side=()):
+    hit = lambda cid: SimpleNamespace(chunk={"chunk_id": cid})
+    return SimpleNamespace(hits=[hit(c) for c in main], side=[("pending", hit(c)) for c in side], not_sure=False, confidence=0.5, features={})
+
+
+def test_gold_rank_counts_any_chunk_of_the_section():
+    assert metrics.score_question(row(), {"b", "z"}, _result(["a", "b"]))["gold_rank"] == 2
+
+
+def test_side_block_hit_is_recorded_but_not_counted_in_recall():
+    scored = metrics.score_question(row(), {"d"}, _result(["a"], side=["d"]))
+    assert scored["gold_rank"] is None and scored["gold_in_side_block"] is True
+
+
+def test_sweep_applies_thresholds_per_language_and_sets_nothing():
+    scored = [_s(language="en", rank=1, confidence=0.9), _s(language="fil", rank=None, confidence=0.2),
+              _s(language="fil", answerable=False, confidence=0.1)]
+    before = config.NOT_SURE_CONFIDENCE_THRESHOLD
+    table = metrics.sweep(scored, thresholds=[0.0, 0.5])
+    assert table["en"][1]["shown_share"] == 1.0
+    assert table["fil"][0]["shown_share"] == 1.0 and table["fil"][1]["shown_share"] == 0.0
+    assert table["fil"][1]["abstention_rate"] == 1.0
+    assert config.NOT_SURE_CONFIDENCE_THRESHOLD == before
+
+
+def test_feature_means_split_right_from_wrong():
+    means = metrics.feature_means([_s(rank=1, confidence=0.9), _s(rank=None, confidence=0.1)])
+    assert means["all"]["right"]["top_cosine"] == 0.9 and means["all"]["wrong"]["top_cosine"] == 0.1
 
 
 def test_dev_command_takes_no_file_argument():
@@ -144,6 +193,20 @@ def test_dev_command_takes_no_file_argument():
 def test_dev_command_says_when_there_are_no_questions():
     out = subprocess.run([sys.executable, str(ROOT / "scripts" / "evaluate.py")], capture_output=True, text=True)
     assert out.returncode == 1 and "No dev questions" in out.stdout
+
+
+def test_confidence_report_takes_no_file_argument_and_needs_dev():
+    script = str(ROOT / "scripts" / "confidence_report.py")
+    out = subprocess.run([sys.executable, script, "eval/questions/test.jsonl"], capture_output=True, text=True)
+    assert out.returncode != 0 and "takes no arguments" in out.stderr
+    out = subprocess.run([sys.executable, script], capture_output=True, text=True)
+    assert out.returncode == 1 and "No dev questions" in out.stdout
+
+
+def test_final_refuses_while_no_threshold_is_set(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(metrics.config, "NOT_SURE_CONFIDENCE_THRESHOLD", None)
+    assert metrics.run_final(True, search=lambda _: None, root=tmp_path, directory=tmp_path, results_dir=tmp_path) == 2
+    assert "NOT_SURE_CONFIDENCE_THRESHOLD" in capsys.readouterr().out
 
 
 def test_final_needs_the_flag(tmp_path, capsys):

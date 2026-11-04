@@ -13,19 +13,23 @@ import subprocess
 from pathlib import Path
 
 from ph_privacy_guide import config
-from ph_privacy_guide.evaluate.questions import QUESTIONS_DIR, load_chunks, load_split, validate_set
+from ph_privacy_guide.evaluate.questions import QUESTIONS_DIR, load_chunks, load_split, resolve_gold_ids, validate_set
 
 RESULTS_DIR = config.ROOT / "results" / "eval"
 GROUPS = ("all", "en", "fil", "taglish")
 TOP_K = 5
 BOOTSTRAP_ROUNDS = 1000
+SWEEP_THRESHOLDS = [round(0.05 * i, 2) for i in range(21)]
 
 
-def score_question(question: dict, hit_ids: list[str], not_sure: bool) -> dict:
-    gold = set(question["gold"])
-    rank = next((i for i, cid in enumerate(hit_ids, 1) if cid in gold), None)
+def score_question(question: dict, gold_ids: set[str], result) -> dict:
+    """gold_rank is the position in the main block's ranking. Side blocks are counted apart."""
+    hit_ids = [h.chunk["chunk_id"] for h in result.hits]
+    rank = next((i for i, cid in enumerate(hit_ids, 1) if cid in gold_ids), None)
+    side_ids = [h.chunk["chunk_id"] for _, h in result.side]
     return {"id": question["id"], "language": question["language"], "answerable": question["answerable"],
-            "not_sure": not_sure, "gold_rank": rank, "top": hit_ids[:TOP_K]}
+            "not_sure": result.not_sure, "gold_rank": rank, "gold_in_side_block": bool(gold_ids & set(side_ids)),
+            "top": hit_ids[:TOP_K], "side": side_ids, "confidence": result.confidence, "features": result.features}
 
 
 def _rate(values: list[float]) -> float | None:
@@ -66,18 +70,48 @@ def summarise_groups(scored: list[dict]) -> dict:
     return {g: summarise([s for s in scored if g == "all" or s["language"] == g]) for g in GROUPS}
 
 
-def run_questions(questions: list[dict], search) -> list[dict]:
-    scored = []
-    for q in questions:
-        result = search(q["question"])
-        scored.append(score_question(q, [h.chunk["chunk_id"] for h in result.hits], result.not_sure))
-    return scored
+def run_questions(questions: list[dict], search, chunks: dict[str, dict]) -> list[dict]:
+    return [score_question(q, resolve_gold_ids(q, chunks), search(q["question"])) for q in questions]
+
+
+def sweep(scored: list[dict], thresholds: list[float] | None = None) -> dict:
+    """What each possible threshold would do, per language. Reports only: it sets nothing."""
+    thresholds = thresholds or SWEEP_THRESHOLDS
+    out: dict = {}
+    for group in GROUPS:
+        members = [s for s in scored if group == "all" or s["language"] == group]
+        rows = []
+        for t in thresholds:
+            applied = [{**s, "not_sure": s["confidence"] < t} for s in members]
+            m = summarise(applied)
+            rows.append({"threshold": t, "shown_share": round(m["n_answered"] / m["n"], 4) if m["n"] else None,
+                         "abstention_rate": m["abstention_rate"], "over_abstention_rate": m["over_abstention_rate"],
+                         "false_confident_rate": m["false_confident_rate"], "recall@3_when_answered": m["recall@3_when_answered"]})
+        out[group] = rows
+    return out
+
+
+def feature_means(scored: list[dict]) -> dict:
+    """Mean of each feature where the tool was right, and where it was not, per language."""
+    out: dict = {}
+    for group in GROUPS:
+        members = [s for s in scored if group == "all" or s["language"] == group]
+        right = [s for s in members if s["answerable"] and s["gold_rank"] and s["gold_rank"] <= 3]
+        wrong = [s for s in members if not (s["answerable"] and s["gold_rank"] and s["gold_rank"] <= 3)]
+        names = list(config.CONFIDENCE_WEIGHTS)
+        out[group] = {"n_right": len(right), "n_wrong": len(wrong)}
+        for name, values in (("right", right), ("wrong", wrong)):
+            out[group][name] = {k: _rate([v["features"][k] for v in values]) for k in names}
+            out[group][name]["confidence"] = _rate([v["confidence"] for v in values])
+    return out
 
 
 def settings() -> dict:
     return {"rrf_k": config.RRF_K, "rrf_weight_bm25": config.RRF_WEIGHT_BM25,
             "rrf_weight_embedding": config.RRF_WEIGHT_EMBEDDING,
-            "not_sure_min_term_coverage": config.NOT_SURE_MIN_TERM_COVERAGE,
+            "confidence_weights": config.CONFIDENCE_WEIGHTS,
+            "not_sure_confidence_threshold": config.NOT_SURE_CONFIDENCE_THRESHOLD,
+            "main_results": config.MAIN_RESULTS, "side_block_max": config.SIDE_BLOCK_MAX,
             "embedding_model": config.EMBEDDING_MODEL_NAME, "embedding_revision": config.EMBEDDING_MODEL_REVISION}
 
 
@@ -119,21 +153,55 @@ def run_dev(search=None, directory: Path = QUESTIONS_DIR) -> int:
     if not rows:
         print("No dev questions yet: eval/questions/dev.jsonl is missing or empty. Nothing was run.")
         return 1
-    errs = validate_set(rows, load_chunks())
+    chunks = load_chunks()
+    errs = validate_set(rows, chunks)
     errs += [f"{r['id']}: not a dev row" for r in rows if r["split"] != "dev"]
     if errs:
         print("Dev questions are invalid:\n" + "\n".join(errs))
         return 1
     if search is None:
         search = _default_search()
-    scored = run_questions(rows, search)
+    scored = run_questions(rows, search, chunks)
     groups = summarise_groups(scored)
     stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out = _write(f"{stamp}_{_commit(config.ROOT)}_dev.json",
                  {"split": "dev", "questions_sha256": file_sha256(path), "settings": settings(),
                   "summary": groups, "questions": scored})
     print(_table(groups))
+    if config.NOT_SURE_CONFIDENCE_THRESHOLD is None:
+        print("\nNo threshold is set, so nothing was withheld: abstention rates are 0 by construction.")
     print(f"\nSaved {out.relative_to(config.ROOT)}")
+    return 0
+
+
+def confidence_report(search=None, directory: Path = QUESTIONS_DIR) -> int:
+    """Dev only. Shows what thresholds would do, per language. Never changes config."""
+    rows = load_split("dev", directory)
+    if not rows:
+        print("No dev questions yet: eval/questions/dev.jsonl is missing or empty. Nothing was run.")
+        return 1
+    chunks = load_chunks()
+    errs = validate_set(rows, chunks) + [f"{r['id']}: not a dev row" for r in rows if r["split"] != "dev"]
+    if errs:
+        print("Dev questions are invalid:\n" + "\n".join(errs))
+        return 1
+    if search is None:
+        search = _default_search()
+    scored = run_questions(rows, search, chunks)
+    table = sweep(scored)
+    means = feature_means(scored)
+    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    out = _write(f"{stamp}_{_commit(config.ROOT)}_dev_confidence.json",
+                 {"split": "dev", "questions_sha256": file_sha256(directory / "dev.jsonl"), "settings": settings(),
+                  "feature_means": means, "sweep": table})
+    for group in GROUPS:
+        print(f"\n{group}: {means[group]['n_right']} right, {means[group]['n_wrong']} not right (top 3)")
+        print(f"  {'threshold':>9} {'shown':>7} {'abstain':>8} {'over-abstain':>13} {'false-conf':>11} {'recall@3 shown':>15}")
+        for r in table[group]:
+            cells = [r["shown_share"], r["abstention_rate"], r["over_abstention_rate"], r["false_confident_rate"], r["recall@3_when_answered"]]
+            shown = ["—" if c is None else c for c in cells]
+            print(f"  {r['threshold']:>9} {shown[0]:>7} {shown[1]:>8} {shown[2]:>13} {shown[3]:>11} {shown[4]:>15}")
+    print(f"\nSaved {out.relative_to(config.ROOT)}. This report sets nothing: choose the threshold from it and set it in config.py.")
     return 0
 
 
@@ -168,17 +236,20 @@ def run_final(flag: bool, search=None, root: Path = config.ROOT, directory: Path
         print("The test split runs only with --final. Nothing was run.")
         return 2
     digest, problems = final_preconditions(root, directory, results_dir)
+    if config.NOT_SURE_CONFIDENCE_THRESHOLD is None:
+        problems.append("NOT_SURE_CONFIDENCE_THRESHOLD is not set; set it from the dev set first")
     if problems:
         print("Refusing the final run:\n" + "\n".join(f"- {p}" for p in problems))
         return 2
     rows = load_split("test", directory)
-    errs = validate_set(rows, load_chunks())
+    chunks = load_chunks()
+    errs = validate_set(rows, chunks)
     if errs:
         print("Test questions are invalid:\n" + "\n".join(errs))
         return 2
     if search is None:
         search = _default_search()
-    scored = run_questions(rows, search)
+    scored = run_questions(rows, search, chunks)
     groups = summarise_groups(scored)
     results_dir.mkdir(parents=True, exist_ok=True)
     out = results_dir / f"final_{digest[:12]}_{_commit(root)}.json"

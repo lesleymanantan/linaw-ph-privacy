@@ -7,8 +7,8 @@ status (in force, repealed, amended, draft, unverified), and says **"Not sure"**
 low.
 
 > **Status: early development.** Hybrid search and a local page work, but search quality has not been
-> measured yet. The "Not sure" rule is provisional, and until its threshold is set on the dev questions
-> it will say "Not sure" to most Filipino questions.
+> measured yet. **"Not sure" is not active:** its threshold will be set on the human-written dev questions,
+> and until then the tool always shows passages and says that they may not answer the question.
 
 ## ⚠ Not legal advice
 
@@ -27,10 +27,12 @@ qualified lawyer or your Data Protection Officer.
   never leave your machine.
 - Draft instruments are always labelled **"draft, not in force"**. Passages from repealed texts are
   flagged with the name of the replacing instrument.
-- **Fixed ordering.** Passages are chosen by relevance (BM25 and embeddings, combined by reciprocal
-  rank fusion with k=60 and equal weights). The passages shown are then ordered: rules and guidance
-  first, then the NPC Summary of Circular 16-03, then the draft. This order is set in `config.py` and
-  is not tuned on any questions.
+- **Fixed layout.** Passages are chosen by relevance (BM25 and embeddings, combined by reciprocal rank
+  fusion with k=60 and equal weights). The main block shows the top 3 statutes, rules and guidance. Most
+  of these have status "not verified", which the page shows. Below it, two labelled blocks may appear:
+  "Pending change: draft, not law" and "NPC summary, not the rule text", at most one passage each, and only
+  if the passage scores at least as high as the last one in the main block. This layout is set in
+  `config.py` and is not tuned on any questions.
 
 ## Scope
 
@@ -60,35 +62,45 @@ SOURCES.md  MODELS.md       provenance of legal texts and downloaded models
 
 The source PDFs (`data/raw/`) are not redistributed in this repository.
 
-## Setup (development)
+## How to run
 
-uv is a development prerequisite, and it is installed inside this folder. `scripts/uv` keeps uv's
-cache, its Python and any home-directory writes under `.tools/` (gitignored), so nothing is written
-outside the project.
+Everything runs on your computer, with no network. These commands need the setup below to have been done
+once.
+
+Start the local page, then open http://127.0.0.1:8765/ in your browser. Press Ctrl-C to stop it.
 
 ```sh
-python3 -m venv .tools && .tools/bin/pip install --no-cache-dir uv==0.9.5
-scripts/uv sync
-.venv/bin/python -m ph_privacy_guide.ingest.extract    # per-page text, extraction report
-.venv/bin/python -m ph_privacy_guide.ingest.sectioner  # sections, footnotes, validation report
-.venv/bin/python -m ph_privacy_guide.ingest.chunker    # chunks.jsonl, validation report
-.venv/bin/python -m ph_privacy_guide.index.bm25        # keyword index
-.venv/bin/python scripts/download_model.py             # once, needs network; see MODELS.md
-.venv/bin/python -m ph_privacy_guide.index.embed       # embedding index
-.venv/bin/pytest
+cd ph-privacy-guide
+.venv/bin/python -m ph_privacy_guide.app.web
 ```
 
-## Search
+Add `--port 9000` if that port is in use. Or search from the command line:
 
 ```sh
-.venv/bin/python -m ph_privacy_guide.app.web           # local page at http://127.0.0.1:8765/
 .venv/bin/python -m ph_privacy_guide.app.cli "your question"
 ```
 
 Both show each passage's exact text with its citation, authority tag, status and any warnings. The page
-binds to 127.0.0.1 only, loads nothing from elsewhere and does not log searches. When it says "Not
-sure", it shows a plain link to the National Privacy Commission's contact page, which opens only if
-you follow it.
+binds to 127.0.0.1 only, loads nothing from elsewhere and does not log searches. When "Not sure" is active
+it shows a plain link to the National Privacy Commission's contact page, which opens only if you follow it.
+
+## Setup (development)
+
+uv is a development prerequisite, and it is installed inside this folder. `scripts/uv` keeps uv's
+cache, its Python and any home-directory writes under `.tools/` (gitignored), so nothing is written
+outside the project. The source PDFs go in `data/raw/` and are not part of this repository.
+
+```sh
+python3 -m venv .tools && .tools/bin/pip install --no-cache-dir uv==0.9.5
+scripts/uv sync
+.venv/bin/python scripts/download_model.py             # once, needs network; see MODELS.md
+.venv/bin/python -m ph_privacy_guide.ingest.extract    # per-page text, extraction report
+.venv/bin/python -m ph_privacy_guide.ingest.sectioner  # sections, footnotes, validation report
+.venv/bin/python -m ph_privacy_guide.ingest.chunker    # chunks.jsonl, gold labels, validation report
+.venv/bin/python -m ph_privacy_guide.index.bm25        # keyword index
+.venv/bin/python -m ph_privacy_guide.index.embed       # embedding index
+.venv/bin/pytest
+```
 
 ## Evaluation
 

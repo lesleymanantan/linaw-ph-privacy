@@ -13,7 +13,7 @@ import sys
 from ph_privacy_guide.config import CATALOGUE, EXCLUDED_DIRNAME, ROOT, allowed_pdfs
 
 FIELDS = [
-    "doc_id", "short_cite", "title", "type", "issuer", "collection", "authority", "status",
+    "doc_id", "instrument_key", "short_cite", "title", "type", "issuer", "collection", "authority", "status",
     "status_basis", "replaced_by", "supersedes", "supplemented_by", "parent_doc_id",
     "date_issued", "date_effective", "version", "in_corpus", "file_path", "sha256",
     "source_url", "retrieved_on", "notes",
@@ -49,6 +49,9 @@ def validate(rows: list[dict]) -> list[str]:
     if len(ids) != len(set(ids)):
         errs.append("duplicate doc_id")
     idset = set(ids)
+    keys = [r["instrument_key"] for r in rows]
+    if not all(keys) or len(keys) != len(set(keys)):
+        errs.append("instrument_key must be present and unique")
     corpus_files = {str(p.relative_to(ROOT)) for p in allowed_pdfs()}
     listed_files = set()
     for r in rows:

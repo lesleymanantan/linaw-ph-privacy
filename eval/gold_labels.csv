@@ -1,0 +1,933 @@
+gold_label,instrument,heading,chunks,block,searchable_by_default
+RA10173 s.1,RA 10173,Short Title,1,main,yes
+RA10173 s.2,RA 10173,Declaration of Policy,1,main,yes
+RA10173 s.3,RA 10173,Definition of Terms,13,main,yes
+RA10173 s.3(a),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(b),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(c),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(d),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(e),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(f),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(g),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(h),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(i),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(j),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(k),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.3(l),RA 10173,Definition of Terms,1,main,yes
+RA10173 s.4,RA 10173,Scope,8,main,yes
+RA10173 s.4(a),RA 10173,Scope,1,main,yes
+RA10173 s.4(b),RA 10173,Scope,1,main,yes
+RA10173 s.4(c),RA 10173,Scope,1,main,yes
+RA10173 s.4(d),RA 10173,Scope,1,main,yes
+RA10173 s.4(e),RA 10173,Scope,1,main,yes
+RA10173 s.4(f),RA 10173,Scope,1,main,yes
+RA10173 s.4(g),RA 10173,Scope,1,main,yes
+RA10173 s.5,RA 10173,Protection Afforded to Journalists and Their Sources,1,main,yes
+RA10173 s.6,RA 10173,Extraterritorial Application,1,main,yes
+RA10173 s.7,RA 10173,Functions of the National Privacy Commission,18,main,yes
+RA10173 s.7(a),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(b),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(c),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(d),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(e),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(f),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(g),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(h),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(i),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(j),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(k),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(l),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(m),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(n),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(o),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(p),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.7(q),RA 10173,Functions of the National Privacy Commission,1,main,yes
+RA10173 s.8,RA 10173,Confidentiality,1,main,yes
+RA10173 s.9,RA 10173,Organizational Structure of the Commission,1,main,yes
+RA10173 s.10,RA 10173,The Secretariat,1,main,yes
+RA10173 s.11,RA 10173,General Data Privacy Principles,1,main,yes
+RA10173 s.12,RA 10173,Criteria for Lawful Processing of Personal Information,1,main,yes
+RA10173 s.13,RA 10173,Sensitive Personal Information and Privileged Information,1,main,yes
+RA10173 s.14,RA 10173,Subcontract of Personal Information,1,main,yes
+RA10173 s.15,RA 10173,Extension of Privileged Communication,1,main,yes
+RA10173 s.16,RA 10173,Rights of the Data Subject,7,main,yes
+RA10173 s.16(a),RA 10173,Rights of the Data Subject,1,main,yes
+RA10173 s.16(b),RA 10173,Rights of the Data Subject,1,main,yes
+RA10173 s.16(c),RA 10173,Rights of the Data Subject,1,main,yes
+RA10173 s.16(d),RA 10173,Rights of the Data Subject,1,main,yes
+RA10173 s.16(e),RA 10173,Rights of the Data Subject,1,main,yes
+RA10173 s.16(f),RA 10173,Rights of the Data Subject,1,main,yes
+RA10173 s.17,RA 10173,Transmissibility of Rights of the Data Subject,1,main,yes
+RA10173 s.18,RA 10173,Right to Data Portability,1,main,yes
+RA10173 s.19,RA 10173,Non-Applicability,1,main,yes
+RA10173 s.20,RA 10173,Security of Personal Information,7,main,yes
+RA10173 s.20(a),RA 10173,Security of Personal Information,1,main,yes
+RA10173 s.20(b),RA 10173,Security of Personal Information,1,main,yes
+RA10173 s.20(c),RA 10173,Security of Personal Information,1,main,yes
+RA10173 s.20(d),RA 10173,Security of Personal Information,1,main,yes
+RA10173 s.20(e),RA 10173,Security of Personal Information,1,main,yes
+RA10173 s.20(f),RA 10173,Security of Personal Information,1,main,yes
+RA10173 s.21,RA 10173,Principle of Accountability,1,main,yes
+RA10173 s.22,RA 10173,Responsibility of Heads of Agencies,1,main,yes
+RA10173 s.23,RA 10173,Requirements Relating to Access by Agency Personnel to Sensitive Personal Information,1,main,yes
+RA10173 s.24,RA 10173,Applicability to Government Contractors,1,main,yes
+RA10173 s.25,RA 10173,Unauthorized Processing of Personal Information and Sensitive Personal Information,1,main,yes
+RA10173 s.26,RA 10173,Accessing Personal Information and Sensitive Personal Information Due to Negligence,1,main,yes
+RA10173 s.27,RA 10173,Improper Disposal of Personal Information and Sensitive Personal Information,1,main,yes
+RA10173 s.28,RA 10173,Processing of Personal Information and Sensitive Personal Information for Unauthorized Purposes,1,main,yes
+RA10173 s.29,RA 10173,Unauthorized Access or Intentional Breach,1,main,yes
+RA10173 s.30,RA 10173,Concealment of Security Breaches Involving Sensitive Personal Information,1,main,yes
+RA10173 s.31,RA 10173,Malicious Disclosure,1,main,yes
+RA10173 s.32,RA 10173,Unauthorized Disclosure,1,main,yes
+RA10173 s.33,RA 10173,Combination or Series of Acts,1,main,yes
+RA10173 s.34,RA 10173,Extent of Liability,1,main,yes
+RA10173 s.35,RA 10173,Large-Scale,1,main,yes
+RA10173 s.36,RA 10173,Offense Committed by Public Officer,1,main,yes
+RA10173 s.37,RA 10173,Restitution,1,main,yes
+RA10173 s.38,RA 10173,Interpretation,1,main,yes
+RA10173 s.39,RA 10173,Implementing Rules and Regulations (IRR),1,main,yes
+RA10173 s.40,RA 10173,Reports and Information,1,main,yes
+RA10173 s.41,RA 10173,Appropriations Clause,1,main,yes
+RA10173 s.42,RA 10173,Transitory Provision,1,main,yes
+RA10173 s.43,RA 10173,Separability Clause,1,main,yes
+RA10173 s.44,RA 10173,Repealing Clause,1,main,yes
+RA10173 s.45,RA 10173,Effectivity Clause,1,main,yes
+IRR_RA10173 s.1,IRR of RA 10173,Title,1,main,yes
+IRR_RA10173 s.2,IRR of RA 10173,Policy,1,main,yes
+IRR_RA10173 s.3,IRR of RA 10173,Definitions,21,main,yes
+IRR_RA10173 s.3(a),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(b),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(c),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(d),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(e),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(f),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(g),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(h),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(i),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(j),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(k),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(l),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(m),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(n),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(o),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(p),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(q),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(r),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(s),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.3(t),IRR of RA 10173,Definitions,1,main,yes
+IRR_RA10173 s.4,IRR of RA 10173,Scope,1,main,yes
+IRR_RA10173 s.5,IRR of RA 10173,Special Cases,7,main,yes
+IRR_RA10173 s.5(a),IRR of RA 10173,Special Cases,1,main,yes
+IRR_RA10173 s.5(b),IRR of RA 10173,Special Cases,1,main,yes
+IRR_RA10173 s.5(c),IRR of RA 10173,Special Cases,1,main,yes
+IRR_RA10173 s.5(d),IRR of RA 10173,Special Cases,1,main,yes
+IRR_RA10173 s.5(e),IRR of RA 10173,Special Cases,1,main,yes
+IRR_RA10173 s.5(f),IRR of RA 10173,Special Cases,1,main,yes
+IRR_RA10173 s.6,IRR of RA 10173,Protection afforded to Data Subjects,1,main,yes
+IRR_RA10173 s.7,IRR of RA 10173,Protection Afforded to Journalists and their Sources,1,main,yes
+IRR_RA10173 s.8,IRR of RA 10173,Mandate,1,main,yes
+IRR_RA10173 s.9,IRR of RA 10173,Functions,8,main,yes
+IRR_RA10173 s.9(a),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.9(b),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.9(c),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.9(d),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.9(e),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.9(f),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.9(g),IRR of RA 10173,Functions,1,main,yes
+IRR_RA10173 s.10,IRR of RA 10173,Administrative Issuances,1,main,yes
+IRR_RA10173 s.11,IRR of RA 10173,Reports and Information,1,main,yes
+IRR_RA10173 s.12,IRR of RA 10173,Confidentiality of Personal Data,1,main,yes
+IRR_RA10173 s.13,IRR of RA 10173,Organizational Structure,1,main,yes
+IRR_RA10173 s.14,IRR of RA 10173,Secretariat,1,main,yes
+IRR_RA10173 s.15,IRR of RA 10173,Effect of Lawful Performance of Duty,1,main,yes
+IRR_RA10173 s.16,IRR of RA 10173,Magna Carta for Science and Technology Personnel,1,main,yes
+IRR_RA10173 s.17,IRR of RA 10173,General Data Privacy Principles,1,main,yes
+IRR_RA10173 s.18,IRR of RA 10173,"Principles of Transparency, Legitimate Purpose and Proportionality",1,main,yes
+IRR_RA10173 s.19,IRR of RA 10173,"General principles in collection, processing and retention",6,main,yes
+IRR_RA10173 s.19(a),IRR of RA 10173,"General principles in collection, processing and retention",1,main,yes
+IRR_RA10173 s.19(b),IRR of RA 10173,"General principles in collection, processing and retention",1,main,yes
+IRR_RA10173 s.19(c),IRR of RA 10173,"General principles in collection, processing and retention",1,main,yes
+IRR_RA10173 s.19(d),IRR of RA 10173,"General principles in collection, processing and retention",1,main,yes
+IRR_RA10173 s.19(e),IRR of RA 10173,"General principles in collection, processing and retention",1,main,yes
+IRR_RA10173 s.20,IRR of RA 10173,General Principles for Data Sharing,5,main,yes
+IRR_RA10173 s.20(a),IRR of RA 10173,General Principles for Data Sharing,1,main,yes
+IRR_RA10173 s.20(b),IRR of RA 10173,General Principles for Data Sharing,1,main,yes
+IRR_RA10173 s.20(c),IRR of RA 10173,General Principles for Data Sharing,1,main,yes
+IRR_RA10173 s.20(d),IRR of RA 10173,General Principles for Data Sharing,1,main,yes
+IRR_RA10173 s.21,IRR of RA 10173,Criteria for Lawful Processing of Personal Information,1,main,yes
+IRR_RA10173 s.22,IRR of RA 10173,Sensitive Personal Information and Privileged Information,1,main,yes
+IRR_RA10173 s.23,IRR of RA 10173,Extension of Privileged Communication,1,main,yes
+IRR_RA10173 s.24,IRR of RA 10173,Surveillance of Suspects and Interception of Recording of Communications,1,main,yes
+IRR_RA10173 s.25,IRR of RA 10173,Data Privacy and Security,1,main,yes
+IRR_RA10173 s.26,IRR of RA 10173,Organizational Security Measures,7,main,yes
+IRR_RA10173 s.26(a),IRR of RA 10173,Organizational Security Measures,1,main,yes
+IRR_RA10173 s.26(b),IRR of RA 10173,Organizational Security Measures,1,main,yes
+IRR_RA10173 s.26(c),IRR of RA 10173,Organizational Security Measures,1,main,yes
+IRR_RA10173 s.26(d),IRR of RA 10173,Organizational Security Measures,1,main,yes
+IRR_RA10173 s.26(e),IRR of RA 10173,Organizational Security Measures,1,main,yes
+IRR_RA10173 s.26(f),IRR of RA 10173,Organizational Security Measures,1,main,yes
+IRR_RA10173 s.27,IRR of RA 10173,Physical Security Measures,1,main,yes
+IRR_RA10173 s.28,IRR of RA 10173,Guidelines for Technical Security Measures,1,main,yes
+IRR_RA10173 s.29,IRR of RA 10173,Appropriate Level of Security,1,main,yes
+IRR_RA10173 s.30,IRR of RA 10173,Responsibility of Heads of Agencies,1,main,yes
+IRR_RA10173 s.31,IRR of RA 10173,Requirements Relating to Access by Agency Personnel to Sensitive Personal Information,3,main,yes
+IRR_RA10173 s.31(a),IRR of RA 10173,Requirements Relating to Access by Agency Personnel to Sensitive Personal Information,1,main,yes
+IRR_RA10173 s.31(b),IRR of RA 10173,Requirements Relating to Access by Agency Personnel to Sensitive Personal Information,1,main,yes
+IRR_RA10173 s.32,IRR of RA 10173,Implementation of Security Requirements,1,main,yes
+IRR_RA10173 s.33,IRR of RA 10173,Applicability to Government Contractors,1,main,yes
+IRR_RA10173 s.34,IRR of RA 10173,Rights of the Data Subject,7,main,yes
+IRR_RA10173 s.34(a),IRR of RA 10173,Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.34(b),IRR of RA 10173,Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.34(c),IRR of RA 10173,Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.34(d),IRR of RA 10173,Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.34(e),IRR of RA 10173,Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.34(f),IRR of RA 10173,Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.35,IRR of RA 10173,Transmissibility of Rights of the Data Subject,1,main,yes
+IRR_RA10173 s.36,IRR of RA 10173,Right to Data Portability,1,main,yes
+IRR_RA10173 s.37,IRR of RA 10173,Limitation on Rights,1,main,yes
+IRR_RA10173 s.38,IRR of RA 10173,Data Breach Notification,1,main,yes
+IRR_RA10173 s.39,IRR of RA 10173,Contents of Notification,1,main,yes
+IRR_RA10173 s.40,IRR of RA 10173,Delay of Notification,1,main,yes
+IRR_RA10173 s.41,IRR of RA 10173,Breach Report,1,main,yes
+IRR_RA10173 s.42,IRR of RA 10173,Procedure for Notification,1,main,yes
+IRR_RA10173 s.43,IRR of RA 10173,Subcontract of Personal Data,1,main,yes
+IRR_RA10173 s.44,IRR of RA 10173,Agreements for Outsourcing,3,main,yes
+IRR_RA10173 s.44(a),IRR of RA 10173,Agreements for Outsourcing,1,main,yes
+IRR_RA10173 s.44(b),IRR of RA 10173,Agreements for Outsourcing,1,main,yes
+IRR_RA10173 s.45,IRR of RA 10173,Duty of personal information processor,1,main,yes
+IRR_RA10173 s.46,IRR of RA 10173,Enforcement of the Data Privacy Act,1,main,yes
+IRR_RA10173 s.47,IRR of RA 10173,Registration of Personal Data Processing Systems,1,main,yes
+IRR_RA10173 s.48,IRR of RA 10173,Notification of Automated Processing Operations,1,main,yes
+IRR_RA10173 s.49,IRR of RA 10173,Review by the Commission,1,main,yes
+IRR_RA10173 s.50,IRR of RA 10173,Accountability for Transfer of Personal Data,1,main,yes
+IRR_RA10173 s.51,IRR of RA 10173,"Accountability for Violation of the Act, these Rules and Other Issuances of the Commission",1,main,yes
+IRR_RA10173 s.52,IRR of RA 10173,Unauthorized Processing of Personal Information and Sensitive Personal Information,1,main,yes
+IRR_RA10173 s.53,IRR of RA 10173,Accessing Personal Information and Sensitive Personal Information Due to Negligence,1,main,yes
+IRR_RA10173 s.54,IRR of RA 10173,Improper Disposal of Personal Information and Sensitive Personal Information,1,main,yes
+IRR_RA10173 s.55,IRR of RA 10173,Processing of Personal Information and Sensitive Personal Information for Unauthorized Purposes,1,main,yes
+IRR_RA10173 s.56,IRR of RA 10173,Unauthorized Access or Intentional Breach,1,main,yes
+IRR_RA10173 s.57,IRR of RA 10173,Concealment of Security Breaches Involving Sensitive Personal Information,1,main,yes
+IRR_RA10173 s.58,IRR of RA 10173,Malicious Disclosure,1,main,yes
+IRR_RA10173 s.59,IRR of RA 10173,Unauthorized Disclosure,1,main,yes
+IRR_RA10173 s.60,IRR of RA 10173,Combination or Series of Acts,1,main,yes
+IRR_RA10173 s.61,IRR of RA 10173,Extent of Liability,1,main,yes
+IRR_RA10173 s.62,IRR of RA 10173,Large-Scale,1,main,yes
+IRR_RA10173 s.63,IRR of RA 10173,Offense Committed by Public Officer,1,main,yes
+IRR_RA10173 s.64,IRR of RA 10173,Restitution,1,main,yes
+IRR_RA10173 s.65,IRR of RA 10173,Fines and Penalties,1,main,yes
+IRR_RA10173 s.66,IRR of RA 10173,Appeal,1,main,yes
+IRR_RA10173 s.67,IRR of RA 10173,Period for Compliance,1,main,yes
+IRR_RA10173 s.68,IRR of RA 10173,Appropriations Clause,1,main,yes
+IRR_RA10173 s.69,IRR of RA 10173,Interpretation,1,main,yes
+IRR_RA10173 s.70,IRR of RA 10173,Separability Clause,1,main,yes
+IRR_RA10173 s.71,IRR of RA 10173,Repealing Clause,1,main,yes
+IRR_RA10173 s.72,IRR of RA 10173,Effectivity Clause,1,main,yes
+NPC_Circular_16-03 s.1,NPC Circular 16-03,Scope,1,main,yes
+NPC_Circular_16-03 s.2,NPC Circular 16-03,Purpose,1,main,yes
+NPC_Circular_16-03 s.3,NPC Circular 16-03,Definition of Terms,13,main,yes
+NPC_Circular_16-03 s.3(A),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(B),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(C),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(D),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(E),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(F),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(G),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(H),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(I),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(J),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(K),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.3(L),NPC Circular 16-03,Definition of Terms,1,main,yes
+NPC_Circular_16-03 s.4,NPC Circular 16-03,Security Incident Management Policy,1,main,yes
+NPC_Circular_16-03 s.5,NPC Circular 16-03,Data Breach Response Team,1,main,yes
+NPC_Circular_16-03 s.6,NPC Circular 16-03,Preventive or Minimization Measures,1,main,yes
+NPC_Circular_16-03 s.7,NPC Circular 16-03,"Availability, Integrity and Confidentiality of Personal Data",1,main,yes
+NPC_Circular_16-03 s.8,NPC Circular 16-03,Policies and Procedures,1,main,yes
+NPC_Circular_16-03 s.9,NPC Circular 16-03,Documentation,1,main,yes
+NPC_Circular_16-03 s.10,NPC Circular 16-03,Regular Review,1,main,yes
+NPC_Circular_16-03 s.11,NPC Circular 16-03,When notification is required,1,main,yes
+NPC_Circular_16-03 s.12,NPC Circular 16-03,Public Information,1,main,yes
+NPC_Circular_16-03 s.13,NPC Circular 16-03,Determination of the Need to Notify,1,main,yes
+NPC_Circular_16-03 s.14,NPC Circular 16-03,Discovery of Vulnerability,1,main,yes
+NPC_Circular_16-03 s.15,NPC Circular 16-03,Who should Notify,1,main,yes
+NPC_Circular_16-03 s.16,NPC Circular 16-03,Reporting by Personal Information Processors,1,main,yes
+NPC_Circular_16-03 s.17,NPC Circular 16-03,Notification of the Commission,6,main,yes
+NPC_Circular_16-03 s.17(A),NPC Circular 16-03,Notification of the Commission,1,main,yes
+NPC_Circular_16-03 s.17(B),NPC Circular 16-03,Notification of the Commission,1,main,yes
+NPC_Circular_16-03 s.17(C),NPC Circular 16-03,Notification of the Commission,1,main,yes
+NPC_Circular_16-03 s.17(D),NPC Circular 16-03,Notification of the Commission,1,main,yes
+NPC_Circular_16-03 s.17(E),NPC Circular 16-03,Notification of the Commission,1,main,yes
+NPC_Circular_16-03 s.18,NPC Circular 16-03,Notification of Data Subjects,5,main,yes
+NPC_Circular_16-03 s.18(A),NPC Circular 16-03,Notification of Data Subjects,1,main,yes
+NPC_Circular_16-03 s.18(B),NPC Circular 16-03,Notification of Data Subjects,1,main,yes
+NPC_Circular_16-03 s.18(C),NPC Circular 16-03,Notification of Data Subjects,1,main,yes
+NPC_Circular_16-03 s.18(D),NPC Circular 16-03,Notification of Data Subjects,1,main,yes
+NPC_Circular_16-03 s.19,NPC Circular 16-03,Exemption from Notification Requirements,1,main,yes
+NPC_Circular_16-03 s.20,NPC Circular 16-03,Failure to Notify,1,main,yes
+NPC_Circular_16-03 s.21,NPC Circular 16-03,Investigation of a Breach or a Security Incident,1,main,yes
+NPC_Circular_16-03 s.22,NPC Circular 16-03,Reportorial requirements,1,main,yes
+NPC_Circular_16-03 s.23,NPC Circular 16-03,Notification and Reporting to the National Privacy Commission,1,main,yes
+NPC_Circular_16-03 s.24,NPC Circular 16-03,Separability Clause,1,main,yes
+NPC_Circular_16-03 s.25,NPC Circular 16-03,Effectivity,1,main,yes
+NPC_Circular_16-03 summary,NPC Circular 16-03,Summary,1,summary,yes
+NPC_Circular_2020-03 s.1,NPC Circular 2020-03,Scope,1,main,yes
+NPC_Circular_2020-03 s.2,NPC Circular 2020-03,Definition of Terms,22,main,yes
+NPC_Circular_2020-03 s.2(A),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(B),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(C),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(D),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(E),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(F),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(G),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(H),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(I),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(J),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(K),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(L),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(M),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(N),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(O),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(P),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(Q),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(R),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(S),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(T),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.2(U),NPC Circular 2020-03,Definition of Terms,1,main,yes
+NPC_Circular_2020-03 s.3,NPC Circular 2020-03,General principles,1,main,yes
+NPC_Circular_2020-03 s.4,NPC Circular 2020-03,Parties,1,main,yes
+NPC_Circular_2020-03 s.5,NPC Circular 2020-03,Transparency,1,main,yes
+NPC_Circular_2020-03 s.6,NPC Circular 2020-03,Authorized processing,1,main,yes
+NPC_Circular_2020-03 s.7,NPC Circular 2020-03,Special cases,1,main,yes
+NPC_Circular_2020-03 s.8,NPC Circular 2020-03,Data sharing agreement; key considerations,1,main,yes
+NPC_Circular_2020-03 s.9,NPC Circular 2020-03,Contents of a Data Sharing Agreement,9,main,yes
+NPC_Circular_2020-03 s.9(A),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(B),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(C),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(D),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(E),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(F),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(G),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.9(H),NPC Circular 2020-03,Contents of a Data Sharing Agreement,1,main,yes
+NPC_Circular_2020-03 s.10,NPC Circular 2020-03,Record of data sharing arrangements,1,main,yes
+NPC_Circular_2020-03 s.11,NPC Circular 2020-03,Security of shared personal data,1,main,yes
+NPC_Circular_2020-03 s.12,NPC Circular 2020-03,Accountability,1,main,yes
+NPC_Circular_2020-03 s.13,NPC Circular 2020-03,Review by the Commission,1,main,yes
+NPC_Circular_2020-03 s.14,NPC Circular 2020-03,Periodic review,1,main,yes
+NPC_Circular_2020-03 s.15,NPC Circular 2020-03,Revisions and amendments,1,main,yes
+NPC_Circular_2020-03 s.16,NPC Circular 2020-03,Termination,1,main,yes
+NPC_Circular_2020-03 s.17,NPC Circular 2020-03,"Return, destruction, or disposal of transferred personal data",1,main,yes
+NPC_Circular_2020-03 s.18,NPC Circular 2020-03,Transitory period,1,main,yes
+NPC_Circular_2020-03 s.19,NPC Circular 2020-03,Separability Clause,1,main,yes
+NPC_Circular_2020-03 s.20,NPC Circular 2020-03,Repealing Clause,1,main,yes
+NPC_Circular_2020-03 s.21,NPC Circular 2020-03,Effectivity,1,main,yes
+NPC_Circular_2022-01 s.1,NPC Circular 2022-01,Scope,1,main,yes
+NPC_Circular_2022-01 s.2,NPC Circular 2022-01,Administrative Fines,6,main,yes
+NPC_Circular_2022-01 s.2(a),NPC Circular 2022-01,Administrative Fines,1,main,yes
+NPC_Circular_2022-01 s.2(b),NPC Circular 2022-01,Administrative Fines,1,main,yes
+NPC_Circular_2022-01 s.2(c),NPC Circular 2022-01,Administrative Fines,1,main,yes
+NPC_Circular_2022-01 s.2(d),NPC Circular 2022-01,Administrative Fines,1,main,yes
+NPC_Circular_2022-01 s.2(e),NPC Circular 2022-01,Administrative Fines,1,main,yes
+NPC_Circular_2022-01 s.3,NPC Circular 2022-01,Factors Affecting Fines,1,main,yes
+NPC_Circular_2022-01 s.4,NPC Circular 2022-01,Due Process,1,main,yes
+NPC_Circular_2022-01 s.5,NPC Circular 2022-01,Appeal,1,main,yes
+NPC_Circular_2022-01 s.6,NPC Circular 2022-01,Posting of Bond on Imposed Administrative Fines,1,main,yes
+NPC_Circular_2022-01 s.7,NPC Circular 2022-01,Refusal to Comply,1,main,yes
+NPC_Circular_2022-01 s.8,NPC Circular 2022-01,Periodic Review and Modification,1,main,yes
+NPC_Circular_2022-01 s.9,NPC Circular 2022-01,Separability Clause,1,main,yes
+NPC_Circular_2022-01 s.10,NPC Circular 2022-01,Applicability Clause,1,main,yes
+NPC_Circular_2022-01 s.11,NPC Circular 2022-01,Effectivity,1,main,yes
+NPC_Circular_2022-04 s.1,NPC Circular 2022-04,Scope,1,main,yes
+NPC_Circular_2022-04 s.2,NPC Circular 2022-04,Definition of Terms,14,main,yes
+NPC_Circular_2022-04 s.2(A),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(B),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(C),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(D),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(E),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(F),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(G),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(H),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(I),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(J),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(K),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(L),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.2(M),NPC Circular 2022-04,Definition of Terms,1,main,yes
+NPC_Circular_2022-04 s.3,NPC Circular 2022-04,Purpose,1,main,yes
+NPC_Circular_2022-04 s.4,NPC Circular 2022-04,General Principles,1,main,yes
+NPC_Circular_2022-04 s.5,NPC Circular 2022-04,Mandatory Registration,1,main,yes
+NPC_Circular_2022-04 s.6,NPC Circular 2022-04,Voluntary Registration,1,main,yes
+NPC_Circular_2022-04 s.7,NPC Circular 2022-04,When to Register,1,main,yes
+NPC_Circular_2022-04 s.8,NPC Circular 2022-04,Authority to Register,2,main,yes
+NPC_Circular_2022-04 s.9,NPC Circular 2022-04,Registration Process,1,main,yes
+NPC_Circular_2022-04 s.10,NPC Circular 2022-04,Mandatory Appointment of DPO in the Government,1,main,yes
+NPC_Circular_2022-04 s.11,NPC Circular 2022-04,Application Form,4,main,yes
+NPC_Circular_2022-04 s.11(A),NPC Circular 2022-04,Application Form,1,main,yes
+NPC_Circular_2022-04 s.11(B),NPC Circular 2022-04,Application Form,1,main,yes
+NPC_Circular_2022-04 s.11(C),NPC Circular 2022-04,Application Form,1,main,yes
+NPC_Circular_2022-04 s.12,NPC Circular 2022-04,Details of Registration,1,main,yes
+NPC_Circular_2022-04 s.13,NPC Circular 2022-04,Certificate of Registration,1,main,yes
+NPC_Circular_2022-04 s.14,NPC Circular 2022-04,Validity,1,main,yes
+NPC_Circular_2022-04 s.15,NPC Circular 2022-04,Verification,1,main,yes
+NPC_Circular_2022-04 s.16,NPC Circular 2022-04,Amendments or Updates,1,main,yes
+NPC_Circular_2022-04 s.17,NPC Circular 2022-04,Non-Registration,1,main,yes
+NPC_Circular_2022-04 s.18,NPC Circular 2022-04,Renewal,1,main,yes
+NPC_Circular_2022-04 s.19,NPC Circular 2022-04,Reasonable Fees,1,main,yes
+NPC_Circular_2022-04 s.20,NPC Circular 2022-04,Imposition of Administrative Fines,1,main,yes
+NPC_Circular_2022-04 s.21,NPC Circular 2022-04,Inaccessible DPO Accounts,1,main,yes
+NPC_Circular_2022-04 s.22,NPC Circular 2022-04,Withdrawal of Registration,1,main,yes
+NPC_Circular_2022-04 s.23,NPC Circular 2022-04,Maintenance of Registry,1,main,yes
+NPC_Circular_2022-04 s.24,NPC Circular 2022-04,Removal from Registry,1,main,yes
+NPC_Circular_2022-04 s.25,NPC Circular 2022-04,Non-inclusion of Confidential Information,1,main,yes
+NPC_Circular_2022-04 s.26,NPC Circular 2022-04,Notification of Automated Decision-Making or Profiling,1,main,yes
+NPC_Circular_2022-04 s.27,NPC Circular 2022-04,When to Notify,1,main,yes
+NPC_Circular_2022-04 s.28,NPC Circular 2022-04,Availability of Additional Information,1,main,yes
+NPC_Circular_2022-04 s.29,NPC Circular 2022-04,Issuance of Seal of Registration,1,main,yes
+NPC_Circular_2022-04 s.30,NPC Circular 2022-04,Standard Information,1,main,yes
+NPC_Circular_2022-04 s.31,NPC Circular 2022-04,Validity,1,main,yes
+NPC_Circular_2022-04 s.32,NPC Circular 2022-04,Mandatory Display of Seal of Registration,1,main,yes
+NPC_Circular_2022-04 s.33,NPC Circular 2022-04,Use of Seal of Registration,1,main,yes
+NPC_Circular_2022-04 s.34,NPC Circular 2022-04,Automatic Revocation or Withdrawal,1,main,yes
+NPC_Circular_2022-04 s.35,NPC Circular 2022-04,Revocation of Certificate of Registration,1,main,yes
+NPC_Circular_2022-04 s.36,NPC Circular 2022-04,Notice of Revocation,1,main,yes
+NPC_Circular_2022-04 s.37,NPC Circular 2022-04,Penalties and Fines,1,main,yes
+NPC_Circular_2022-04 s.38,NPC Circular 2022-04,Cease and Desist Order,1,main,yes
+NPC_Circular_2022-04 s.39,NPC Circular 2022-04,Transitory Period,1,main,yes
+NPC_Circular_2022-04 s.40,NPC Circular 2022-04,Repealing Clause,1,main,yes
+NPC_Circular_2022-04 s.41,NPC Circular 2022-04,Separability Clause,1,main,yes
+NPC_Circular_2022-04 s.42,NPC Circular 2022-04,Publication and Effectivity,1,main,yes
+NPC_Circular_2022-04_Annex1 annex,"NPC Circular 2022-04, Annex 1",Sworn Declaration and Undertaking for Exemption from Registration of Data Processing Systems,1,main,yes
+NPC_Circular_2023-04 s.1,NPC Circular 2023-04,Scope and Purpose,1,main,yes
+NPC_Circular_2023-04 s.2,NPC Circular 2023-04,Definition of Terms,9,main,yes
+NPC_Circular_2023-04 s.2(A),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(B),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(C),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(D),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(E),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(F),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(G),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.2(H),NPC Circular 2023-04,Definition of Terms,1,main,yes
+NPC_Circular_2023-04 s.3,NPC Circular 2023-04,Transparency,16,main,yes
+NPC_Circular_2023-04 s.3(A),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(B),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(C),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D),NPC Circular 2023-04,Transparency,10,main,yes
+NPC_Circular_2023-04 s.3(D)(1),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(2),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(3),NPC Circular 2023-04,Transparency,5,main,yes
+NPC_Circular_2023-04 s.3(D)(3)(a),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(3)(b),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(3)(c),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(3)(d),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(4),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(D)(5),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(E),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.3(F),NPC Circular 2023-04,Transparency,1,main,yes
+NPC_Circular_2023-04 s.4,NPC Circular 2023-04,Legitimate Purpose,1,main,yes
+NPC_Circular_2023-04 s.5,NPC Circular 2023-04,Proportionality,1,main,yes
+NPC_Circular_2023-04 s.6,NPC Circular 2023-04,Fairness,1,main,yes
+NPC_Circular_2023-04 s.7,NPC Circular 2023-04,Freely given,4,main,yes
+NPC_Circular_2023-04 s.7(A),NPC Circular 2023-04,Freely given,1,main,yes
+NPC_Circular_2023-04 s.7(B),NPC Circular 2023-04,Freely given,1,main,yes
+NPC_Circular_2023-04 s.7(C),NPC Circular 2023-04,Freely given,1,main,yes
+NPC_Circular_2023-04 s.8,NPC Circular 2023-04,Specific,1,main,yes
+NPC_Circular_2023-04 s.9,NPC Circular 2023-04,Informed,1,main,yes
+NPC_Circular_2023-04 s.10,NPC Circular 2023-04,An indication of will,1,main,yes
+NPC_Circular_2023-04 s.11,NPC Circular 2023-04,"Evidenced by written, electronic, or recorded means",1,main,yes
+NPC_Circular_2023-04 s.12,NPC Circular 2023-04,General Considerations,1,main,yes
+NPC_Circular_2023-04 s.13,NPC Circular 2023-04,General Considerations,6,main,yes
+NPC_Circular_2023-04 s.13(A),NPC Circular 2023-04,General Considerations,1,main,yes
+NPC_Circular_2023-04 s.13(B),NPC Circular 2023-04,General Considerations,1,main,yes
+NPC_Circular_2023-04 s.13(C),NPC Circular 2023-04,General Considerations,1,main,yes
+NPC_Circular_2023-04 s.13(D),NPC Circular 2023-04,General Considerations,1,main,yes
+NPC_Circular_2023-04 s.13(E),NPC Circular 2023-04,General Considerations,1,main,yes
+NPC_Circular_2023-04 s.14,NPC Circular 2023-04,Direct Marketing,1,main,yes
+NPC_Circular_2023-04 s.15,NPC Circular 2023-04,Data sharing,1,main,yes
+NPC_Circular_2023-04 s.16,NPC Circular 2023-04,Research,1,main,yes
+NPC_Circular_2023-04 s.17,NPC Circular 2023-04,Publicly available information,1,main,yes
+NPC_Circular_2023-04 s.18,NPC Circular 2023-04,Profiling and automated processing,1,main,yes
+NPC_Circular_2023-04 s.19,NPC Circular 2023-04,Consent as an essential element of contracts,1,main,yes
+NPC_Circular_2023-04 s.20,NPC Circular 2023-04,Waiver of the rights of the data subject,1,main,yes
+NPC_Circular_2023-04 s.21,NPC Circular 2023-04,Period for validity of consent,6,main,yes
+NPC_Circular_2023-04 s.21(A),NPC Circular 2023-04,Period for validity of consent,1,main,yes
+NPC_Circular_2023-04 s.21(B),NPC Circular 2023-04,Period for validity of consent,1,main,yes
+NPC_Circular_2023-04 s.21(C),NPC Circular 2023-04,Period for validity of consent,1,main,yes
+NPC_Circular_2023-04 s.21(D),NPC Circular 2023-04,Period for validity of consent,1,main,yes
+NPC_Circular_2023-04 s.21(E),NPC Circular 2023-04,Period for validity of consent,1,main,yes
+NPC_Circular_2023-04 s.22,NPC Circular 2023-04,Interpretation,1,main,yes
+NPC_Circular_2023-04 s.23,NPC Circular 2023-04,Penalties,1,main,yes
+NPC_Circular_2023-04 s.24,NPC Circular 2023-04,Transitory Provisions,1,main,yes
+NPC_Circular_2023-04 s.25,NPC Circular 2023-04,Separability Clause,1,main,yes
+NPC_Circular_2023-04 s.26,NPC Circular 2023-04,Repealing Clause,1,main,yes
+NPC_Circular_2023-04 s.27,NPC Circular 2023-04,Effectivity,1,main,yes
+NPC_Circular_2023-06 s.1,NPC Circular 2023-06,Scope,1,main,yes
+NPC_Circular_2023-06 s.2,NPC Circular 2023-06,Purpose,1,main,yes
+NPC_Circular_2023-06 s.3,NPC Circular 2023-06,Definition of Terms,21,main,yes
+NPC_Circular_2023-06 s.3(A),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(B),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(C),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(D),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(E),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(F),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(G),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(H),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(I),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(J),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(K),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(L),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(M),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(N),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(O),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(P),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(Q),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(R),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(S),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.3(T),NPC Circular 2023-06,Definition of Terms,1,main,yes
+NPC_Circular_2023-06 s.4,NPC Circular 2023-06,General Obligations,1,main,yes
+NPC_Circular_2023-06 s.5,NPC Circular 2023-06,Privacy Impact Assessment (PIA),1,main,yes
+NPC_Circular_2023-06 s.6,NPC Circular 2023-06,Control Framework for Data Protection,1,main,yes
+NPC_Circular_2023-06 s.7,NPC Circular 2023-06,Privacy-By-Design and Privacy-By-Default,1,main,yes
+NPC_Circular_2023-06 s.8,NPC Circular 2023-06,Privacy Engineering,1,main,yes
+NPC_Circular_2023-06 s.9,NPC Circular 2023-06,General Rule,1,main,yes
+NPC_Circular_2023-06 s.10,NPC Circular 2023-06,Service Provider as Personal Information Processor,1,main,yes
+NPC_Circular_2023-06 s.11,NPC Circular 2023-06,Protection of Personal Data,1,main,yes
+NPC_Circular_2023-06 s.12,NPC Circular 2023-06,Access to or Modification of Databases,1,main,yes
+NPC_Circular_2023-06 s.13,NPC Circular 2023-06,Restricted Access,1,main,yes
+NPC_Circular_2023-06 s.14,NPC Circular 2023-06,PIP Access,1,main,yes
+NPC_Circular_2023-06 s.15,NPC Circular 2023-06,Acceptable Use Policy,1,main,yes
+NPC_Circular_2023-06 s.16,NPC Circular 2023-06,Online Access to Personal Data,1,main,yes
+NPC_Circular_2023-06 s.17,NPC Circular 2023-06,Authorized Devices,1,main,yes
+NPC_Circular_2023-06 s.18,NPC Circular 2023-06,Remote Disconnection or Deletion,1,main,yes
+NPC_Circular_2023-06 s.19,NPC Circular 2023-06,Physical Filing System,1,main,yes
+NPC_Circular_2023-06 s.20,NPC Circular 2023-06,Personal Data Sharing Agreements,1,main,yes
+NPC_Circular_2023-06 s.21,NPC Circular 2023-06,Business Continuity Management,1,main,yes
+NPC_Circular_2023-06 s.22,NPC Circular 2023-06,Telecommuting,1,main,yes
+NPC_Circular_2023-06 s.23,NPC Circular 2023-06,Emails,1,main,yes
+NPC_Circular_2023-06 s.24,NPC Circular 2023-06,Personal Productivity Software,1,main,yes
+NPC_Circular_2023-06 s.25,NPC Circular 2023-06,Removable or Portable Storage Media,1,main,yes
+NPC_Circular_2023-06 s.26,NPC Circular 2023-06,Fax Machines,1,main,yes
+NPC_Circular_2023-06 s.27,NPC Circular 2023-06,Transmittal,1,main,yes
+NPC_Circular_2023-06 s.28,NPC Circular 2023-06,Disposal and Destruction of Personal Data,1,main,yes
+NPC_Circular_2023-06 s.29,NPC Circular 2023-06,Logs Retention,1,main,yes
+NPC_Circular_2023-06 s.30,NPC Circular 2023-06,Procedures for Disposal and Destruction,1,main,yes
+NPC_Circular_2023-06 s.31,NPC Circular 2023-06,Personal Data Disposal Service Provider,1,main,yes
+NPC_Circular_2023-06 s.32,NPC Circular 2023-06,Threat monitoring and vulnerability management,1,main,yes
+NPC_Circular_2023-06 s.33,NPC Circular 2023-06,Personal Data Breach Management,1,main,yes
+NPC_Circular_2023-06 s.34,NPC Circular 2023-06,Audit,1,main,yes
+NPC_Circular_2023-06 s.35,NPC Circular 2023-06,Penalties,1,main,yes
+NPC_Circular_2023-06 s.36,NPC Circular 2023-06,Review,1,main,yes
+NPC_Circular_2023-06 s.37,NPC Circular 2023-06,Transitory Period,1,main,yes
+NPC_Circular_2023-06 s.38,NPC Circular 2023-06,Separability Clause,1,main,yes
+NPC_Circular_2023-06 s.39,NPC Circular 2023-06,Repealing Clause,1,main,yes
+NPC_Circular_2023-06 s.40,NPC Circular 2023-06,Effectivity,1,main,yes
+NPC_Circular_2023-07 s.1,NPC Circular 2023-07,Scope and Purpose,1,main,yes
+NPC_Circular_2023-07 s.2,NPC Circular 2023-07,Definition of Terms,1,main,yes
+NPC_Circular_2023-07 s.3,NPC Circular 2023-07,General Considerations,1,main,yes
+NPC_Circular_2023-07 s.4,NPC Circular 2023-07,Requisites for Processing Based on Legitimate Interest; Legitimate Interest Assessment,1,main,yes
+NPC_Circular_2023-07 s.5,NPC Circular 2023-07,The Legitimate Interest is Established (Purpose Test),1,main,yes
+NPC_Circular_2023-07 s.6,NPC Circular 2023-07,The Means to Fulfill the Legitimate Interest is both Necessary and Lawful (Necessity Test),1,main,yes
+NPC_Circular_2023-07 s.7,NPC Circular 2023-07,"The Interest is Legitimate and Lawful, and it does not Override Fundamental Rights and Freedoms of Data Subjects (Balancing Test)",1,main,yes
+NPC_Circular_2023-07 s.8,NPC Circular 2023-07,Documentation,1,main,yes
+NPC_Circular_2023-07 s.9,NPC Circular 2023-07,Further Processing of Personal Information Based on Legitimate Interest,1,main,yes
+NPC_Circular_2023-07 s.10,NPC Circular 2023-07,Legitimate Interest of Third Parties,1,main,yes
+NPC_Circular_2023-07 s.11,NPC Circular 2023-07,Sectoral Determination of Specific Legitimate Interest,1,main,yes
+NPC_Circular_2023-07 s.12,NPC Circular 2023-07,Processing Carried Out by Public Authorities,1,main,yes
+NPC_Circular_2023-07 s.13,NPC Circular 2023-07,Interpretation,1,main,yes
+NPC_Circular_2023-07 s.14,NPC Circular 2023-07,Penalties,1,main,yes
+NPC_Circular_2023-07 s.15,NPC Circular 2023-07,Transitory Provision,1,main,yes
+NPC_Circular_2023-07 s.16,NPC Circular 2023-07,Separability Clause,1,main,yes
+NPC_Circular_2023-07 s.17,NPC Circular 2023-07,Repealing Clause,1,main,yes
+NPC_Circular_2023-07 s.18,NPC Circular 2023-07,Effectivity,1,main,yes
+NPC_Circular_2024-02 s.1,NPC Circular 2024-02,Scope,1,main,yes
+NPC_Circular_2024-02 s.2,NPC Circular 2024-02,Definition of Terms,10,main,yes
+NPC_Circular_2024-02 s.2(A),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(B),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(C),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(D),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(E),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(F),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(G),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(H),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.2(I),NPC Circular 2024-02,Definition of Terms,1,main,yes
+NPC_Circular_2024-02 s.3,NPC Circular 2024-02,General principles,6,main,yes
+NPC_Circular_2024-02 s.3(A),NPC Circular 2024-02,General principles,1,main,yes
+NPC_Circular_2024-02 s.3(B),NPC Circular 2024-02,General principles,1,main,yes
+NPC_Circular_2024-02 s.3(C),NPC Circular 2024-02,General principles,1,main,yes
+NPC_Circular_2024-02 s.3(D),NPC Circular 2024-02,General principles,1,main,yes
+NPC_Circular_2024-02 s.3(E),NPC Circular 2024-02,General principles,1,main,yes
+NPC_Circular_2024-02 s.4,NPC Circular 2024-02,Lawful basis,1,main,yes
+NPC_Circular_2024-02 s.5,NPC Circular 2024-02,Safeguards,9,main,yes
+NPC_Circular_2024-02 s.5(A),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.5(B),NPC Circular 2024-02,Safeguards,7,main,yes
+NPC_Circular_2024-02 s.5(B)(1),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.5(B)(2),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.5(B)(3),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.5(B)(4),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.5(B)(5),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.5(B)(6),NPC Circular 2024-02,Safeguards,1,main,yes
+NPC_Circular_2024-02 s.6,NPC Circular 2024-02,Data subject request for access,1,main,yes
+NPC_Circular_2024-02 s.7,NPC Circular 2024-02,Third-party access request,8,main,yes
+NPC_Circular_2024-02 s.7(A),NPC Circular 2024-02,Third-party access request,1,main,yes
+NPC_Circular_2024-02 s.7(B),NPC Circular 2024-02,Third-party access request,6,main,yes
+NPC_Circular_2024-02 s.7(B)(1),NPC Circular 2024-02,Third-party access request,1,main,yes
+NPC_Circular_2024-02 s.7(B)(2),NPC Circular 2024-02,Third-party access request,1,main,yes
+NPC_Circular_2024-02 s.7(B)(3),NPC Circular 2024-02,Third-party access request,1,main,yes
+NPC_Circular_2024-02 s.7(B)(4),NPC Circular 2024-02,Third-party access request,1,main,yes
+NPC_Circular_2024-02 s.7(B)(5),NPC Circular 2024-02,Third-party access request,1,main,yes
+NPC_Circular_2024-02 s.8,NPC Circular 2024-02,Response procedure,3,main,yes
+NPC_Circular_2024-02 s.8(A),NPC Circular 2024-02,Response procedure,1,main,yes
+NPC_Circular_2024-02 s.8(B),NPC Circular 2024-02,Response procedure,1,main,yes
+NPC_Circular_2024-02 s.9,NPC Circular 2024-02,Period for complying with the request,1,main,yes
+NPC_Circular_2024-02 s.10,NPC Circular 2024-02,Denial of request,3,main,yes
+NPC_Circular_2024-02 s.10(A),NPC Circular 2024-02,Denial of request,1,main,yes
+NPC_Circular_2024-02 s.10(B),NPC Circular 2024-02,Denial of request,1,main,yes
+NPC_Circular_2024-02 s.11,NPC Circular 2024-02,Interpretation,1,main,yes
+NPC_Circular_2024-02 s.12,NPC Circular 2024-02,Penalties,1,main,yes
+NPC_Circular_2024-02 s.13,NPC Circular 2024-02,Transitory Provisions,1,main,yes
+NPC_Circular_2024-02 s.14,NPC Circular 2024-02,Separability Clause,1,main,yes
+NPC_Circular_2024-02 s.15,NPC Circular 2024-02,Repealing Clause,1,main,yes
+NPC_Circular_2024-02 s.16,NPC Circular 2024-02,Effectivity,1,main,yes
+NPC-IC_Joint_Advisory_2025-001 s.1,NPC-IC Joint Advisory 2025-001,Scope,1,main,yes
+NPC-IC_Joint_Advisory_2025-001 s.2,NPC-IC Joint Advisory 2025-001,Definition of Terms,1,main,yes
+NPC-IC_Joint_Advisory_2025-001 s.3,NPC-IC Joint Advisory 2025-001,Privacy-Enhancing Technologies (PETs),1,main,yes
+NPC-IC_Joint_Advisory_2025-001 s.4,NPC-IC Joint Advisory 2025-001,Selection and Implementation of PETs; Factors,1,main,yes
+NPC_Advisory_2017-01 part:scope,NPC Advisory 2017-01,Scope,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms,NPC Advisory 2017-01,Definition of Terms,17,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(a),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(b),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(c),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(d),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(e),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(f),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(g),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(h),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(i),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(j),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(k),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(l),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(m),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(n),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(o),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:definition-of-terms(p),NPC Advisory 2017-01,Definition of Terms,1,main,yes
+NPC_Advisory_2017-01 part:general-principles,NPC Advisory 2017-01,General Principles,1,main,yes
+NPC_Advisory_2017-01 part:mandatory-designation,NPC Advisory 2017-01,Mandatory Designation,1,main,yes
+NPC_Advisory_2017-01 part:general-qualifications,NPC Advisory 2017-01,General Qualifications,1,main,yes
+NPC_Advisory_2017-01 part:position-of-the-dpo-or-cop,NPC Advisory 2017-01,Position of the DPO or COP,1,main,yes
+NPC_Advisory_2017-01 part:independence-autonomy,NPC Advisory 2017-01,"Independence, Autonomy",1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities,NPC Advisory 2017-01,Duties and Responsibilities,10,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(a),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(b),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(c),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(d),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(e),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(f),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(g),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(h),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:duties-and-responsibilities(i),NPC Advisory 2017-01,Duties and Responsibilities,1,main,yes
+NPC_Advisory_2017-01 part:general-obligations-of-the-pic-or-pip,NPC Advisory 2017-01,General Obligations of the PIC or PIP,1,main,yes
+NPC_Advisory_2017-01 part:outsourcing-or-subcontracting-of-functio,NPC Advisory 2017-01,Outsourcing or Subcontracting of Functions,1,main,yes
+NPC_Advisory_2017-01 part:protections,NPC Advisory 2017-01,Protections,1,main,yes
+NPC_Advisory_2017-01 part:publication-and-communication,NPC Advisory 2017-01,Publication and Communication,1,main,yes
+NPC_Advisory_2017-01 part:weight-of-opinion,NPC Advisory 2017-01,Weight of Opinion,1,main,yes
+NPC_Advisory_2017-01 part:accountability,NPC Advisory 2017-01,Accountability,1,main,yes
+NPC_Advisory_2017-03 part:scope,NPC Advisory 2017-03,Scope,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms,NPC Advisory 2017-03,Definition of Terms,20,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(A),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(B),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(C),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(D),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(E),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(F),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(G),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(H),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(I),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(J),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(K),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(L),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(M),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(N),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(O),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(P),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(Q),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(R),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:definition-of-terms(S),NPC Advisory 2017-03,Definition of Terms,1,main,yes
+NPC_Advisory_2017-03 part:general-principles,NPC Advisory 2017-03,General Principles,1,main,yes
+NPC_Advisory_2017-03 part:key-considerations,NPC Advisory 2017-03,Key Considerations,1,main,yes
+NPC_Advisory_2017-03 part:objectives,NPC Advisory 2017-03,Objectives,1,main,yes
+NPC_Advisory_2017-03 part:responsibility,NPC Advisory 2017-03,Responsibility,1,main,yes
+NPC_Advisory_2017-03 part:stakeholder-involvement,NPC Advisory 2017-03,Stakeholder Involvement,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form,NPC Advisory 2017-03,Structure and Form,9,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(1),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(2),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(3),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(4),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(5),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(6),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(7),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:structure-and-form(8),NPC Advisory 2017-03,Structure and Form,1,main,yes
+NPC_Advisory_2017-03 part:planning-a-pia,NPC Advisory 2017-03,Planning a PIA,1,main,yes
+NPC_Advisory_2017-03 part:preparatory-activities,NPC Advisory 2017-03,Preparatory Activities,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia,NPC Advisory 2017-03,Conduct of the PIA,11,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(1),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(2),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(3),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(4),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(5),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(6),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(7),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(8),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(9),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:conduct-of-the-pia(10),NPC Advisory 2017-03,Conduct of the PIA,1,main,yes
+NPC_Advisory_2017-03 part:documentation-and-review,NPC Advisory 2017-03,Documentation and Review,1,main,yes
+NPC_Advisory_2017-03 part:compliance-and-accountability,NPC Advisory 2017-03,Compliance and Accountability,1,main,yes
+NPC_Advisory_2021-01 s.1,NPC Advisory 2021-01,Scope,1,main,yes
+NPC_Advisory_2021-01 s.2,NPC Advisory 2021-01,General Principles,1,main,yes
+NPC_Advisory_2021-01 s.3,NPC Advisory 2021-01,Exercise of rights,1,main,yes
+NPC_Advisory_2021-01 s.4,NPC Advisory 2021-01,Transmissibility of rights,1,main,yes
+NPC_Advisory_2021-01 s.5,NPC Advisory 2021-01,Policies and procedures,7,main,yes
+NPC_Advisory_2021-01 s.5(A),NPC Advisory 2021-01,Policies and procedures,1,main,yes
+NPC_Advisory_2021-01 s.5(B),NPC Advisory 2021-01,Policies and procedures,1,main,yes
+NPC_Advisory_2021-01 s.5(C),NPC Advisory 2021-01,Policies and procedures,1,main,yes
+NPC_Advisory_2021-01 s.5(D),NPC Advisory 2021-01,Policies and procedures,1,main,yes
+NPC_Advisory_2021-01 s.5(E),NPC Advisory 2021-01,Policies and procedures,1,main,yes
+NPC_Advisory_2021-01 s.5(F),NPC Advisory 2021-01,Policies and procedures,1,main,yes
+NPC_Advisory_2021-01 s.6,NPC Advisory 2021-01,Right to be Informed,5,main,yes
+NPC_Advisory_2021-01 s.6(A),NPC Advisory 2021-01,Right to be Informed,1,main,yes
+NPC_Advisory_2021-01 s.6(B),NPC Advisory 2021-01,Right to be Informed,1,main,yes
+NPC_Advisory_2021-01 s.6(C),NPC Advisory 2021-01,Right to be Informed,1,main,yes
+NPC_Advisory_2021-01 s.6(D),NPC Advisory 2021-01,Right to be Informed,1,main,yes
+NPC_Advisory_2021-01 s.7,NPC Advisory 2021-01,Right to Object,4,main,yes
+NPC_Advisory_2021-01 s.7(A),NPC Advisory 2021-01,Right to Object,1,main,yes
+NPC_Advisory_2021-01 s.7(B),NPC Advisory 2021-01,Right to Object,1,main,yes
+NPC_Advisory_2021-01 s.7(C),NPC Advisory 2021-01,Right to Object,1,main,yes
+NPC_Advisory_2021-01 s.8,NPC Advisory 2021-01,Right to Access,4,main,yes
+NPC_Advisory_2021-01 s.8(A),NPC Advisory 2021-01,Right to Access,1,main,yes
+NPC_Advisory_2021-01 s.8(B),NPC Advisory 2021-01,Right to Access,1,main,yes
+NPC_Advisory_2021-01 s.8(C),NPC Advisory 2021-01,Right to Access,1,main,yes
+NPC_Advisory_2021-01 s.9,NPC Advisory 2021-01,Right to Rectification,1,main,yes
+NPC_Advisory_2021-01 s.10,NPC Advisory 2021-01,Right to Erasure or Blocking,6,main,yes
+NPC_Advisory_2021-01 s.10(A),NPC Advisory 2021-01,Right to Erasure or Blocking,1,main,yes
+NPC_Advisory_2021-01 s.10(B),NPC Advisory 2021-01,Right to Erasure or Blocking,1,main,yes
+NPC_Advisory_2021-01 s.10(C),NPC Advisory 2021-01,Right to Erasure or Blocking,1,main,yes
+NPC_Advisory_2021-01 s.10(D),NPC Advisory 2021-01,Right to Erasure or Blocking,1,main,yes
+NPC_Advisory_2021-01 s.10(E),NPC Advisory 2021-01,Right to Erasure or Blocking,1,main,yes
+NPC_Advisory_2021-01 s.11,NPC Advisory 2021-01,Right to Data Portability,1,main,yes
+NPC_Advisory_2021-01 s.12,NPC Advisory 2021-01,Right to Damages,1,main,yes
+NPC_Advisory_2021-01 s.13,NPC Advisory 2021-01,Limitations,1,main,yes
+NPC_Advisory_2021-01 s.14,NPC Advisory 2021-01,Denial of request,1,main,yes
+NPC_Advisory_2021-01 s.15,NPC Advisory 2021-01,Reasonableness of the denial or limitation,1,main,yes
+NPC_Advisory_2021-01 s.16,NPC Advisory 2021-01,Interpretation,1,main,yes
+NPC_Advisory_2021-01 annex,NPC Advisory 2021-01,Annex A*,5,main,yes
+NPC_Advisory_2021-02 s.1,NPC Advisory 2021-02,Scope,1,main,yes
+NPC_Advisory_2021-02 s.2,NPC Advisory 2021-02,Rationale,1,main,yes
+NPC_Advisory_2021-02 s.3,NPC Advisory 2021-02,Voluntary in nature,1,main,yes
+NPC_Advisory_2021-02 s.4,NPC Advisory 2021-02,Definition of Terms,8,main,yes
+NPC_Advisory_2021-02 s.4(A),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.4(B),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.4(C),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.4(D),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.4(E),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.4(F),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.4(G),NPC Advisory 2021-02,Definition of Terms,1,main,yes
+NPC_Advisory_2021-02 s.5,NPC Advisory 2021-02,ASEAN Model Contract Clauses (MCCs) and ASEAN Data Management Frame- work (DMF),4,main,yes
+NPC_Advisory_2021-02 s.5(A),NPC Advisory 2021-02,ASEAN Model Contract Clauses (MCCs) and ASEAN Data Management Frame- work (DMF),1,main,yes
+NPC_Advisory_2021-02 s.5(B),NPC Advisory 2021-02,ASEAN Model Contract Clauses (MCCs) and ASEAN Data Management Frame- work (DMF),1,main,yes
+NPC_Advisory_2021-02 s.5(C),NPC Advisory 2021-02,ASEAN Model Contract Clauses (MCCs) and ASEAN Data Management Frame- work (DMF),1,main,yes
+NPC_Advisory_2021-02 s.6,NPC Advisory 2021-02,Effect,1,main,yes
+NPC_Advisory_2021-02 s.7,NPC Advisory 2021-02,Interpretation,1,main,yes
+NPC_Advisory_2021-02 annex,NPC Advisory 2021-02,Annex A,18,main,yes
+NPC_Advisory_2023-01 s.1,NPC Advisory 2023-01,Purpose,1,main,yes
+NPC_Advisory_2023-01 s.2,NPC Advisory 2023-01,Definition of Terms,8,main,yes
+NPC_Advisory_2023-01 s.2(A),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.2(B),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.2(C),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.2(D),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.2(E),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.2(F),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.2(G),NPC Advisory 2023-01,Definition of Terms,1,main,yes
+NPC_Advisory_2023-01 s.3,NPC Advisory 2023-01,Deceptive Design Patterns,3,main,yes
+NPC_Advisory_2023-01 s.3(A),NPC Advisory 2023-01,Deceptive Design Patterns,1,main,yes
+NPC_Advisory_2023-01 s.3(B),NPC Advisory 2023-01,Deceptive Design Patterns,1,main,yes
+NPC_Advisory_2023-01 s.4,NPC Advisory 2023-01,Transparency,1,main,yes
+NPC_Advisory_2023-01 s.5,NPC Advisory 2023-01,Fairness,1,main,yes
+NPC_Advisory_2023-01 s.6,NPC Advisory 2023-01,Accountability,1,main,yes
+NPC_Advisory_2023-01 s.7,NPC Advisory 2023-01,Effects on Consent,1,main,yes
+NPC_Advisory_2023-01 s.8,NPC Advisory 2023-01,Privacy by Design,1,main,yes
+NPC_Advisory_2023-01 s.9,NPC Advisory 2023-01,Interpretation,1,main,yes
+NPC_Advisory_2024-01 s.1,NPC Advisory 2024-01,Purpose,1,main,yes
+NPC_Advisory_2024-01 s.2,NPC Advisory 2024-01,Definition of Terms,1,main,yes
+NPC_Advisory_2024-01 s.3,NPC Advisory 2024-01,Model Contractual Clauses (MCCs),2,main,yes
+NPC_Advisory_2024-01 s.6,NPC Advisory 2024-01,Voluntary adoption,1,main,yes
+NPC_Advisory_2024-01 s.7,NPC Advisory 2024-01,Effects,1,main,yes
+NPC_Advisory_2024-01 s.8,NPC Advisory 2024-01,Interpretation,1,main,yes
+NPC_Advisory_2024-02 s.1,NPC Advisory 2024-02,Scope,1,main,yes
+NPC_Advisory_2024-02 s.2,NPC Advisory 2024-02,Processing under Section 13 (f) of the DPA,1,main,yes
+NPC_Advisory_2024-02 s.3,NPC Advisory 2024-02,Processing under Section 13 (f) of the DPA as legitimate interest,1,main,yes
+NPC_Advisory_2024-02 s.4,NPC Advisory 2024-02,Necessary,1,main,yes
+NPC_Advisory_2024-02 s.5,NPC Advisory 2024-02,"Protection of Lawful Rights and Interests; Establishment, Exercise, or Defense of Legal Claims",1,main,yes
+NPC_Advisory_2024-02 s.6,NPC Advisory 2024-02,Transparency; Right to be Informed,1,main,yes
+NPC_Advisory_2024-02 s.7,NPC Advisory 2024-02,Determination of merit of lawful rights and interests and legal claims; admissibility of evidence,1,main,yes
+NPC_Advisory_2024-02 s.8,NPC Advisory 2024-02,Interpretation,1,main,yes
+NPC_Advisory_2024-03 s.1,NPC Advisory 2024-03,Scope,1,main,yes
+NPC_Advisory_2024-03 s.2,NPC Advisory 2024-03,Risk-Based Assessment,3,main,yes
+NPC_Advisory_2024-03 s.2(A),NPC Advisory 2024-03,Risk-Based Assessment,1,main,yes
+NPC_Advisory_2024-03 s.2(B),NPC Advisory 2024-03,Risk-Based Assessment,1,main,yes
+NPC_Advisory_2024-03 s.3,NPC Advisory 2024-03,Privacy Notice,6,main,yes
+NPC_Advisory_2024-03 s.3(A),NPC Advisory 2024-03,Privacy Notice,1,main,yes
+NPC_Advisory_2024-03 s.3(B),NPC Advisory 2024-03,Privacy Notice,1,main,yes
+NPC_Advisory_2024-03 s.3(C),NPC Advisory 2024-03,Privacy Notice,1,main,yes
+NPC_Advisory_2024-03 s.3(D),NPC Advisory 2024-03,Privacy Notice,1,main,yes
+NPC_Advisory_2024-03 s.3(E),NPC Advisory 2024-03,Privacy Notice,1,main,yes
+NPC_Advisory_2024-03 s.4,NPC Advisory 2024-03,Data Breach Notification,1,main,yes
+NPC_Advisory_2024-03 s.5,NPC Advisory 2024-03,Accountability,1,main,yes
+NPC_Advisory_2024-03 s.6,NPC Advisory 2024-03,Interpretation,1,main,yes
+NPC_Advisory_2024-04 s.1,NPC Advisory 2024-04,Scope,1,main,yes
+NPC_Advisory_2024-04 s.2,NPC Advisory 2024-04,Application of the DPA,7,main,yes
+NPC_Advisory_2024-04 s.2(A),NPC Advisory 2024-04,Application of the DPA,1,main,yes
+NPC_Advisory_2024-04 s.2(B),NPC Advisory 2024-04,Application of the DPA,1,main,yes
+NPC_Advisory_2024-04 s.2(C),NPC Advisory 2024-04,Application of the DPA,1,main,yes
+NPC_Advisory_2024-04 s.2(D),NPC Advisory 2024-04,Application of the DPA,1,main,yes
+NPC_Advisory_2024-04 s.2(E),NPC Advisory 2024-04,Application of the DPA,1,main,yes
+NPC_Advisory_2024-04 s.2(F),NPC Advisory 2024-04,Application of the DPA,1,main,yes
+NPC_Advisory_2024-04 s.3,NPC Advisory 2024-04,Rights of the Data Subject,1,main,yes
+NPC_Advisory_2024-04 s.4,NPC Advisory 2024-04,Interpretation,1,main,yes
+NPC_Advisory_2025-01 s.1,NPC Advisory 2025-01,Data sharing; DSAs; clarifications,1,main,yes
+NPC_Advisory_2025-01 s.2,NPC Advisory 2025-01,Interpretation,1,main,yes
+NPC_Advisory_2025-02 s.1,NPC Advisory 2025-02,Purpose,1,main,yes
+NPC_Advisory_2025-02 s.2,NPC Advisory 2025-02,Scope,1,main,yes
+NPC_Advisory_2025-02 s.3,NPC Advisory 2025-02,Definition of Terms,14,main,yes
+NPC_Advisory_2025-02 s.3(A),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(B),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(C),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(D),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(E),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(F),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(G),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(H),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(I),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(J),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(K),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(L),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.3(M),NPC Advisory 2025-02,Definition of Terms,1,main,yes
+NPC_Advisory_2025-02 s.4,NPC Advisory 2025-02,Guidelines,6,main,yes
+NPC_Advisory_2025-02 s.4(A),NPC Advisory 2025-02,Guidelines,1,main,yes
+NPC_Advisory_2025-02 s.4(B),NPC Advisory 2025-02,Guidelines,1,main,yes
+NPC_Advisory_2025-02 s.4(C),NPC Advisory 2025-02,Guidelines,1,main,yes
+NPC_Advisory_2025-02 s.4(D),NPC Advisory 2025-02,Guidelines,1,main,yes
+NPC_Advisory_2025-02 s.4(E),NPC Advisory 2025-02,Guidelines,1,main,yes
+NPC_Advisory_2025-02 s.5,NPC Advisory 2025-02,Interpretation,1,main,yes
+NPC_Advisory_2026-01 s.1,NPC Advisory 2026-01,Scope and Purpose,1,main,yes
+NPC_Advisory_2026-01 s.2,NPC Advisory 2026-01,Definition of Terms,4,main,yes
+NPC_Advisory_2026-01 s.2(A),NPC Advisory 2026-01,Definition of Terms,1,main,yes
+NPC_Advisory_2026-01 s.2(B),NPC Advisory 2026-01,Definition of Terms,1,main,yes
+NPC_Advisory_2026-01 s.2(C),NPC Advisory 2026-01,Definition of Terms,1,main,yes
+NPC_Advisory_2026-01 s.3,NPC Advisory 2026-01,Conduct of lawful data scraping,9,main,yes
+NPC_Advisory_2026-01 s.3(A),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(B),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(C),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(D),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(E),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(F),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(G),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.3(H),NPC Advisory 2026-01,Conduct of lawful data scraping,1,main,yes
+NPC_Advisory_2026-01 s.4,NPC Advisory 2026-01,Unauthorized data scraping practices,1,main,yes
+NPC_Advisory_2026-01 s.5,NPC Advisory 2026-01,Hosting publicly available personal data,1,main,yes
+NPC_Advisory_2026-01 s.6,NPC Advisory 2026-01,Accountability,1,main,yes
+NPC_Advisory_2026-01 s.7,NPC Advisory 2026-01,Use of scraped personal data,1,main,yes
+NPC_Advisory_2026-01 s.8,NPC Advisory 2026-01,Interpretation,1,main,yes
+NPC_Advisory_2026-02 s.1,NPC Advisory 2026-02,Scope and Purpose,1,main,yes
+NPC_Advisory_2026-02 s.2,NPC Advisory 2026-02,Submission of Request,6,main,yes
+NPC_Advisory_2026-02 s.2(A),NPC Advisory 2026-02,Submission of Request,1,main,yes
+NPC_Advisory_2026-02 s.2(B),NPC Advisory 2026-02,Submission of Request,1,main,yes
+NPC_Advisory_2026-02 s.2(C),NPC Advisory 2026-02,Submission of Request,1,main,yes
+NPC_Advisory_2026-02 s.2(D),NPC Advisory 2026-02,Submission of Request,1,main,yes
+NPC_Advisory_2026-02 s.2(E),NPC Advisory 2026-02,Submission of Request,1,main,yes
+NPC_Advisory_2026-02 s.3,NPC Advisory 2026-02,Interpretation,1,main,yes
+NPC_Advisory_2026-03 s.1,NPC Advisory 2026-03,Scope,1,main,yes
+NPC_Advisory_2026-03 s.2,NPC Advisory 2026-03,Coverage,1,main,yes
+NPC_Advisory_2026-03 s.3,NPC Advisory 2026-03,Extended Period for Submission of 2025 ASIRs,1,main,yes
+NPC_Advisory_2026-03 s.4,NPC Advisory 2026-03,Contents of ASIRs,1,main,yes
+NPC_Advisory_2026-03 s.5,NPC Advisory 2026-03,Manner of submission,1,main,yes
+NPC_Advisory_2026-03 s.6,NPC Advisory 2026-03,Submission in the Absence of Security Incidents,1,main,yes
+NPC_Advisory_2026-03 s.7,NPC Advisory 2026-03,Failure to Submit ASIR,1,main,yes
+NPC_Advisory_2026-03 s.8,NPC Advisory 2026-03,Interpretation,1,main,yes
+DRAFT_PIA_Circular s.1,NPC Circular No. 2026-__ (DRAFT),Scope and Purpose,1,pending,yes
+DRAFT_PIA_Circular s.2,NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,21,pending,yes
+DRAFT_PIA_Circular s.2(A),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(B),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(C),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(D),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(E),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(F),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(G),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(H),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(I),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(J),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(K),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(L),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(M),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(N),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(O),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(P),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(Q),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(R),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(S),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.2(T),NPC Circular No. 2026-__ (DRAFT),Definitions of Terms,1,pending,yes
+DRAFT_PIA_Circular s.3,NPC Circular No. 2026-__ (DRAFT),General Principles,1,pending,yes
+DRAFT_PIA_Circular s.4,NPC Circular No. 2026-__ (DRAFT),Key Considerations,6,pending,yes
+DRAFT_PIA_Circular s.4(A),NPC Circular No. 2026-__ (DRAFT),Key Considerations,2,pending,yes
+DRAFT_PIA_Circular s.4(B),NPC Circular No. 2026-__ (DRAFT),Key Considerations,1,pending,yes
+DRAFT_PIA_Circular s.4(C),NPC Circular No. 2026-__ (DRAFT),Key Considerations,1,pending,yes
+DRAFT_PIA_Circular s.4(D),NPC Circular No. 2026-__ (DRAFT),Key Considerations,1,pending,yes
+DRAFT_PIA_Circular s.5,NPC Circular No. 2026-__ (DRAFT),Accountability and Responsibility,1,pending,yes
+DRAFT_PIA_Circular s.6,NPC Circular No. 2026-__ (DRAFT),Stakeholder Involvement,1,pending,yes
+DRAFT_PIA_Circular s.7,NPC Circular No. 2026-__ (DRAFT),Structure and content,5,pending,yes
+DRAFT_PIA_Circular s.7(A),NPC Circular No. 2026-__ (DRAFT),Structure and content,1,pending,yes
+DRAFT_PIA_Circular s.7(B),NPC Circular No. 2026-__ (DRAFT),Structure and content,1,pending,yes
+DRAFT_PIA_Circular s.7(C),NPC Circular No. 2026-__ (DRAFT),Structure and content,1,pending,yes
+DRAFT_PIA_Circular s.7(D),NPC Circular No. 2026-__ (DRAFT),Structure and content,1,pending,yes
+DRAFT_PIA_Circular s.8,NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,11,pending,yes
+DRAFT_PIA_Circular s.8(A),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(B),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(C),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(D),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(E),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(F),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(G),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(H),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(I),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.8(J),NPC Circular No. 2026-__ (DRAFT),Conduct of a Privacy Impact Assessment,1,pending,yes
+DRAFT_PIA_Circular s.9,NPC Circular No. 2026-__ (DRAFT),Documentation,1,pending,yes
+DRAFT_PIA_Circular s.10,NPC Circular No. 2026-__ (DRAFT),Review,1,pending,yes
+DRAFT_PIA_Circular s.11,NPC Circular No. 2026-__ (DRAFT),Compliance and accountability,1,pending,yes
+DRAFT_PIA_Circular s.12,NPC Circular No. 2026-__ (DRAFT),Interpretation,1,pending,yes
+DRAFT_PIA_Circular s.13,NPC Circular No. 2026-__ (DRAFT),Penalties,1,pending,yes
+DRAFT_PIA_Circular s.14,NPC Circular No. 2026-__ (DRAFT),Transitory Provisions,1,pending,yes
+DRAFT_PIA_Circular s.15,NPC Circular No. 2026-__ (DRAFT),Separability Clause,1,pending,yes
+DRAFT_PIA_Circular s.16,NPC Circular No. 2026-__ (DRAFT),Repealing Clause,1,pending,yes
+DRAFT_PIA_Circular s.17,NPC Circular No. 2026-__ (DRAFT),Effectivity,1,pending,yes
+DRAFT_PIA_Circular annex,NPC Circular No. 2026-__ (DRAFT),Annex A,12,pending,no
+NPC_Toolkit_Ch2 part:overview,"NPC Privacy Toolkit, Ch. II",Overview,1,main,yes
+NPC_Toolkit_Ch2 part:i-project-system-description,"NPC Privacy Toolkit, Ch. II",I. Project/System Description,1,main,yes
+NPC_Toolkit_Ch2 part:ii-threshold-analysis,"NPC Privacy Toolkit, Ch. II",II. Threshold Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:iii-stakeholder-s-engagement,"NPC Privacy Toolkit, Ch. II",III. Stakeholder(s) Engagement,1,main,yes
+NPC_Toolkit_Ch2 part:iv-personal-data-flows,"NPC Privacy Toolkit, Ch. II",IV. Personal Data Flows,6,main,yes
+NPC_Toolkit_Ch2 part:iv-personal-data-flows(1),"NPC Privacy Toolkit, Ch. II",IV. Personal Data Flows,1,main,yes
+NPC_Toolkit_Ch2 part:iv-personal-data-flows(2),"NPC Privacy Toolkit, Ch. II",IV. Personal Data Flows,1,main,yes
+NPC_Toolkit_Ch2 part:iv-personal-data-flows(3),"NPC Privacy Toolkit, Ch. II",IV. Personal Data Flows,1,main,yes
+NPC_Toolkit_Ch2 part:iv-personal-data-flows(4),"NPC Privacy Toolkit, Ch. II",IV. Personal Data Flows,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis,"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,17,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(1),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(2),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(3),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(4),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(5),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(6),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(7),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(8),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(9),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(10),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,7,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(10)(1),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(10)(2),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,4,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(10)(2)(1),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,2,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(10)(2)(2),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:v-privacy-impact-analysis(10)(3),"NPC Privacy Toolkit, Ch. II",V. Privacy Impact Analysis,1,main,yes
+NPC_Toolkit_Ch2 part:vi-privacy-risk-management,"NPC Privacy Toolkit, Ch. II",VI. Privacy Risk Management,2,main,yes
+NPC_Toolkit_Ch2 part:vii-recommended-privacy-solutions,"NPC Privacy Toolkit, Ch. II",VII. Recommended Privacy Solutions,1,main,yes
