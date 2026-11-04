@@ -44,7 +44,7 @@ later.
 ```
 catalogue/catalogue.csv     one row per document (status, authority, sha256, source)
 src/ph_privacy_guide/       ingest/ index/ retrieve/ answer/ app/
-reports/                    extraction and section-validation reports
+reports/                    extraction report (section validation: data/processed/)
 eval/questions/             human-written dev/test questions
 SOURCES.md  MODELS.md       provenance of legal texts and downloaded models
 ```
