@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-04T22:42:02+00:00",
+  "commit": "0f31d51",
+  "machine": {
+    "cpu": "Apple M3 Pro",
+    "logical_cores": 11,
+    "ram_bytes": 19327352832,
+    "os": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.12",
+    "onnxruntime": "1.31.1",
+    "tokenizers": "0.23.3",
+    "numpy": "2.5.4"
+  },
+  "model": {
+    "name": "intfloat/multilingual-e5-small",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "model_dir_bytes": 487850673,
+    "model_onnx_bytes": 470268510
+  },
+  "sizes": {
+    "bm25_index_bytes": 479887,
+    "embedding_matrix_bytes": 1483904,
+    "embedding_metadata_bytes": 45172,
+    "chunks_jsonl_bytes": 2315628,
+    "venv_bytes": 179011753
+  },
+  "index_build": {
+    "chunks": 966,
+    "dimensions": 384,
+    "tokens_max": 824,
+    "truncated_chunks": [
+      "NPC_Circular_2022-04_Annex1:annex:annex",
+      "NPC_Advisory_2021-01_Data_Subject_Rights:annex:annex:part-1",
+      "NPC_Advisory_2021-01_Data_Subject_Rights:annex:annex:part-2",
+      "NPC_Advisory_2024-01_Cross_Border_Clauses:section:3",
+      "DRAFT_Updated_PIA_Guidelines_Circular:section:4:a"
+    ],
+    "model_load_seconds": 1.098,
+    "embedding_seconds": 22.087,
+    "chunks_per_second": 43.74,
+    "build_peak_rss_bytes": 1295319040
+  },
+  "runs": [
+    {
+      "threads_setting": 0,
+      "cold_start_seconds": 0.751,
+      "first_query_seconds": 0.007,
+      "peak_rss_after_load_bytes": 1412513792,
+      "peak_rss_after_queries_bytes": 1412513792,
+      "queries": 200,
+      "latency": {
+        "bm25": {
+          "p50_ms": 0.06,
+          "p95_ms": 0.46,
+          "max_ms": 0.77
+        },
+        "encode": {
+          "p50_ms": 3.39,
+          "p95_ms": 6.87,
+          "max_ms": 25.56
+        },
+        "vector_search": {
+          "p50_ms": 0.19,
+          "p95_ms": 0.35,
+          "max_ms": 2.86
+        },
+        "fusion": {
+          "p50_ms": 0.34,
+          "p95_ms": 0.8,
+          "max_ms": 4.28
+        },
+        "total": {
+          "p50_ms": 4.13,
+          "p95_ms": 8.07,
+          "max_ms": 30.41
+        }
+      }
+    },
+    {
+      "threads_setting": 2,
+      "cold_start_seconds": 0.869,
+      "first_query_seconds": 0.01,
+      "peak_rss_after_load_bytes": 1412907008,
+      "peak_rss_after_queries_bytes": 1412907008,
+      "queries": 200,
+      "latency": {
+        "bm25": {
+          "p50_ms": 0.06,
+          "p95_ms": 0.44,
+          "max_ms": 0.46
+        },
+        "encode": {
+          "p50_ms": 5.78,
+          "p95_ms": 8.65,
+          "max_ms": 12.13
+        },
+        "vector_search": {
+          "p50_ms": 0.2,
+          "p95_ms": 0.25,
+          "max_ms": 0.35
+        },
+        "fusion": {
+          "p50_ms": 0.33,
+          "p95_ms": 0.51,
+          "max_ms": 0.58
+        },
+        "total": {
+          "p50_ms": 6.48,
+          "p95_ms": 9.42,
+          "max_ms": 13.24
+        }
+      }
+    }
+  ]
+}
