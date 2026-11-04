@@ -1,0 +1,9 @@
+#!/bin/sh
+# Project-local uv wrapper: keeps uv's cache, managed Python and shims inside this folder.
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export UV_CACHE_DIR="$ROOT/.uv/cache"
+export UV_PYTHON_INSTALL_DIR="$ROOT/.uv/python"
+export UV_PYTHON_BIN_DIR="$ROOT/.uv/bin"
+export UV_TOOL_DIR="$ROOT/.uv/tools"
+export UV_PYTHON_PREFERENCE=only-managed
+exec "$ROOT/.tools/bin/uv" "$@"

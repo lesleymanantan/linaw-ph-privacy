@@ -1,0 +1,28 @@
+[project]
+name = "ph-privacy-guide"
+version = "0.0.1"
+description = "Offline retrieval of Philippine data privacy law and NPC guidance passages, with citation, authority tag and status. No text generation."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = "==3.12.*"
+dependencies = [
+    "pdfplumber==0.11.7",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.4.2",
+]
+
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ph_privacy_guide"]
+
+[tool.uv]
+python-preference = "only-managed"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,13 @@
+.DS_Store
+data/raw/
+# local toolchain and environment (never committed)
+.tools/
+.uv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# derived artefacts
+data/processed/
+indexes/
+models/
