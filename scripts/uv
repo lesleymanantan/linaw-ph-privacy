@@ -1,9 +1,18 @@
 #!/bin/sh
-# Project-local uv wrapper: keeps uv's cache, managed Python and shims inside this folder.
+# Project-local uv wrapper. Everything uv writes stays inside .tools/ (gitignored).
+# HOME and XDG_* are redirected too, so any write uv would make to a home directory lands in
+# .tools/home, where it can be seen. That folder should stay empty.
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-export UV_CACHE_DIR="$ROOT/.uv/cache"
-export UV_PYTHON_INSTALL_DIR="$ROOT/.uv/python"
-export UV_PYTHON_BIN_DIR="$ROOT/.uv/bin"
-export UV_TOOL_DIR="$ROOT/.uv/tools"
+export HOME="$ROOT/.tools/home"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_BIN_HOME="$HOME/.local/bin"
+export UV_CACHE_DIR="$ROOT/.tools/uv-cache"
+export UV_PYTHON_INSTALL_DIR="$ROOT/.tools/python"
+export UV_PYTHON_BIN_DIR="$ROOT/.tools/python-bin"
+export UV_TOOL_DIR="$ROOT/.tools/uv-tools"
+export UV_TOOL_BIN_DIR="$ROOT/.tools/uv-tools-bin"
 export UV_PYTHON_PREFERENCE=only-managed
+mkdir -p "$HOME"
 exec "$ROOT/.tools/bin/uv" "$@"

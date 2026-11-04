@@ -2,7 +2,6 @@
 data/raw/
 # local toolchain and environment (never committed)
 .tools/
-.uv/
 .venv/
 __pycache__/
 *.pyc

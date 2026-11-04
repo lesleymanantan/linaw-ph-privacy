@@ -6,7 +6,8 @@ shows the exact text with its citation, authority tag (statute, rule, guidance, 
 status (in force, repealed, amended, draft, unverified), and says **"Not sure"** when confidence is
 low.
 
-> **Status: early development.** Ingestion and cataloguing only; retrieval is not built yet.
+> **Status: early development.** Keyword search only. The embedding model and evaluation are not
+> built yet, and the "Not sure" rule is provisional.
 
 ## ⚠ Not legal advice
 
@@ -53,12 +54,29 @@ The source PDFs (`data/raw/`) are not redistributed in this repository.
 
 ## Setup (development)
 
+uv is a development prerequisite, and it is installed inside this folder. `scripts/uv` keeps uv's
+cache, its Python and any home-directory writes under `.tools/` (gitignored), so nothing is written
+outside the project.
+
 ```sh
-scripts/uv sync          # project-local uv: cache and Python stay inside this folder
-.venv/bin/python -m ph_privacy_guide.ingest.extract   # extraction report
-.venv/bin/python -m ph_privacy_guide.ingest.sectioner # section validation report
+python3 -m venv .tools && .tools/bin/pip install --no-cache-dir uv==0.9.5
+scripts/uv sync
+.venv/bin/python -m ph_privacy_guide.ingest.extract    # per-page text, extraction report
+.venv/bin/python -m ph_privacy_guide.ingest.sectioner  # sections, footnotes, validation report
+.venv/bin/python -m ph_privacy_guide.ingest.chunker    # chunks.jsonl, validation report
+.venv/bin/python -m ph_privacy_guide.index.bm25        # keyword index
 .venv/bin/pytest
 ```
+
+## Search
+
+```sh
+.venv/bin/python -m ph_privacy_guide.app.cli "your search terms"
+```
+
+Prints each passage's exact text with its citation, authority tag, status and any warnings. Only
+keyword search exists so far, and it works on English terms: a Filipino search will usually return
+"Not sure" until the embedding model is added.
 
 ## AI assistance
 

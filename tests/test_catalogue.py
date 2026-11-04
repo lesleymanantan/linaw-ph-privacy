@@ -20,10 +20,21 @@ def test_known_statuses():
 
 
 def test_only_confirmed_statuses_are_set():
-    confirmed = {"NPC_Circular_17-01", "NPC_Circular_16-01", "NPC_Circular_16-03_Breach_Management"}
+    confirmed = {"NPC_Circular_17-01", "NPC_Circular_16-01", "NPC_Circular_16-02", "NPC_Advisory_2020-04",
+                 "NPC_Circular_16-03_Breach_Management"}
     for r in catalogue.load():
         if r["collection"] == "drafts":
             assert r["status"] == "draft" and r["authority"] == "draft"
             assert DRAFT_LABEL.split(",")[0] in r["notes"].lower()
         elif r["doc_id"] not in confirmed:
             assert r["status"] == "unverified", r["doc_id"]
+
+
+def test_added_repealed_rows():
+    rows = {r["doc_id"]: r for r in catalogue.load()}
+    assert rows["NPC_Circular_16-02"]["status"] == "repealed"
+    assert "2020-03 s.20" in rows["NPC_Circular_16-02"]["status_basis"]
+    assert rows["NPC_Circular_16-02"]["replaced_by"] == "NPC_Circular_2020-03_Data_Sharing_Agreements"
+    assert rows["NPC_Advisory_2020-04"]["status"] == "repealed"
+    assert "advisories page note" in rows["NPC_Advisory_2020-04"]["status_basis"]
+    assert rows["NPC_Advisory_2020-04"]["in_corpus"] == "no"

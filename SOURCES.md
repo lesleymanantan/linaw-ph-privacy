@@ -19,6 +19,8 @@ Provenance of every legal text. **Generated from `catalogue/catalogue.csv`** by
 | NPC_Circular_2024-02_CCTV | NPC Circular 2024-02 | unverified | — | TBS | TBS | TBS | 66792d60a6cd |
 | NPC_Circular_17-01 | NPC Circular 17-01 | repealed | NPC Circular 2022-04 s.40: 'This Circular supersedes in its entirety NPC Circular No. 17-01.' | TBS | — | — | — |
 | NPC_Circular_16-01 | NPC Circular 16-01 | repealed | NPC Circular 2023-06 s.39: 'This Circular expressly repeals NPC Circular No. 16-01.' | TBS | — | — | — |
+| NPC_Circular_16-02 | NPC Circular 16-02 | repealed | NPC Circular 2020-03 s.20: 'This Circular supersedes in its entirety NPC Circular No. 16-02.' | TBS | — | — | — |
+| NPC_Advisory_2020-04 | NPC Advisory 2020-04 | repealed | NPC advisories page note, as reported by project owner. Not confirmed by the corpus: Circular 2024-02 s.15 is a general repealing clause that does not name this advisory. | TBS | — | — | — |
 | NPC-IC_Joint_Advisory_2025-001_PETs | NPC-IC Joint Advisory 2025-001 | unverified | — | TBS | TBS | TBS | 6934008f50d4 |
 | NPC_Advisory_2017-01_DPO | NPC Advisory 2017-01 | unverified | — | TBS | TBS | TBS | 9a0fbcf1146c |
 | NPC_Advisory_2017-03_PIA | NPC Advisory 2017-03 | unverified | — | TBS | TBS | TBS | 5f180677bdee |
