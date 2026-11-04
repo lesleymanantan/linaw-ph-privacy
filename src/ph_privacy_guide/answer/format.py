@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from ph_privacy_guide.answer.warnings import STATUS_WORDS
-from ph_privacy_guide.config import ANNOTATION_LABEL
+from ph_privacy_guide.config import ANNOTATION_LABEL, CONTACT_URL
 from ph_privacy_guide.retrieve.search import SearchResult
 
 RULE = "-" * 78
@@ -29,6 +29,7 @@ def format_hit(rank: int, hit) -> str:
 def format_result(query: str, result: SearchResult) -> str:
     head = f'Search: "{query}"'
     if result.not_sure:
-        return f"{head}\n\nNot sure. {result.reason.capitalize()}. No passage is shown.\n\n{LIMIT_NOTE}"
+        return (f"{head}\n\nNot sure. {result.reason.capitalize()}. No passage is shown.\n"
+                f"You can ask the National Privacy Commission: {CONTACT_URL}\n\n{LIMIT_NOTE}")
     body = "\n\n".join(format_hit(i, h) for i, h in enumerate(result.hits, 1))
     return f"{head}\n\n{body}\n\n{LIMIT_NOTE}"

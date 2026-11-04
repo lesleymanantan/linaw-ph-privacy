@@ -43,3 +43,12 @@ def test_processed_and_indexes_have_no_excluded():
                     assert MARKER not in json.dumps(rec), f"{f}: excluded path in record"
             else:
                 assert MARKER.encode() not in f.read_bytes(), f"{f}: excluded path present"
+
+
+def test_index_chunk_lists_are_allowlisted():
+    allowed = _allowed_doc_ids()
+    for name in ("bm25.json", "embeddings.json"):
+        path = ROOT / "indexes" / name
+        if path.exists():
+            for chunk_id in json.loads(path.read_text())["chunk_ids"]:
+                assert chunk_id.split(":")[0] in allowed, chunk_id

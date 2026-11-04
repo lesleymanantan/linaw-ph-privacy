@@ -16,6 +16,7 @@ def _refuse(*_args, **_kwargs):
 def enforce_offline() -> None:
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["TRANSFORMERS_OFFLINE"] = "1"
+    os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
     socket.socket.connect = _refuse
     socket.socket.connect_ex = _refuse
     socket.create_connection = _refuse

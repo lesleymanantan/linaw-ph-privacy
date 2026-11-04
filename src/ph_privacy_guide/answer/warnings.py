@@ -16,10 +16,10 @@ def annotation_warnings(row_type: str, footnotes: list[dict], cites: dict[str, s
     out = []
     for note in footnotes:
         flat = re.sub(r"\s+", " ", note["text"])
-        for pattern, (repealed, replacement) in REPEALED_FOOTNOTE_WARNINGS.items():
+        for pattern, (repealed, replacement, basis) in REPEALED_FOOTNOTE_WARNINGS.items():
             if re.search(pattern, flat):
                 out.append(f"NPC annotation {note['number']} cites {repealed}, which is repealed. "
-                           f"See {cites[replacement]}.")
+                           f"See {cites[replacement]} ({basis}).")
     return out
 
 

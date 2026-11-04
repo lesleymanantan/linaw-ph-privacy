@@ -29,7 +29,7 @@ def tokenize(text: str) -> list[str]:
     return [t for t in TOKEN_RE.findall(text.lower()) if t not in STOPWORDS]
 
 
-def _chunks_hash() -> str:
+def chunks_hash() -> str:
     return hashlib.sha256(CHUNKS.read_bytes()).hexdigest()
 
 
@@ -44,7 +44,7 @@ def build() -> dict:
         lengths.append(sum(tf.values()))
         for term, n in tf.items():
             postings.setdefault(term, []).append([i, n])
-    index = {"chunks_sha256": _chunks_hash(), "k1": K1, "b": B, "chunk_ids": [c["chunk_id"] for c in docs],
+    index = {"chunks_sha256": chunks_hash(), "k1": K1, "b": B, "chunk_ids": [c["chunk_id"] for c in docs],
              "lengths": lengths, "avg_length": sum(lengths) / len(lengths), "postings": postings}
     INDEX.parent.mkdir(exist_ok=True)
     INDEX.write_text(json.dumps(index))
@@ -53,7 +53,7 @@ def build() -> dict:
 
 def load() -> dict:
     index = json.loads(INDEX.read_text())
-    if index["chunks_sha256"] != _chunks_hash():
+    if index["chunks_sha256"] != chunks_hash():
         raise RuntimeError("indexes/bm25.json is older than chunks.jsonl; rebuild it")
     return index
 

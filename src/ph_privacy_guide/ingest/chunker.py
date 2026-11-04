@@ -23,7 +23,8 @@ from collections import Counter
 from ph_privacy_guide import catalogue
 from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings
 from ph_privacy_guide.config import (ANNOTATION_LABEL, DRAFT_LABEL, PROCESSED, REPEALED_FOOTNOTE_WARNINGS,
-                                     SEARCHABLE_KINDS, SUMMARY_LABEL, allowed_pdfs)
+                                     RANK_TIER_DRAFT, RANK_TIER_SUMMARY, SEARCHABLE_KINDS, SUMMARY_LABEL,
+                                     allowed_pdfs, rank_tier)
 from ph_privacy_guide.ingest.sectioner import WHOLE_DOC_TYPES, _marker_re, nonspace_len
 
 MAX_WORDS = 350
@@ -193,7 +194,7 @@ def build_chunks() -> list[dict]:
                     "page_start": page_start, "page_end": page_end,
                     "searchable": rec["kind"] in SEARCHABLE_KINDS and not is_draft_annex and not heading_only,
                     "switch": "draft_annex" if is_draft_annex else "",
-                    "rank_tier": 1 if rec["kind"] == "summary" else 0,
+                    "rank_tier": rank_tier(rec["kind"], rec["status"]),
                     "annotations": [], "text": text, "index_text": index_text(rec["title"], rec["division"], text),
                     "text_sha256": hashlib.sha256(text.encode()).hexdigest(),
                 }
@@ -283,12 +284,16 @@ def validate(chunks: list[dict]) -> list[dict]:
     other = [c["chunk_id"] for c in chunks if c["collection"] != "drafts" and DRAFT_LABEL in c["citation"]]
     add("No draft label elsewhere", not other, f"{len(other)} wrongly labelled")
 
+    tiers = [c["chunk_id"] for c in chunks if c["kind"] != "footnote"
+             and (c["rank_tier"] == RANK_TIER_DRAFT) != (c["status"] == "draft")]
+    add("Every draft chunk, and only those, is in the lowest rank tier", not tiers, f"{len(tiers)} wrong")
+
     annex = [c for c in chunks if c["switch"] == "draft_annex"]
     add("Draft Annex A not searchable by default", bool(annex) and not any(c["searchable"] for c in annex), f"{len(annex)} chunks behind the switch")
 
     summary = [c for c in chunks if c["kind"] == "summary"]
     add("16-03 Summary labelled and ranked below sections",
-        bool(summary) and all(c["rank_tier"] == 1 and c["label"] == SUMMARY_LABEL for c in summary)
+        bool(summary) and all(c["rank_tier"] == RANK_TIER_SUMMARY and c["label"] == SUMMARY_LABEL for c in summary)
         and {c["doc_id"] for c in summary} == {"NPC_Circular_16-03_Breach_Management"}, f"{len(summary)} chunks")
 
     notes = [c for c in chunks if c["kind"] == "footnote"]
@@ -303,14 +308,16 @@ def validate(chunks: list[dict]) -> list[dict]:
     with_notes = sum(len(c["annotations"]) for c in chunks)
     add("Every footnote attached to a chunk's annotations", with_notes == len(notes), f"{with_notes} attached")
 
-    # The configured repealed-circular warning fires for every IRR footnote that cites it.
-    pattern = next(iter(REPEALED_FOOTNOTE_WARNINGS))
+    # The configured repealed-circular warnings fire for every IRR footnote that cites them.
     irr_notes = [c for c in notes if c["doc_id"] == "IRR_RA10173"]
-    citing = [c for c in irr_notes if re.search(pattern, re.sub(r"\s+", " ", c["text"]))]
-    warned = [c for c in chunks if c["doc_id"] == "IRR_RA10173" and any("17-01" in w and "2022-04" in w for w in c["warnings"])]
-    warned_notes = sum(sum("17-01" in w for w in c["warnings"]) for c in warned)
-    add("IRR chunks with notes citing 17-01 warn and name 2022-04", bool(citing) and warned_notes == len(citing),
-        f"{len(citing)} notes cite 17-01, on {len(warned)} chunks: {[c['citation'] for c in warned]}")
+    for pattern, (repealed, replacement, _basis) in REPEALED_FOOTNOTE_WARNINGS.items():
+        short = repealed.split()[-1]
+        target = rows[replacement]["short_cite"]
+        citing = [c for c in irr_notes if re.search(pattern, re.sub(r"\s+", " ", c["text"]))]
+        warned = [c for c in chunks if c["doc_id"] == "IRR_RA10173" and any(short in w and target in w for w in c["warnings"])]
+        warned_notes = sum(sum(short in w for w in c["warnings"]) for c in warned)
+        add(f"IRR chunks with notes citing {short} warn and name {target}", bool(citing) and warned_notes == len(citing),
+            f"{len(citing)} notes on {len(warned)} chunks: {[c['citation'] for c in warned]}")
 
     supp = [c for c in chunks if c["doc_id"] == "NPC_Circular_16-03_Breach_Management" and c["kind"] != "footnote"]
     add("16-03 chunks show Supplemented by Advisory 2026-02", all(any("Advisory 2026-02" in w for w in c["warnings"]) for c in supp), f"{len(supp)} chunks")
