@@ -4,7 +4,7 @@ import json
 import pytest
 
 from ph_privacy_guide import catalogue
-from ph_privacy_guide.config import DRAFT_LABEL, PROCESSED
+from ph_privacy_guide.config import ANNOTATION_LABEL, DRAFT_LABEL, PROCESSED, SUMMARY_LABEL
 from ph_privacy_guide.ingest import sectioner as S
 
 ROW = {"doc_id": "X", "short_cite": "X", "type": "circular", "status": "unverified", "authority": "rule",
@@ -79,7 +79,7 @@ def test_ra10173_numbers_run_unbroken_to_45():
 
 def test_all_sectioned_docs_are_contiguous_with_effectivity_clause():
     for row in catalogue.load():
-        if row["in_corpus"] == "yes" and row["type"] in S.SECTIONED_TYPES:
+        if row["in_corpus"] == "yes" and row["type"] in S.LAW_TYPES:
             secs = _sections(row["doc_id"])
             assert [int(r["section"]) for r in secs] == list(range(1, len(secs) + 1)), row["doc_id"]
             assert S.EFFECTIVITY_TITLE_RE.search(secs[-1]["title"]), row["doc_id"]
@@ -104,10 +104,34 @@ def test_every_draft_record_is_labelled_and_nothing_else_is():
         if row["in_corpus"] == "yes" and row["type"] in S.SECTIONED_TYPES | S.WHOLE_DOC_TYPES:
             for r in _records(row["doc_id"]):
                 if row["collection"] == "drafts":
-                    assert r["label"] == DRAFT_LABEL and DRAFT_LABEL in r["citation"]
+                    assert DRAFT_LABEL in (r["label"], r.get("draft_label"))
+                    assert DRAFT_LABEL in r["citation"]
                     assert r["status"] == "draft" and r["authority"] == "draft"
                 else:
-                    assert r["label"] == "" and DRAFT_LABEL not in r["citation"]
+                    assert DRAFT_LABEL not in r["label"] and DRAFT_LABEL not in r["citation"]
+
+
+def test_footnotes_are_out_of_section_text_and_linked():
+    recs = _records("IRR_RA10173")
+    notes = [r for r in recs if r["kind"] == "footnote"]
+    assert [int(r["section"]) for r in notes] == list(range(1, 27))
+    assert all(r["label"] == ANNOTATION_LABEL and r["parent_section"] for r in notes)
+    body = "\n".join(r["text"] for r in recs if r["kind"] == "section")
+    assert "Original provision:" not in body
+    assert "[NPC Circular No. 17-01]" not in body
+
+
+def test_summary_and_draft_annex_are_separate_records():
+    summary = [r for r in _records("NPC_Circular_16-03_Breach_Management") if r["kind"] == "summary"]
+    assert len(summary) == 1 and summary[0]["label"] == SUMMARY_LABEL
+    annex = [r for r in _records("DRAFT_Updated_PIA_Guidelines_Circular") if r["kind"] == "annex"]
+    assert len(annex) == 1 and annex[0]["label"] == DRAFT_LABEL
+
+
+def test_every_document_is_sectioned_with_no_lost_text():
+    results = S.run()
+    assert len(results) == 28
+    assert [r.doc_id for r in results if S._lost(r)] == []
 
 
 def test_draft_keeps_risk_matrix_numbers():

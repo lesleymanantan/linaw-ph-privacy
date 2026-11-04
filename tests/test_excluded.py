@@ -36,7 +36,7 @@ def test_processed_and_indexes_have_no_excluded():
             if not f.is_file():
                 continue
             if f.suffix == ".jsonl":
-                assert f.stem in allowed, f"unexpected document file {f}"
+                assert f.stem in allowed | {"chunks"}, f"unexpected document file {f}"
                 for line in f.open():
                     rec = json.loads(line)
                     assert rec.get("doc_id") in allowed, f"{f}: doc_id {rec.get('doc_id')} not allowlisted"
