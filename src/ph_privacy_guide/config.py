@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / "data" / "raw"
 PROCESSED = ROOT / "data" / "processed"
 CATALOGUE = ROOT / "catalogue" / "catalogue.csv"
+LABELS_CSV = ROOT / "data" / "i18n" / "labels.csv"
 REPORTS = ROOT / "reports"
 
 # collection folder -> default authority hint (the catalogue is authoritative)
@@ -151,6 +152,9 @@ EMBEDDING_THREADS = 0  # 0 lets onnxruntime decide
 MAX_OVERLAP_TOKENS = 60
 TOKEN_SAFETY_MARGIN = 8
 KEYWORD_ONLY_NOTE = "Keyword-searchable beyond the limit: the embedding model reads only the first 512 tokens."
+
+# Official document links: only https addresses on these hosts, taken from the catalogue. Never built or guessed.
+OFFICIAL_HOSTS = {"privacy.gov.ph", "www.privacy.gov.ph"}
 
 # Local web page.
 WEB_HOST = "127.0.0.1"

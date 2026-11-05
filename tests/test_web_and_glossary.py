@@ -1,5 +1,6 @@
 """The local page and the glossary file."""
 import csv
+import json
 import re
 import threading
 import urllib.error
@@ -8,8 +9,10 @@ from types import SimpleNamespace
 
 import pytest
 
+from ph_privacy_guide import catalogue
+from ph_privacy_guide.answer import labels
 from ph_privacy_guide.app import web
-from ph_privacy_guide.config import CONTACT_URL, ROOT, WEB_HOST
+from ph_privacy_guide.config import (BLOCK_HEADINGS, BLOCK_PENDING, BLOCK_SUMMARY, CONTACT_URL, LISTED_LABEL, ROOT, WEB_HOST)
 from ph_privacy_guide.retrieve.search import SearchResult
 
 CHUNK = {"citation": "<Cite> s.1", "authority": "rule", "status": "unverified", "date_issued": "2020-01-01",
@@ -56,7 +59,7 @@ def test_home_page_has_question_box_and_limit(base_url):
 
 def test_results_show_citation_tag_status_warning_and_escape_text(base_url):
     _, body, _ = _get(base_url + "/?q=term")
-    for needle in ("&lt;Cite&gt; s.1", "Authority: rule", "Status: not verified", "A &lt;warning&gt;", "Exact &lt;text&gt;\nsecond line", "NPC annotation 1"):
+    for needle in ("&lt;Cite&gt; s.1", "Type: Binding rule", "Status: not verified", "Source: &lt;Cite&gt; s.1, pages 1-2 (issued 1 Jan 2020)", "A &lt;warning&gt;", "Exact &lt;text&gt;\nsecond line", "NPC annotation 1"):
         assert needle in body
     assert "<Cite>" not in body
 
@@ -73,9 +76,10 @@ def test_side_blocks_have_their_own_headings_below_the_main_results(base_url):
     assert body.index("NPC summary, not the rule text") > body.index("Pending change")
 
 
-def test_page_says_when_not_sure_is_not_active(base_url):
-    assert "is not active yet" in _get(base_url + "/?q=term")[1].replace("&quot;", '"')
-    assert "is not active yet" not in _get(base_url + "/?q=calibrated")[1].replace("&quot;", '"')
+def test_page_says_when_not_sure_is_switched_off(base_url):
+    banner = 'The "not sure" check is switched off for now, so these results may not answer your question.'
+    assert banner in _get(base_url + "/?q=term")[1].replace("&quot;", '"')
+    assert banner not in _get(base_url + "/?q=calibrated")[1].replace("&quot;", '"')
     assert "A plain note" in _get(base_url + "/?q=term")[1]
 
 
@@ -107,3 +111,117 @@ def test_glossary_has_english_terms_and_no_filipino():
     for r in rows:
         assert r["fil_term"] == r["fil_variants"] == r["fil_source"] == r["fil_reviewer"] == ""
     assert all("DRAFT" not in r["en_source_citation"] for r in rows)
+
+
+BASE = {"citation": "NPC Circular 2022-04, s.10", "authority": "rule", "status": "listed_no_repeal", "kind": "section",
+        "date_issued": "2022-12-05", "page_start": 7, "page_end": 8, "warnings": [], "text": "x", "annotations": [],
+        "status_label": LISTED_LABEL, "doc_id": "D"}
+
+
+@pytest.mark.parametrize("over,expected", [
+    ({}, "Source: NPC Circular 2022-04, section 10, pages 7-8 (issued 5 Dec 2022)"),
+    ({"page_end": 7}, "Source: NPC Circular 2022-04, section 10, page 7 (issued 5 Dec 2022)"),
+    ({"date_issued": ""}, "Source: NPC Circular 2022-04, section 10, pages 7-8"),
+    ({"citation": "NPC Advisory 2017-01, Definition of Terms (m)"}, "Source: NPC Advisory 2017-01, Definition of Terms (m), pages 7-8 (issued 5 Dec 2022)"),
+    ({"citation": "RA 10173, s.3(l)"}, "Source: RA 10173, section 3(l), pages 7-8 (issued 5 Dec 2022)"),
+])
+def test_source_line(over, expected):
+    assert labels.source_text({**BASE, **over}) == expected
+
+
+@pytest.mark.parametrize("over,expected", [
+    ({"authority": "statute"}, "Law"), ({"authority": "rule"}, "Binding rule"), ({"authority": "guidance"}, "NPC guidance"),
+    ({"authority": "draft"}, "Draft, not law"), ({"authority": "rule", "kind": "summary"}, "NPC summary"),
+])
+def test_type_wording(over, expected):
+    assert labels.type_text({**BASE, **over}) == expected
+
+
+def test_status_wording_changes_only_the_plain_listed_label():
+    new = "NPC lists this document and notes no repeal. We have not checked it ourselves."
+    rows = catalogue.load()
+    for r in rows:
+        shown = labels.status_display({"status": r["status"], "status_label": r["status_label"]})
+        assert shown == (new if r["status_label"] == LISTED_LABEL else r["status_label"]), r["doc_id"]
+        assert r["status"] == "draft" or "in force" not in shown
+    assert sum(r["status_label"] == LISTED_LABEL for r in rows) == 22
+
+
+def test_abbreviations_are_wrapped_for_display_only():
+    text = "The PICs & DPO of NPC-IC; EPIC and pic stay."
+    chunk = {**BASE, "text": text}
+    page = web._hit_html(1, SimpleNamespace(chunk=chunk))
+    assert chunk["text"] == text
+    assert '<abbr title="Personal Information Controller">PICs</abbr> &amp; <abbr title="Data Protection Officer">DPO</abbr>' in page
+    assert '<abbr title="National Privacy Commission">NPC</abbr>-IC' in page and "EPIC and pic stay." in page
+
+
+def test_every_abbreviation_full_name_comes_from_the_corpus_and_the_requested_ones_exist():
+    with open(ROOT / "data" / "processed" / "chunks.jsonl") as f:
+        corpus = re.sub(r"\s+", " ", " ".join(json.loads(line)["text"] for line in f)).lower()
+    names = {k[5:]: v["en"] for k, v in labels.load_labels().items() if k.startswith("abbr.")}
+    assert {"DPO", "PIC", "PIP", "COP", "PIA"} <= set(names)
+    assert all(name.lower() in corpus for name in names.values())
+
+
+@pytest.mark.parametrize("url,page,expected", [
+    ("TBS", 3, None), ("", 3, None), ("http://privacy.gov.ph/a.pdf", 3, None), ("https://example.com/a.pdf", 3, None),
+    ("https://privacy.gov.ph.example.com/a.pdf", 3, None),
+    ("https://privacy.gov.ph/a.pdf", 3, "https://privacy.gov.ph/a.pdf#page=3"),
+    ("https://www.privacy.gov.ph/A.PDF", 3, "https://www.privacy.gov.ph/A.PDF#page=3"),
+    ("https://privacy.gov.ph/a/", 3, "https://privacy.gov.ph/a/"),
+    ("https://privacy.gov.ph/a.pdf#x", 3, "https://privacy.gov.ph/a.pdf#x"),
+])
+def test_official_url_is_never_built_or_guessed(url, page, expected):
+    assert catalogue.official_url(url, page) == expected
+
+
+def test_link_opens_in_a_new_tab_only_when_the_catalogue_has_an_address(monkeypatch):
+    hit = SimpleNamespace(chunk=BASE)
+    monkeypatch.setattr(catalogue, "source_urls", lambda: {"D": "https://privacy.gov.ph/a.pdf"})
+    page = web._hit_html(1, hit)
+    assert ('<a href="https://privacy.gov.ph/a.pdf#page=7" target="_blank" rel="noopener noreferrer">'
+            "Open the official document</a>") in page
+    for address in ("TBS", "", "https://example.com/a.pdf"):
+        monkeypatch.setattr(catalogue, "source_urls", lambda: {"D": address})
+        assert "Open the official document" not in web._hit_html(1, hit)
+
+
+def test_catalogue_rejects_an_address_that_is_not_official():
+    rows = catalogue.load()
+    rows[0]["source_url"] = "https://example.com/a.pdf"
+    assert any("source_url" in e for e in catalogue.validate(rows))
+
+
+def test_labels_file_has_the_columns_and_no_filipino_yet():
+    # Filipino is written by people. Remove the last assert once they fill the column.
+    with open(ROOT / "data" / "i18n" / "labels.csv", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+    assert reader.fieldnames == ["key", "en", "fil"] and all(r["key"] and r["en"] for r in rows)
+    assert all(r["fil"] == "" for r in rows)
+
+
+def test_filipino_falls_back_to_english_and_uses_a_label_when_there_is_one(monkeypatch):
+    assert labels.label("page.search", "fil") == "Search"
+    filled = {"page.search": {"key": "page.search", "en": "Search", "fil": "FIL-LABEL"}}
+    monkeypatch.setattr(labels, "load_labels", lambda: filled)
+    assert labels.label("page.search", "fil") == "FIL-LABEL" and labels.label("page.search", "en") == "Search"
+
+
+def test_switch_keeps_the_query_and_never_touches_the_passage(base_url, monkeypatch):
+    _, body, _ = _get(base_url + "/?q=a%26b&lang=fil")
+    assert 'href="/?lang=en&amp;q=a%26b"' in body and 'href="/?lang=fil&amp;q=a%26b"' in body
+    assert '<input type="hidden" name="lang" value="fil">' in body and 'lang="en"' in body
+    assert "Passages are shown in the original English text." in body
+    assert '<pre lang="en">Exact &lt;text&gt;' in body
+
+
+def test_bad_language_value_falls_back_and_is_not_echoed(base_url):
+    _, body, _ = _get(base_url + "/?q=term&lang=%22%3E%3Cb%3E")
+    assert '<input type="hidden" name="lang" value="en">' in body and "<b>" not in body
+
+
+def test_block_headings_match_the_fixed_layout():
+    assert labels.label("block.pending") == BLOCK_HEADINGS[BLOCK_PENDING]
+    assert labels.label("block.summary") == BLOCK_HEADINGS[BLOCK_SUMMARY]

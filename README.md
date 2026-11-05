@@ -2,11 +2,12 @@
 
 A local, offline tool that finds the passages of Philippine data privacy law and National Privacy
 Commission (NPC) issuances that relate to a plain-language question in English or Filipino. It
-shows the exact text with its citation, authority tag (statute, rule, guidance, policy, draft) and
-status, and says **"Not sure"** when confidence is low.
+shows the exact text with its source, its type (Law, Binding rule, NPC guidance, NPC summary, Draft, not
+law) and its status, and says **"Not sure"** when confidence is low.
 
-Status labels mean what they say and no more. "Listed by NPC, no repeal noted; not independently
-verified" means the document is on the NPC advisories and circulars page with no repeal marked, and no
+Status labels mean what they say and no more. "NPC lists this document and notes no repeal. We have not
+checked it ourselves." (recorded in the catalogue as "Listed by NPC, no repeal noted; not independently
+verified") means the document is on the NPC advisories and circulars page with no repeal marked, and no
 repeal of it was found in this corpus. It does not prove the document is current: that page also lists
 repealed circulars with no repeal note. "Not verified" means no status has been established. "Amended by
 NPC Circular 2020-03 (per NPC annotations in the text)" rests on annotations printed in the later annotated
@@ -87,9 +88,20 @@ Add `--port 9000` if that port is in use. Or search from the command line:
 .venv/bin/python -m ph_privacy_guide.app.cli "your question"
 ```
 
-Both show each passage's exact text with its citation, authority tag, status and any warnings. The page
-binds to 127.0.0.1 only, loads nothing from elsewhere and does not log searches. When "Not sure" is active
-it shows a plain link to the National Privacy Commission's contact page, which opens only if you follow it.
+Both show each passage's exact text with its type, status, source and any warnings. The page binds to
+127.0.0.1 only, loads nothing from elsewhere and does not log searches. When "Not sure" is active it shows a
+plain link to the National Privacy Commission's contact page, which opens only if you follow it.
+
+The page also has:
+
+- **Official document links.** "Open the official document" opens the address in `catalogue/catalogue.csv` in
+  a new tab, at the right page for a PDF. The tool never fetches it. A link appears only for an https address
+  on privacy.gov.ph; addresses are never guessed, and none has been supplied yet (`source_url` is `TBS`).
+- **Abbreviation hints.** DPO, PIC, PIP, COP, PIA, IRR, NPC, PMP and NCERT show their full names when you
+  hover over them. This changes the display only, not the stored text.
+- **An EN/FIL switch for interface labels.** Labels are in `data/i18n/labels.csv`. An empty `fil` cell falls
+  back to English, and the column is empty for now, so both settings look the same until people fill it in.
+  Passages, warnings and notes stay in their original English and are never translated.
 
 ## Setup (development)
 

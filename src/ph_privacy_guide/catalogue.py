@@ -9,9 +9,11 @@ from __future__ import annotations
 import csv
 import hashlib
 import sys
+from functools import lru_cache
+from urllib.parse import urlparse
 
-from ph_privacy_guide.config import (CATALOGUE, EXCLUDED_DIRNAME, LISTED_BASIS, LISTED_LABEL, LISTED_VARIANTS, ROOT,
-                                     STATUS_LISTED, allowed_pdfs)
+from ph_privacy_guide.config import (CATALOGUE, EXCLUDED_DIRNAME, LISTED_BASIS, LISTED_LABEL, LISTED_VARIANTS, OFFICIAL_HOSTS,
+                                     ROOT, STATUS_LISTED, allowed_pdfs)
 
 FIELDS = [
     "doc_id", "instrument_key", "short_cite", "title", "type", "issuer", "collection", "authority", "status", "status_label",
@@ -34,6 +36,22 @@ def save(rows: list[dict]) -> None:
         w = csv.DictWriter(f, fieldnames=FIELDS, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
+
+
+def official_url(source_url: str, page: int | None = None) -> str | None:
+    """The catalogue's address if it is an official NPC one, else None. A PDF address also gets #page=N."""
+    parsed = urlparse(source_url.strip())
+    if parsed.scheme != "https" or parsed.hostname not in OFFICIAL_HOSTS:
+        return None
+    url = source_url.strip()
+    if page and parsed.path.lower().endswith(".pdf") and not parsed.fragment:
+        url += f"#page={page}"
+    return url
+
+
+@lru_cache(maxsize=1)
+def source_urls() -> dict[str, str]:
+    return {r["doc_id"]: r["source_url"] for r in load()}
 
 
 def sha256(path) -> str:
@@ -80,6 +98,8 @@ def validate(rows: list[dict]) -> list[str]:
             errs.append(f"{d}: only the draft's own label may use the words 'in force'")
         if "supplement" in text:
             errs.append(f"{d}: no document in the corpus says it supplements another")
+        if r["source_url"] not in ("", "TBS") and not official_url(r["source_url"]):
+            errs.append(f"{d}: source_url must be an https address on {sorted(OFFICIAL_HOSTS)}, or TBS")
         if r["status"] == "repealed" and not r["replaced_by"]:
             errs.append(f"{d}: repealed without replaced_by")
         if (r["collection"] == "drafts") != (r["status"] == "draft" and r["authority"] == "draft"):

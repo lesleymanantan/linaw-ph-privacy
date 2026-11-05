@@ -1,18 +1,21 @@
 """A minimal local search page. Usage: python -m ph_privacy_guide.app.web [--port 8765]
 
 Binds to 127.0.0.1 only. Standard library only, no scripts, no external assets, no telemetry, and
-searches are not logged. The one external address is a plain link the reader may choose to follow.
+searches are not logged. External addresses are plain links the reader may choose to follow; the tool
+never fetches them itself.
 """
 from __future__ import annotations
 
 import argparse
 import html
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse
 
-from ph_privacy_guide.answer.warnings import status_text
-from ph_privacy_guide.answer.format import UNCALIBRATED_NOTE
-from ph_privacy_guide.config import ANNOTATION_LABEL, BLOCK_HEADINGS, CONTACT_URL, MAIN_RESULTS, WEB_HOST, WEB_PORT
+from ph_privacy_guide import catalogue
+from ph_privacy_guide.answer.format import BLOCK_KEYS
+from ph_privacy_guide.answer.labels import (DEFAULT_LANGUAGE, LANGUAGES, abbreviate, has_translation, label, source_text,
+                                            status_display, type_text)
+from ph_privacy_guide.config import CONTACT_URL, MAIN_RESULTS, WEB_HOST, WEB_PORT
 from ph_privacy_guide.offline import enforce_offline
 
 PAGE_STYLE = """
@@ -35,56 +38,70 @@ button { font: inherit; padding: .5rem 1rem; }
            border-radius: 4px; font-size: .95rem; }
 pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; margin: .5rem 0; }
 details { font-size: .9rem; margin-top: .4rem; }
+nav { float: right; font-size: .9rem; }
+abbr[title] { text-decoration: underline dotted; }
 """
 CSP = "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'"
 
 
-def _hit_html(rank: int, hit) -> str:
+def _hit_html(rank: int, hit, lang: str = DEFAULT_LANGUAGE) -> str:
     c = hit.chunk
     esc = html.escape
-    pages = f"p.{c['page_start']}" if c["page_start"] == c["page_end"] else f"pp.{c['page_start']}-{c['page_end']}"
-    meta = [f"Authority: {c['authority']}", f"Status: {status_text(c)}"]
-    if c["date_issued"]:
-        meta.append(f"Issued: {c['date_issued']}")
-    meta.append(pages)
+    passage = lambda text: abbreviate(esc(text), lang)  # display only; the stored text is not touched
     parts = [f'<div class="result"><h2>{rank}. {esc(c["citation"])}</h2>',
-             f'<div class="meta">{esc(" | ".join(meta))}</div>']
-    parts += [f'<div class="warning">{esc(w)}</div>' for w in c["warnings"]]
-    parts += [f'<div class="meta">{esc(n)}</div>' for n in c.get("notes", [])]
-    parts.append(f"<pre>{esc(c['text'])}</pre>")
+             f'<div class="meta">{esc(label("type.label", lang))}: {esc(type_text(c, lang))}</div>',
+             f'<div class="meta">{esc(label("status.label", lang))}: {esc(status_display(c, lang))}</div>',
+             f'<div class="meta">{esc(source_text(c, lang))}</div>']
+    link = catalogue.official_url(catalogue.source_urls().get(c.get("doc_id"), ""), c["page_start"])
+    if link:
+        parts.append(f'<div class="meta"><a href="{esc(link, quote=True)}" target="_blank" rel="noopener noreferrer">'
+                     f'{esc(label("link.official", lang))}</a></div>')
+    parts += [f'<div class="warning">{passage(w)}</div>' for w in c["warnings"]]
+    parts += [f'<div class="meta">{passage(n)}</div>' for n in c.get("notes", [])]
+    parts.append(f'<pre lang="en">{passage(c["text"])}</pre>')
     for note in c["annotations"]:
-        parts.append(f"<details><summary>{esc(ANNOTATION_LABEL)} {note['number']} (not the provision's text)</summary>"
-                     f"<pre>{esc(note['text'])}</pre></details>")
+        parts.append(f'<details><summary>{esc(label("annotation.label", lang))} {note["number"]} '
+                     f'{esc(label("annotation.not_text", lang))}</summary><pre lang="en">{passage(note["text"])}</pre></details>')
     parts.append("</div>")
     return "".join(parts)
 
 
-def render_page(query: str = "", result=None) -> str:
+def _language_switch(query: str, lang: str) -> str:
+    links = []
+    for code in LANGUAGES:
+        params = {"lang": code, **({"q": query} if query else {})}
+        current = ' aria-current="true"' if code == lang else ""
+        links.append(f'<a href="/?{html.escape(urlencode(params), quote=True)}"{current}>{code.upper()}</a>')
+    return f'<nav aria-label="{html.escape(label("page.language", lang), quote=True)}">{" | ".join(links)}</nav>'
+
+
+def render_page(query: str = "", result=None, lang: str = DEFAULT_LANGUAGE) -> str:
     esc = html.escape
+    t = lambda key: esc(label(key, lang))
     body = ""
     if result is not None:
         if result.not_sure:
-            body = (f'<div class="result"><h2>Not sure</h2><p>{esc(result.reason.capitalize())}. No passage is shown.</p>'
-                    f'<p>You can ask the National Privacy Commission: <a href="{esc(CONTACT_URL)}">{esc(CONTACT_URL)}</a></p></div>')
+            body = (f'<div class="result"><h2>{t("not_sure.heading")}</h2><p>{esc(result.reason.capitalize())}. {t("not_sure.no_passage")}</p>'
+                    f'<p>{t("not_sure.contact")} <a href="{esc(CONTACT_URL)}">{esc(CONTACT_URL)}</a></p></div>')
         else:
-            items = [_hit_html(i, h) for i, h in enumerate(result.hits, 1)]
+            items = [_hit_html(i, h, lang) for i, h in enumerate(result.hits, 1)]
             rank = len(result.hits) + 1
             for block, hit in result.side:
-                items.append(f'<h3 class="block">{esc(BLOCK_HEADINGS[block])}</h3>{_hit_html(rank, hit)}')
+                items.append(f'<h3 class="block">{t(BLOCK_KEYS[block])}</h3>{_hit_html(rank, hit, lang)}')
                 rank += 1
-            note = "" if result.calibrated else f'<div class="warning">{esc(UNCALIBRATED_NOTE)}</div>'
-            body = note + "".join(items)
+            note = "" if result.calibrated else f'<div class="warning">{t("banner.threshold_off")}</div>'
+            body = note + "".join(items) + f'<p class="limit">{t("results.english_note")}</p>'
+    page_lang = lang if has_translation(lang) else DEFAULT_LANGUAGE
     return (
-        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        f'<!doctype html><html lang="{page_lang}"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
-        f"<title>PH Privacy Guide</title><style>{PAGE_STYLE}</style></head><body>"
-        "<h1>PH Privacy Guide</h1>"
-        '<p class="limit">Finds passages of Philippine data privacy law and National Privacy Commission guidance. '
-        "<strong>Not legal advice.</strong> Shows source text only and can miss provisions. Runs on this computer; "
-        "your question stays here.</p>"
-        '<form action="/" method="get"><label for="q" hidden>Your question</label>'
-        f'<input type="text" id="q" name="q" value="{esc(query)}" placeholder="Your question" autofocus>'
-        "<button type=\"submit\">Search</button></form>"
+        f'<title>{t("page.title")}</title><style>{PAGE_STYLE}</style></head><body>'
+        f'{_language_switch(query, lang)}<h1>{t("page.title")}</h1>'
+        f'<p class="limit">{t("page.intro_before")} <strong>{t("page.not_legal_advice")}</strong> {t("page.intro_after")}</p>'
+        f'<form action="/" method="get"><label for="q" hidden>{t("page.question")}</label>'
+        f'<input type="hidden" name="lang" value="{lang}">'
+        f'<input type="text" id="q" name="q" value="{esc(query)}" placeholder="{t("page.question")}" autofocus>'
+        f'<button type="submit">{t("page.search")}</button></form>'
         f"{body}</body></html>"
     )
 
@@ -98,9 +115,12 @@ def make_server(searcher, port: int = WEB_PORT) -> HTTPServer:
                 return self._send(403, "Forbidden")
             if url.path != "/":
                 return self._send(404, "Not found")
-            query = parse_qs(url.query).get("q", [""])[0].strip()
+            params = parse_qs(url.query)
+            query = params.get("q", [""])[0].strip()
+            lang = params.get("lang", [DEFAULT_LANGUAGE])[0]
+            lang = lang if lang in LANGUAGES else DEFAULT_LANGUAGE
             result = searcher.search(query, k=MAIN_RESULTS) if query else None
-            return self._send(200, render_page(query, result))
+            return self._send(200, render_page(query, result, lang))
 
         def _send(self, status: int, text: str) -> None:
             data = text.encode()

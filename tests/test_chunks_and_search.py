@@ -132,7 +132,9 @@ def test_chunks_carry_the_catalogue_label_and_the_page_shows_it():
     chunks = _chunks()
     sample = next(c for c in chunks if c["doc_id"] == "NPC_Advisory_2026-01_Data_Scraping" and c["kind"] == "section")
     text = format_hit(1, SimpleNamespace(chunk=sample))
-    assert "Status: Listed by NPC, no repeal noted; not independently verified" in text
+    assert "Status: NPC lists this document and notes no repeal. We have not checked it ourselves." in text
+    assert "Type: NPC guidance" in text and "Authority:" not in text and "Issued:" not in text
+    assert sample["status_label"] == "Listed by NPC, no repeal noted; not independently verified"
     breach = next(c for c in chunks if c["doc_id"] == "NPC_Circular_16-03_Breach_Management" and c["kind"] == "section")
     assert "Status: Listed by NPC, no repeal noted. Advisory 2026-02 (2026-05) gives clarifications" in format_hit(1, SimpleNamespace(chunk=breach))
     ra = next(c for c in chunks if c["doc_id"] == "RA10173_DPA_2012" and c["kind"] == "section")
@@ -315,7 +317,7 @@ def test_the_bar_does_not_move_with_k(searcher):
 def test_without_a_threshold_passages_show_with_a_plain_note(searcher):
     result = searcher.search("xyzzy plugh")
     assert not result.not_sure and not result.calibrated and result.hits
-    assert '"Not sure" is not active yet' in format_result("xyzzy plugh", result)
+    assert 'The "not sure" check is switched off for now, so these results may not answer your question.' in format_result("xyzzy plugh", result)
 
 
 @needs_index
@@ -338,10 +340,10 @@ def test_threshold_comes_from_config_and_hides_passages(searcher, monkeypatch):
     result = searcher.search("data sharing agreement")
     assert result.not_sure and result.calibrated
     text = format_result("data sharing agreement", result)
-    assert "Not sure" in text and "Authority:" not in text and "https://privacy.gov.ph/contactus/" in text
+    assert "Not sure" in text and "Type:" not in text and "https://privacy.gov.ph/contactus/" in text
     monkeypatch.setattr(module, "NOT_SURE_CONFIDENCE_THRESHOLD", 0.0)
     result = searcher.search("data sharing agreement")
-    assert not result.not_sure and "not active" not in format_result("x", result)
+    assert not result.not_sure and "switched off" not in format_result("x", result)
 
 
 @needs_index
@@ -366,6 +368,6 @@ def test_full_hybrid_query_runs_with_sockets_blocked():
     )
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=120)
     assert out.returncode == 0, out.stderr
-    assert "Authority:" in out.stdout and "Not legal advice" in out.stdout
+    assert "Type:" in out.stdout and "Not legal advice" in out.stdout
     assert "BLOCKED NetworkBlocked" in out.stdout
     assert "HUB_LOADED False" in out.stdout
