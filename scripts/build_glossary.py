@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Write data/glossary/en_fil_terms.csv: English defined terms from the corpus, Filipino columns empty.
+"""Write data/glossary/en_fil_terms.csv: English defined terms from the corpus, keeping existing Filipino values.
 
 Reads definition chunks from chunks.jsonl. Skips the draft circular, because it is not law. No Filipino
-term is ever generated here; people fill those columns in.
+term is ever generated here: fil_ values are kept from the existing file, matching en_term. If a term with
+Filipino values is no longer found, nothing is written.
 """
-import csv
 import json
 import re
+import sys
 
+from ph_privacy_guide import glossary
+from ph_privacy_guide.config import GLOSSARY_CSV as OUT
 from ph_privacy_guide.config import PROCESSED, ROOT
 
-OUT = ROOT / "data" / "glossary" / "en_fil_terms.csv"
-COLUMNS = ["en_term", "en_source_citation", "en_source_chunk_id", "n_sources", "fil_term", "fil_variants",
-           "fil_source", "fil_reviewer"]
 AUTHORITY_ORDER = {"statute": 0, "rule": 1, "guidance": 2, "policy": 3}
 QUOTED_RE = re.compile(r"^\(?[A-Za-z]{1,2}[.)]\)?\s*[“\"]([^”\"]{2,80})[”\"]")
 UNQUOTED_RE = re.compile(r"^\([a-z]\)\s+([A-Z][A-Za-z ,\-]{2,70}?)\s+(?:shall refer|refers?|is|means)\b")
@@ -33,15 +33,19 @@ def main() -> None:
             term = defined_term(c["text"])
             if term:
                 found.setdefault(term.casefold(), []).append({**c, "_term": term})
+    rows = []
+    for key in sorted(found):
+        sources = sorted(found[key], key=lambda c: (AUTHORITY_ORDER[c["authority"]], c["date_issued"]))
+        best = sources[0]
+        rows.append({"en_term": best["_term"], "en_source_citation": best["citation"],
+                     "en_source_chunk_id": best["chunk_id"], "n_sources": len(sources)})
+    rows, errors = glossary.keep_filipino(rows, glossary.read_rows(OUT) if OUT.exists() else [])
+    if errors:
+        sys.exit("Nothing was written:\n" + "\n".join(errors))
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUT, "w", newline="") as f:
-        w = csv.writer(f, lineterminator="\n")
-        w.writerow(COLUMNS)
-        for key in sorted(found):
-            sources = sorted(found[key], key=lambda c: (AUTHORITY_ORDER[c["authority"]], c["date_issued"]))
-            best = sources[0]
-            w.writerow([best["_term"], best["citation"], best["chunk_id"], len(sources), "", "", "", ""])
-    print(f"{len(found)} English terms written to {OUT.relative_to(ROOT)}; Filipino columns left empty")
+    glossary.write_rows(rows, OUT)
+    kept = sum(1 for row in rows if row["fil_term"])
+    print(f"{len(rows)} English terms written to {OUT.relative_to(ROOT)}; Filipino values kept on {kept}")
 
 
 if __name__ == "__main__":

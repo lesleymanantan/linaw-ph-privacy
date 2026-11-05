@@ -1,7 +1,8 @@
 """Hybrid search: BM25 plus embeddings, reciprocal rank fusion, fixed result blocks, score-based confidence.
 
 Steps, all set in config.py and none tuned on any questions:
-1. Rank allowed chunks by BM25, and separately by embedding similarity.
+1. Rank allowed chunks by BM25, and separately by embedding similarity. With USE_GLOSSARY on, the BM25 terms
+   also include the English tokens of reviewed glossary phrases found in the question.
 2. Fuse: score = sum over rankings of weight / (RRF_K + rank), equal weights.
 3. Main block: the top passages that are statutes, rules or guidance. Drafts and the 16-03 Summary never
    enter it.
@@ -18,12 +19,14 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import dataclass, field
+from functools import cached_property
 
 import numpy as np
 
 from ph_privacy_guide.config import (BLOCK_MAIN, BLOCK_PENDING, BLOCK_SUMMARY, EMBEDDING_THREADS, INCLUDE_DRAFT_ANNEX,
                                      MAIN_RESULTS, NOT_SURE_CONFIDENCE_THRESHOLD, RRF_K, RRF_WEIGHT_BM25,
-                                     RRF_WEIGHT_EMBEDDING, SIDE_BLOCK_MAX)
+                                     RRF_WEIGHT_EMBEDDING, SIDE_BLOCK_MAX, USE_GLOSSARY)
+from ph_privacy_guide import glossary
 from ph_privacy_guide.index import bm25
 from ph_privacy_guide.retrieve.confidence import combine, compute_features, is_not_sure
 
@@ -81,6 +84,10 @@ class Searcher:
         self.embedder = embed.Embedder(threads=threads)
         self.index_chunks = [self.chunks[i] for i in self.index["chunk_ids"]]
 
+    @cached_property
+    def glossary_entries(self) -> list:
+        return glossary.load_expansions()
+
     def _allowed(self, chunk: dict, include_draft_annex: bool) -> bool:
         return chunk["searchable"] or (include_draft_annex and chunk["switch"] == "draft_annex")
 
@@ -89,7 +96,8 @@ class Searcher:
         found = set(bm25.tokenize(chunk["index_text"]))
         return Hit(chunk, score, [t for t in terms if t in found])
 
-    def search(self, query: str, k: int = MAIN_RESULTS, include_draft_annex: bool = INCLUDE_DRAFT_ANNEX) -> SearchResult:
+    def search(self, query: str, k: int = MAIN_RESULTS, include_draft_annex: bool = INCLUDE_DRAFT_ANNEX,
+               use_glossary: bool = USE_GLOSSARY) -> SearchResult:
         calibrated = NOT_SURE_CONFIDENCE_THRESHOLD is not None
         if not query.strip():
             return SearchResult([], [], True, "the search is empty", calibrated=calibrated)
@@ -98,7 +106,8 @@ class Searcher:
         block_of = lambda i: self.index_chunks[i]["block"]
 
         t0 = time.perf_counter()
-        keyword = bm25.score(self.index, terms)
+        extra = glossary.expansion_terms(query, self.glossary_entries) if use_glossary else []
+        keyword = bm25.score(self.index, terms + extra)
         bm25_ids = sorted((i for i in keyword if allowed[i]), key=lambda i: (-keyword[i], i))
         t1 = time.perf_counter()
         query_vector = self.embedder.encode_query(query)

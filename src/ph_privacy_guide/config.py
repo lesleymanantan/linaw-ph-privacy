@@ -10,6 +10,7 @@ RAW = ROOT / "data" / "raw"
 PROCESSED = ROOT / "data" / "processed"
 CATALOGUE = ROOT / "catalogue" / "catalogue.csv"
 LABELS_CSV = ROOT / "data" / "i18n" / "labels.csv"
+GLOSSARY_CSV = ROOT / "data" / "glossary" / "en_fil_terms.csv"
 REPORTS = ROOT / "reports"
 
 # collection folder -> default authority hint (the catalogue is authoritative)
@@ -135,6 +136,10 @@ def result_block(kind: str, status: str) -> str:
 RRF_K = 60
 RRF_WEIGHT_BM25 = 1.0
 RRF_WEIGHT_EMBEDDING = 1.0
+
+# When True, a reviewed Filipino glossary phrase in the question adds its English term's tokens to the keyword
+# search terms only. The embedding query and the term list do not change. Off until the dev set says otherwise.
+USE_GLOSSARY = False
 
 # "Not sure" comes from a score-based confidence (retrieve/confidence.py). Equal weights are a default,
 # not a finding. The threshold stays None until the dev set exists, and may be set only from dev.

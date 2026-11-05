@@ -112,6 +112,7 @@ def settings() -> dict:
             "confidence_weights": config.CONFIDENCE_WEIGHTS,
             "not_sure_confidence_threshold": config.NOT_SURE_CONFIDENCE_THRESHOLD,
             "main_results": config.MAIN_RESULTS, "side_block_max": config.SIDE_BLOCK_MAX,
+            "use_glossary": config.USE_GLOSSARY,
             "embedding_model": config.EMBEDDING_MODEL_NAME, "embedding_revision": config.EMBEDDING_MODEL_REVISION}
 
 

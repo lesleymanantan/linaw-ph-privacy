@@ -62,7 +62,7 @@ catalogue/catalogue.csv     one row per document (status, authority, sha256, sou
 src/ph_privacy_guide/       ingest/ index/ retrieve/ answer/ app/
 reports/                    extraction report (section validation: data/processed/)
 eval/                       question schema, guidelines, template; human-written questions
-data/glossary/              English defined terms; Filipino columns to be filled in by people
+data/glossary/              English defined terms; Filipino values come only from people, via scripts/import_glossary.py
 results/                    evaluation and benchmark runs
 scripts/                    dev-only tools: model download, question import, metrics, benchmark
 SOURCES.md  MODELS.md       provenance of legal texts and downloaded models

@@ -9,7 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from ph_privacy_guide import catalogue
+from ph_privacy_guide import catalogue, glossary
 from ph_privacy_guide.answer import labels
 from ph_privacy_guide.app import web
 from ph_privacy_guide.config import (BLOCK_HEADINGS, BLOCK_PENDING, BLOCK_SUMMARY, CONTACT_URL, LISTED_LABEL, ROOT, WEB_HOST)
@@ -101,15 +101,16 @@ def test_other_host_header_is_refused(base_url):
     assert e.value.code == 403
 
 
-def test_glossary_has_english_terms_and_no_filipino():
+def test_glossary_rows_have_english_sources_and_filled_terms_have_a_source():
     path = ROOT / "data" / "glossary" / "en_fil_terms.csv"
     if not path.exists():
         pytest.skip("run scripts/build_glossary.py first")
-    with open(path, newline="") as f:
+    with open(path, newline="", encoding="utf-8-sig") as f:
         rows = list(csv.DictReader(f))
     assert rows and all(r["en_term"] and r["en_source_chunk_id"] for r in rows)
     for r in rows:
-        assert r["fil_term"] == r["fil_variants"] == r["fil_source"] == r["fil_reviewer"] == ""
+        assert r["fil_source"] or not r["fil_term"], r["en_term"]
+    assert glossary.validate_rows(rows) == []
     assert all("DRAFT" not in r["en_source_citation"] for r in rows)
 
 
