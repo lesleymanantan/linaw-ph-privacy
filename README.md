@@ -3,8 +3,12 @@
 A local, offline tool that finds the passages of Philippine data privacy law and National Privacy
 Commission (NPC) issuances that relate to a plain-language question in English or Filipino. It
 shows the exact text with its citation, authority tag (statute, rule, guidance, policy, draft) and
-status (in force, repealed, amended, draft, unverified), and says **"Not sure"** when confidence is
-low.
+status, and says **"Not sure"** when confidence is low.
+
+Status labels mean what they say and no more. "Listed by NPC, no repeal noted; not independently
+verified" means the document is on the NPC advisories and circulars page with no repeal marked, and no
+repeal of it was found in this corpus. It does not prove the document is current: that page also lists
+repealed circulars with no repeal note. "Not verified" means no status has been established.
 
 > **Status: early development.** Hybrid search and a local page work, but search quality has not been
 > measured yet. **"Not sure" is not active:** its threshold will be set on the human-written dev questions,
@@ -28,8 +32,8 @@ qualified lawyer or your Data Protection Officer.
 - Draft instruments are always labelled **"draft, not in force"**. Passages from repealed texts are
   flagged with the name of the replacing instrument.
 - **Fixed layout.** Passages are chosen by relevance (BM25 and embeddings, combined by reciprocal rank
-  fusion with k=60 and equal weights). The main block shows the top 3 statutes, rules and guidance. Most
-  of these have status "not verified", which the page shows. Below it, two labelled blocks may appear:
+  fusion with k=60 and equal weights). The main block shows the top 3 statutes, rules and guidance that
+  are not repealed or draft, each with its status label. Below it, two labelled blocks may appear:
   "Pending change: draft, not law" and "NPC summary, not the rule text", at most one passage each, and only
   if the passage scores at least as high as the last one in the main block. This layout is set in
   `config.py` and is not tuned on any questions.
@@ -99,6 +103,7 @@ scripts/uv sync
 .venv/bin/python -m ph_privacy_guide.ingest.chunker    # chunks.jsonl, gold labels, validation report
 .venv/bin/python -m ph_privacy_guide.index.bm25        # keyword index
 .venv/bin/python -m ph_privacy_guide.index.embed       # embedding index
+.venv/bin/python scripts/scan_status_language.py       # repeal and amendment language, for status review
 .venv/bin/pytest
 ```
 

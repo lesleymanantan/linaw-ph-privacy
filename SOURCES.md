@@ -2,39 +2,39 @@
 
 Provenance of every legal text. **Generated from `catalogue/catalogue.csv`** by
 `python -m ph_privacy_guide.catalogue --sources`; edit the catalogue, not this file.
-`TBS` = to be supplied. Status `unverified` = not yet confirmed from a cited provision.
+`TBS` = to be supplied. "not verified" = not yet confirmed from a cited provision.
 
 | doc_id | Citation | Status | Status basis | Version | Source URL | Retrieved | sha256 (first 12) |
 |---|---|---|---|---|---|---|---|
-| RA10173_DPA_2012 | RA 10173 | unverified | — | TBS | TBS | TBS | 8e7c4e38fd1b |
-| IRR_RA10173 | IRR of RA 10173 | unverified | — | TBS | TBS | TBS | 1d8218f48661 |
-| NPC_Circular_16-03_Breach_Management | NPC Circular 16-03 | in_force | Confirmed by project owner from document text; supplemented by NPC Advisory 2026-02 | TBS | TBS | TBS | 167c9177cbff |
-| NPC_Circular_2020-03_Data_Sharing_Agreements | NPC Circular 2020-03 | unverified | — | TBS | TBS | TBS | bf1c08d0b724 |
-| NPC_Circular_2022-01_Administrative_Fines | NPC Circular 2022-01 | unverified | — | TBS | TBS | TBS | 2b8a43124ddf |
-| NPC_Circular_2022-04_Registration | NPC Circular 2022-04 | unverified | — | TBS | TBS | TBS | ed55fe1814ff |
-| NPC_Circular_2022-04_Annex1 | NPC Circular 2022-04, Annex 1 | unverified | — | TBS | TBS | TBS | 2481555fc4aa |
-| NPC_Circular_2023-04_Consent | NPC Circular 2023-04 | unverified | — | TBS | TBS | TBS | 260acf8ed16b |
-| NPC_Circular_2023-06_Security | NPC Circular 2023-06 | unverified | — | TBS | TBS | TBS | d717c2a44776 |
-| NPC_Circular_2023-07_Legitimate_Interest | NPC Circular 2023-07 | unverified | — | TBS | TBS | TBS | b2e09208d17e |
-| NPC_Circular_2024-02_CCTV | NPC Circular 2024-02 | unverified | — | TBS | TBS | TBS | 66792d60a6cd |
+| RA10173_DPA_2012 | RA 10173 | not verified | — | TBS | TBS | TBS | 8e7c4e38fd1b |
+| IRR_RA10173 | IRR of RA 10173 | not verified | — | TBS | TBS | TBS | 1d8218f48661 |
+| NPC_Circular_16-03_Breach_Management | NPC Circular 16-03 | in force, supplemented by Advisory 2026-02 | Confirmed by project owner from document text; supplemented by NPC Advisory 2026-02, which words this as clarifications (s.1, s.2) | TBS | TBS | TBS | 167c9177cbff |
+| NPC_Circular_2020-03_Data_Sharing_Agreements | NPC Circular 2020-03 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | bf1c08d0b724 |
+| NPC_Circular_2022-01_Administrative_Fines | NPC Circular 2022-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 2b8a43124ddf |
+| NPC_Circular_2022-04_Registration | NPC Circular 2022-04 | in force | Project owner's instruction. s.40 supersedes Circular 17-01 in its entirety; no named repeal aimed at it found in the corpus; not independently verified | TBS | TBS | TBS | ed55fe1814ff |
+| NPC_Circular_2022-04_Annex1 | NPC Circular 2022-04, Annex 1 | not verified | — | TBS | TBS | TBS | 2481555fc4aa |
+| NPC_Circular_2023-04_Consent | NPC Circular 2023-04 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 260acf8ed16b |
+| NPC_Circular_2023-06_Security | NPC Circular 2023-06 | in force | Project owner's instruction. s.39 expressly repeals Circular 16-01; no named repeal aimed at it found in the corpus; not independently verified | TBS | TBS | TBS | d717c2a44776 |
+| NPC_Circular_2023-07_Legitimate_Interest | NPC Circular 2023-07 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | b2e09208d17e |
+| NPC_Circular_2024-02_CCTV | NPC Circular 2024-02 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 66792d60a6cd |
 | NPC_Circular_17-01 | NPC Circular 17-01 | repealed | NPC Circular 2022-04 s.40: 'This Circular supersedes in its entirety NPC Circular No. 17-01.' | TBS | — | — | — |
 | NPC_Circular_16-01 | NPC Circular 16-01 | repealed | NPC Circular 2023-06 s.39: 'This Circular expressly repeals NPC Circular No. 16-01.' | TBS | — | — | — |
 | NPC_Circular_16-02 | NPC Circular 16-02 | repealed | NPC Circular 2020-03 s.20: 'This Circular supersedes in its entirety NPC Circular No. 16-02.' | TBS | — | — | — |
 | NPC_Advisory_2020-04 | NPC Advisory 2020-04 | repealed | NPC advisories page note, as reported by project owner. Not confirmed by the corpus: Circular 2024-02 s.15 is a general repealing clause that does not name this advisory. | TBS | — | — | — |
-| NPC-IC_Joint_Advisory_2025-001_PETs | NPC-IC Joint Advisory 2025-001 | unverified | — | TBS | TBS | TBS | 6934008f50d4 |
-| NPC_Advisory_2017-01_DPO | NPC Advisory 2017-01 | unverified | — | TBS | TBS | TBS | 9a0fbcf1146c |
-| NPC_Advisory_2017-03_PIA | NPC Advisory 2017-03 | unverified | — | TBS | TBS | TBS | 5f180677bdee |
-| NPC_Advisory_2021-01_Data_Subject_Rights | NPC Advisory 2021-01 | unverified | — | TBS | TBS | TBS | c9b1270d3877 |
-| NPC_Advisory_2021-02_ASEAN_Clauses_DMF | NPC Advisory 2021-02 | unverified | — | TBS | TBS | TBS | 078085c965d4 |
-| NPC_Advisory_2023-01_Deceptive_Design | NPC Advisory 2023-01 | unverified | — | TBS | TBS | TBS | f8849eaa6148 |
-| NPC_Advisory_2024-01_Cross_Border_Clauses | NPC Advisory 2024-01 | unverified | — | TBS | TBS | TBS | 37c1f3f9ad58 |
-| NPC_Advisory_2024-02_Section13f | NPC Advisory 2024-02 | unverified | — | TBS | TBS | TBS | eab6b9d85ff0 |
-| NPC_Advisory_2024-03_Child_Transparency | NPC Advisory 2024-03 | unverified | — | TBS | TBS | TBS | 6e7927672808 |
-| NPC_Advisory_2024-04_AI | NPC Advisory 2024-04 | unverified | — | TBS | TBS | TBS | 93a9c89b33f2 |
-| NPC_Advisory_2025-01_DSA_Clarification | NPC Advisory 2025-01 | unverified | — | TBS | TBS | TBS | df401d9040fc |
-| NPC_Advisory_2025-02_Privacy_Engineering | NPC Advisory 2025-02 | unverified | — | TBS | TBS | TBS | 06c53a09e228 |
-| NPC_Advisory_2026-01_Data_Scraping | NPC Advisory 2026-01 | unverified | — | TBS | TBS | TBS | f7995c24694c |
-| NPC_Advisory_2026-02_DBNMS_Clarification | NPC Advisory 2026-02 | unverified | — | TBS | TBS | TBS | 1c2202dedd98 |
-| NPC_Advisory_2026-03_ASIR_Extension | NPC Advisory 2026-03 | unverified | — | TBS | TBS | TBS | a7e091c3954c |
-| DRAFT_Updated_PIA_Guidelines_Circular | NPC Circular No. 2026-__ (DRAFT) | draft | — | TBS | TBS | TBS | ec50b3a208ca |
-| NPC_Toolkit_Ch2_PIA_0618 | NPC Privacy Toolkit, Ch. II | unverified | — | TBS | TBS | TBS | 89f2a170100e |
+| NPC-IC_Joint_Advisory_2025-001_PETs | NPC-IC Joint Advisory 2025-001 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 6934008f50d4 |
+| NPC_Advisory_2017-01_DPO | NPC Advisory 2017-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 9a0fbcf1146c |
+| NPC_Advisory_2017-03_PIA | NPC Advisory 2017-03 | not verified | — | TBS | TBS | TBS | 5f180677bdee |
+| NPC_Advisory_2021-01_Data_Subject_Rights | NPC Advisory 2021-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | c9b1270d3877 |
+| NPC_Advisory_2021-02_ASEAN_Clauses_DMF | NPC Advisory 2021-02 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 078085c965d4 |
+| NPC_Advisory_2023-01_Deceptive_Design | NPC Advisory 2023-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | f8849eaa6148 |
+| NPC_Advisory_2024-01_Cross_Border_Clauses | NPC Advisory 2024-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 37c1f3f9ad58 |
+| NPC_Advisory_2024-02_Section13f | NPC Advisory 2024-02 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | eab6b9d85ff0 |
+| NPC_Advisory_2024-03_Child_Transparency | NPC Advisory 2024-03 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 6e7927672808 |
+| NPC_Advisory_2024-04_AI | NPC Advisory 2024-04 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 93a9c89b33f2 |
+| NPC_Advisory_2025-01_DSA_Clarification | NPC Advisory 2025-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | df401d9040fc |
+| NPC_Advisory_2025-02_Privacy_Engineering | NPC Advisory 2025-02 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 06c53a09e228 |
+| NPC_Advisory_2026-01_Data_Scraping | NPC Advisory 2026-01 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | f7995c24694c |
+| NPC_Advisory_2026-02_DBNMS_Clarification | NPC Advisory 2026-02 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | 1c2202dedd98 |
+| NPC_Advisory_2026-03_ASIR_Extension | NPC Advisory 2026-03 | Listed by NPC, no repeal noted; not independently verified | Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); page marks no repeal; none found in the corpus; not independently verified | TBS | TBS | TBS | a7e091c3954c |
+| DRAFT_Updated_PIA_Guidelines_Circular | NPC Circular No. 2026-__ (DRAFT) | draft, not in force | — | TBS | TBS | TBS | ec50b3a208ca |
+| NPC_Toolkit_Ch2_PIA_0618 | NPC Privacy Toolkit, Ch. II | not verified | — | TBS | TBS | TBS | 89f2a170100e |

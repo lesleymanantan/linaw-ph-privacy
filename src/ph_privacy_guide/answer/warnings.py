@@ -3,10 +3,16 @@ from __future__ import annotations
 
 import re
 
-from ph_privacy_guide.config import DRAFT_LABEL, REPEALED_FOOTNOTE_WARNINGS, SUMMARY_LABEL, TOOLKIT_LABEL
+from ph_privacy_guide.config import (DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, STATUS_LISTED, SUMMARY_LABEL,
+                                     TOOLKIT_LABEL)
 
 STATUS_WORDS = {"in_force": "in force", "repealed": "repealed", "amended": "amended",
-                "draft": DRAFT_LABEL, "unverified": "not verified"}
+                "draft": DRAFT_LABEL, "unverified": "not verified", STATUS_LISTED: LISTED_LABEL}
+
+
+def status_text(chunk: dict) -> str:
+    """The on-screen status: the catalogue's label for that document."""
+    return chunk.get("status_label") or STATUS_WORDS[chunk["status"]]
 
 
 def annotation_warnings(row_type: str, footnotes: list[dict], cites: dict[str, str]) -> list[str]:

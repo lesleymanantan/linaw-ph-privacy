@@ -1,7 +1,7 @@
 """Format search results for the terminal. Passage text is printed exactly as stored."""
 from __future__ import annotations
 
-from ph_privacy_guide.answer.warnings import STATUS_WORDS
+from ph_privacy_guide.answer.warnings import status_text
 from ph_privacy_guide.config import ANNOTATION_LABEL, BLOCK_HEADINGS, CONTACT_URL
 from ph_privacy_guide.retrieve.search import SearchResult
 
@@ -14,7 +14,7 @@ UNCALIBRATED_NOTE = ('"Not sure" is not active yet: its threshold has not been s
 def format_hit(rank: int, hit) -> str:
     c = hit.chunk
     pages = f"p.{c['page_start']}" if c["page_start"] == c["page_end"] else f"pp.{c['page_start']}-{c['page_end']}"
-    meta = [f"Authority: {c['authority']}", f"Status: {STATUS_WORDS[c['status']]}"]
+    meta = [f"Authority: {c['authority']}", f"Status: {status_text(c)}"]
     if c["date_issued"]:
         meta.append(f"Issued: {c['date_issued']}")
     meta.append(pages)

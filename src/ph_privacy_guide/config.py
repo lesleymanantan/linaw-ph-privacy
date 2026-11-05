@@ -31,6 +31,13 @@ def allowed_pdfs() -> list[Path]:
     return out
 
 
+# Status for documents on the NPC advisories and circulars page. That page also lists repealed Circulars
+# 17-01 and 16-01 with no repeal note, so being listed does not prove a document is current.
+STATUS_LISTED = "listed_no_repeal"
+LISTED_LABEL = "Listed by NPC, no repeal noted; not independently verified"
+LISTED_BASIS = ("Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); "
+                "page marks no repeal; none found in the corpus; not independently verified")
+
 # Labels shown wherever these texts appear.
 ANNOTATION_LABEL = "NPC annotation"
 SUMMARY_LABEL = "NPC summary, not the rule text"

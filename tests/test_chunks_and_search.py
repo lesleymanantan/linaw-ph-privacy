@@ -66,6 +66,20 @@ def test_real_irr_notes_citing_16_01_warn_on_s30_and_s49():
     assert {c["section"] for c in warned} == {"30", "49"}
 
 
+def test_chunks_carry_the_catalogue_label_and_the_page_shows_it():
+    from ph_privacy_guide.answer.format import format_hit
+    from types import SimpleNamespace
+
+    chunks = _chunks()
+    sample = next(c for c in chunks if c["doc_id"] == "NPC_Advisory_2026-01_Data_Scraping" and c["kind"] == "section")
+    text = format_hit(1, SimpleNamespace(chunk=sample))
+    assert "Status: Listed by NPC, no repeal noted; not independently verified" in text
+    breach = next(c for c in chunks if c["doc_id"] == "NPC_Circular_16-03_Breach_Management" and c["kind"] == "section")
+    assert "Status: in force, supplemented by Advisory 2026-02" in format_hit(1, SimpleNamespace(chunk=breach))
+    ra = next(c for c in chunks if c["doc_id"] == "RA10173_DPA_2012" and c["kind"] == "section")
+    assert "Status: not verified" in format_hit(1, SimpleNamespace(chunk=ra))
+
+
 def test_every_chunk_is_in_the_right_block():
     for c in _chunks():
         if c["kind"] == "footnote":

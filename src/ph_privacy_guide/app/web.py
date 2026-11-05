@@ -10,7 +10,7 @@ import html
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs, urlparse
 
-from ph_privacy_guide.answer.warnings import STATUS_WORDS
+from ph_privacy_guide.answer.warnings import status_text
 from ph_privacy_guide.answer.format import UNCALIBRATED_NOTE
 from ph_privacy_guide.config import ANNOTATION_LABEL, BLOCK_HEADINGS, CONTACT_URL, MAIN_RESULTS, WEB_HOST, WEB_PORT
 from ph_privacy_guide.offline import enforce_offline
@@ -43,7 +43,7 @@ def _hit_html(rank: int, hit) -> str:
     c = hit.chunk
     esc = html.escape
     pages = f"p.{c['page_start']}" if c["page_start"] == c["page_end"] else f"pp.{c['page_start']}-{c['page_end']}"
-    meta = [f"Authority: {c['authority']}", f"Status: {STATUS_WORDS[c['status']]}"]
+    meta = [f"Authority: {c['authority']}", f"Status: {status_text(c)}"]
     if c["date_issued"]:
         meta.append(f"Issued: {c['date_issued']}")
     meta.append(pages)

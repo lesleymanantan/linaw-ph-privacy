@@ -10,16 +10,17 @@ import csv
 import hashlib
 import sys
 
-from ph_privacy_guide.config import CATALOGUE, EXCLUDED_DIRNAME, ROOT, allowed_pdfs
+from ph_privacy_guide.config import (CATALOGUE, EXCLUDED_DIRNAME, LISTED_BASIS, LISTED_LABEL, ROOT, STATUS_LISTED,
+                                     allowed_pdfs)
 
 FIELDS = [
-    "doc_id", "instrument_key", "short_cite", "title", "type", "issuer", "collection", "authority", "status",
+    "doc_id", "instrument_key", "short_cite", "title", "type", "issuer", "collection", "authority", "status", "status_label",
     "status_basis", "replaced_by", "supersedes", "supplemented_by", "parent_doc_id",
     "date_issued", "date_effective", "version", "in_corpus", "file_path", "sha256",
     "source_url", "retrieved_on", "notes",
 ]
 AUTHORITIES = {"statute", "rule", "guidance", "policy", "draft"}
-STATUSES = {"in_force", "repealed", "amended", "draft", "unverified"}
+STATUSES = {"in_force", "repealed", "amended", "draft", "unverified", STATUS_LISTED}
 TYPES = {"statute", "irr", "circular", "annex", "advisory", "joint_advisory", "toolkit", "draft_circular"}
 
 
@@ -68,6 +69,15 @@ def validate(rows: list[dict]) -> list[str]:
             errs.append(f"{d}: bad type {r['type']!r}")
         if r["status"] not in ("unverified", "draft") and not r["status_basis"]:
             errs.append(f"{d}: status {r['status']} needs status_basis")
+        if not r["status_label"]:
+            errs.append(f"{d}: status_label is empty")
+        if r["status"] == STATUS_LISTED and (r["status_basis"] != LISTED_BASIS or r["status_label"] != LISTED_LABEL):
+            errs.append(f"{d}: listed documents must use the exact basis and label")
+        text = f"{r['status_label']} {r['status_basis']}".lower()
+        if "listed as current" in text:
+            errs.append(f"{d}: 'listed as current' is not allowed: being listed does not prove it")
+        if r["status"] == STATUS_LISTED and "in force" in text:
+            errs.append(f"{d}: a listed document may not be described as in force")
         if r["status"] == "repealed" and not r["replaced_by"]:
             errs.append(f"{d}: repealed without replaced_by")
         if (r["collection"] == "drafts") != (r["status"] == "draft" and r["authority"] == "draft"):
@@ -101,14 +111,14 @@ def write_sources(rows: list[dict]) -> None:
         "",
         "Provenance of every legal text. **Generated from `catalogue/catalogue.csv`** by",
         "`python -m ph_privacy_guide.catalogue --sources`; edit the catalogue, not this file.",
-        "`TBS` = to be supplied. Status `unverified` = not yet confirmed from a cited provision.",
+        "`TBS` = to be supplied. \"not verified\" = not yet confirmed from a cited provision.",
         "",
         "| doc_id | Citation | Status | Status basis | Version | Source URL | Retrieved | sha256 (first 12) |",
         "|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
         basis = r["status_basis"].replace("|", "/") or "—"
-        lines.append(f"| {r['doc_id']} | {r['short_cite']} | {r['status']} | {basis} | {r['version'] or '—'} | "
+        lines.append(f"| {r['doc_id']} | {r['short_cite']} | {r['status_label']} | {basis} | {r['version'] or '—'} | "
                      f"{r['source_url'] or '—'} | {r['retrieved_on'] or '—'} | {r['sha256'][:12] or '—'} |")
     (ROOT / "SOURCES.md").write_text("\n".join(lines) + "\n")
 

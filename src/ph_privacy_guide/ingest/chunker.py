@@ -318,6 +318,7 @@ def build_chunks() -> list[dict]:
                 "index_text": "", "text_sha256": hashlib.sha256(note["text"].encode()).hexdigest(),
             })
         for chunk in doc_chunks:
+            chunk["status_label"] = row["status_label"]
             chunk["warnings"] = status_warnings(chunk, cites) + annotation_warnings(row["type"], chunk["annotations"], cites)
         chunks.extend(doc_chunks)
     return chunks
@@ -452,6 +453,9 @@ def validate(chunks: list[dict]) -> list[dict]:
     misplaced = [c["chunk_id"] for c in chunks if c["text"].split("\n")[0].strip()
                  not in page_cache[c["doc_id"]].get(c["page_start"], "")]
     add("Each chunk starts on the page it cites", not misplaced, f"{len(misplaced)} misplaced {misplaced[:5]}")
+
+    stale = [c["chunk_id"] for c in chunks if c["status"] != rows[c["doc_id"]]["status"] or c["status_label"] != rows[c["doc_id"]]["status_label"]]
+    add("Every chunk's status and label match the catalogue", not stale, f"{len(stale)} differ")
 
     repealed_text = [c["chunk_id"] for c in chunks if c["status"] == "repealed"]
     add("Repealed instruments have no text in the corpus", not repealed_text, "17-01, 16-01, 16-02 and Advisory 2020-04 are catalogue rows only")
