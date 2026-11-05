@@ -10,3 +10,7 @@ __pycache__/
 data/processed/
 indexes/
 models/
+
+# local spreadsheets and their Excel lock files
+*.xlsx
+~$*

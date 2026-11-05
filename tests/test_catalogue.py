@@ -1,5 +1,7 @@
+import csv
+
 from ph_privacy_guide import catalogue
-from ph_privacy_guide.config import (DRAFT_LABEL, IRR_AMENDED_LABEL, LISTED_BASIS, LISTED_LABEL, LISTED_VARIANTS, RA_STATUS_TEXT,
+from ph_privacy_guide.config import (DRAFT_LABEL, IRR_AMENDED_LABEL, LISTED_BASIS, LISTED_LABEL, LISTED_VARIANTS, RA_STATUS_TEXT, ROOT,
                                      STATUS_LISTED)
 
 LISTED = {
@@ -112,3 +114,14 @@ def test_annex_follows_its_circular_and_the_rest_stay_not_verified():
         assert rows[key]["status"] == "unverified" and rows[key]["status_label"] == "not verified", key
     for key in ("NPC_Circular_17-01", "NPC_Circular_16-01", "NPC_Circular_16-02", "NPC_Advisory_2020-04"):
         assert rows[key]["status"] == "repealed" and rows[key]["status_label"] == "repealed"
+
+
+def test_source_urls_are_copied_exactly_from_the_npc_links_list():
+    with open(ROOT / "data" / "reference" / "npc_page_links_5Nov.csv", newline="", encoding="utf-8-sig") as f:
+        listed = {row["url"] for row in csv.DictReader(f)}
+    rows = catalogue.load()
+    filled = [r for r in rows if r["source_url"] != "TBS"]
+    assert len(filled) == 28 and all(r["source_url"] in listed for r in filled)
+    assert len({r["source_url"] for r in filled}) == 28
+    assert {r["doc_id"] for r in rows if r["source_url"] == "TBS"} == {
+        "RA10173_DPA_2012", "IRR_RA10173", "DRAFT_Updated_PIA_Guidelines_Circular", "NPC_Toolkit_Ch2_PIA_0618"}
