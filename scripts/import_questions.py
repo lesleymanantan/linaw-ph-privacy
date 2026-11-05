@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Import human-written questions from CSV. Usage: import_questions.py FILE.csv --split dev
 
-All rows must be valid or nothing is written. See eval/GUIDELINES.md.
+Blank rows are skipped and notes are not read. All other rows must be valid or nothing is written.
+See eval/GUIDELINES.md.
 """
 import argparse
 import sys

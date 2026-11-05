@@ -61,6 +61,11 @@ DOCUMENT_WARNINGS = {
     "NPC_Circular_2022-04_Annex1": "Annex of NPC Circular 2022-04. Its status follows the circular.",
 }
 
+# Warnings on the chunks of one section. Circular 2023-06 s.4 is one chunk, so its warning covers all of s.4, including s.4(D).
+PIA_PENDING_WARNING = ("A draft circular (not in force) would change when a privacy impact assessment is required. "
+                       "Check the NPC site for the current position.")
+SECTION_WARNINGS = {("NPC_Circular_2023-06_Security", section): PIA_PENDING_WARNING for section in ("4", "5", "7")}
+
 # Warnings quoting an annotation printed in the text. The quote must be in that section, or the build stops.
 # (doc_id, section, subsection prefix; "" covers the whole section) -> (what the annotation says, quote, doc_id it points to).
 TEXT_ANNOTATION_WARNINGS = {

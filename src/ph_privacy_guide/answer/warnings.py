@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import re
 
-from ph_privacy_guide.config import (DOCUMENT_WARNINGS, DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, STATUS_LISTED,
-                                     SUMMARY_LABEL, TEXT_ANNOTATION_WARNINGS, TOOLKIT_LABEL)
+from ph_privacy_guide.config import (DOCUMENT_WARNINGS, DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, SECTION_WARNINGS,
+                                     STATUS_LISTED, SUMMARY_LABEL, TEXT_ANNOTATION_WARNINGS, TOOLKIT_LABEL)
 
 STATUS_WORDS = {"repealed": "repealed", "amended": "amended",
                 "draft": DRAFT_LABEL, "unverified": "not verified", STATUS_LISTED: LISTED_LABEL}
@@ -53,6 +53,8 @@ def status_warnings(rec: dict, cites: dict[str, str]) -> list[str]:
         out.append(f"{cites.get(rec['clarified_by'], rec['clarified_by'])} gives clarifications for requests under this circular.")
     if rec.get("doc_id") in DOCUMENT_WARNINGS:
         out.append(DOCUMENT_WARNINGS[rec["doc_id"]])
+    if rec.get("kind") == "section" and (rec["doc_id"], rec["section"]) in SECTION_WARNINGS:
+        out.append(SECTION_WARNINGS[(rec["doc_id"], rec["section"])])
     if rec["label"] == SUMMARY_LABEL:
         out.append(f"{SUMMARY_LABEL}.")
     if rec["label"] == TOOLKIT_LABEL:

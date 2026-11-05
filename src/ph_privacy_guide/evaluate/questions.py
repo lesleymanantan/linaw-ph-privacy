@@ -10,14 +10,15 @@ from ph_privacy_guide.config import PROCESSED, ROOT
 QUESTIONS_DIR = ROOT / "eval" / "questions"
 SPLITS = ("train", "dev", "test")
 LANGUAGES = {"en", "fil", "taglish"}
-TYPES = {"definition", "obligation", "right", "procedure", "penalty", "scenario", "status", "out_of_scope", "not_covered"}
-UNANSWERABLE_TYPES = {"out_of_scope", "not_covered"}
+TYPES = {"lookup", "scenario", "out_of_scope"}
 SOURCES = {"human", "rule"}
 ORIGINS = {"human", "ai_draft_edited"}
 FIELDS = ["id", "split", "question", "language", "type", "answerable", "gold", "gold_doc_ids", "source", "origin",
-          "author", "reviewer", "pair_id", "topic", "notes"]
-CSV_COLUMNS = ["id", "question", "language", "type", "answerable", "gold", "source", "origin", "author", "reviewer",
-               "pair_id", "topic", "notes"]
+          "author", "reviewer", "date", "pair_id"]
+CSV_COLUMNS = ["id", "question", "language", "pair_id", "type", "answerable", "gold", "origin", "writer", "reviewer", "date",
+               "notes"]
+IGNORED_COLUMNS = {"notes"}
+ANSWERABLE_VALUES = {"yes": True, "no": False}
 
 
 def load_chunks() -> dict[str, dict]:
@@ -53,9 +54,9 @@ def validate_row(row: dict, chunks: dict[str, dict]) -> list[str]:
     if row["type"] not in TYPES:
         errs.append(f"bad type {row['type']!r}")
     if not isinstance(row["answerable"], bool):
-        errs.append("answerable must be true or false")
-    elif row["answerable"] == (row["type"] in UNANSWERABLE_TYPES):
-        errs.append("answerable must be false for out_of_scope and not_covered, and only for those")
+        errs.append(f"answerable must be yes or no, not {row['answerable']!r}")
+    elif row["answerable"] and row["type"] == "out_of_scope":
+        errs.append("answerable must be no for out_of_scope")
     if row["answerable"] is True and not row["gold"]:
         errs.append("answerable question has no gold")
     if row["answerable"] is False and row["gold"]:
@@ -109,22 +110,31 @@ def split_gold_cell(cell: str) -> list[str]:
 
 
 def csv_to_rows(path: Path, split: str, chunks: dict[str, dict]) -> tuple[list[dict], list[str]]:
+    """Map the owner's columns to the schema: writer becomes author, source is human, notes are not read."""
     rows, errs = [], []  # unresolved gold is caught by validate_row, and fails the whole import
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
-        absent = [c for c in CSV_COLUMNS if c not in (reader.fieldnames or [])]
-        if absent:
-            return [], [f"CSV is missing columns: {absent}"]
-        for number, raw in enumerate(reader, 2):
-            answerable = {"true": True, "false": False}.get(raw["answerable"].strip().lower(), raw["answerable"])
-            gold = split_gold_cell(raw["gold"])
+        columns = reader.fieldnames or []
+        absent = [c for c in CSV_COLUMNS if c not in columns]
+        unknown = [c for c in columns if c not in CSV_COLUMNS]
+        if absent or unknown:
+            return [], [f"CSV columns differ: missing {absent}, unknown {unknown}"]
+        for raw in reader:
+            line = reader.line_num
+            if raw.get(None):
+                errs.append(f"line {line}: more cells than columns")
+                continue
+            cell = {c: (raw[c] or "").strip() for c in CSV_COLUMNS if c not in IGNORED_COLUMNS}
+            if not any(cell.values()):
+                continue
+            gold = split_gold_cell(cell["gold"])
             rows.append({
-                "id": raw["id"].strip(), "split": split, "question": raw["question"].strip(),
-                "language": raw["language"].strip(), "type": raw["type"].strip(), "answerable": answerable,
+                "id": cell["id"], "split": split, "question": cell["question"],
+                "language": cell["language"], "type": cell["type"],
+                "answerable": ANSWERABLE_VALUES.get(cell["answerable"], cell["answerable"]),
                 "gold": gold, "gold_doc_ids": sorted({chunks[c]["doc_id"] for g in gold for c in resolve_label(g, chunks)}),
-                "source": raw["source"].strip() or "human", "origin": raw["origin"].strip(),
-                "author": raw["author"].strip(), "reviewer": raw["reviewer"].strip(),
-                "pair_id": raw["pair_id"].strip(), "topic": raw["topic"].strip(), "notes": raw["notes"].strip(),
+                "source": "human", "origin": cell["origin"], "author": cell["writer"], "reviewer": cell["reviewer"],
+                "date": cell["date"], "pair_id": cell["pair_id"],
             })
     return rows, errs
 

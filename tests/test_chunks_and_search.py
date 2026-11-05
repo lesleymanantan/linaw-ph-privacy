@@ -91,6 +91,15 @@ def test_document_warnings_on_advisory_2017_03_and_annex_1():
     assert "Annex of NPC Circular 2022-04. Its status follows the circular." in annex["warnings"]
 
 
+def test_pending_pia_warning_is_on_circular_2023_06_s4_s5_s7_only():
+    text = ("A draft circular (not in force) would change when a privacy impact assessment is required. "
+            "Check the NPC site for the current position.")
+    warned = [c for c in _chunks() if text in c["warnings"]]
+    assert sorted(c["citation"] for c in warned) == [f"NPC Circular 2023-06, s.{n}" for n in (4, 5, 7)]
+    assert "D. Conduct a Privacy Impact Assessment" in warned[0]["text"]
+    assert all(c["status"] == "listed_no_repeal" and c["block"] == BLOCK_MAIN for c in warned)
+
+
 HEADER = ("NPC Advisory No. 2026-02 – Clarification on the\nSubmission of Personal Data Breach Notification\n"
           "through Data Breach Notification Management\nSystem\nPage 2 of 3\n")
 ADVISORY = "NPC_Advisory_2026-02_DBNMS_Clarification"

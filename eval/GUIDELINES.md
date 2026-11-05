@@ -21,8 +21,9 @@ only if a person edited and reviewed it, and it must be marked as such.
 3. Filipino and Taglish questions must be written by native speakers, not machine-translated.
 4. Cover all three languages. To compare languages directly, write the same question in each and
    give the rows the same `pair_id`. A `pair_id` may not cross splits.
-5. About one in five questions should be unanswerable: `out_of_scope` (not data privacy) or
-   `not_covered` (data privacy, but not in this corpus). These measure "not sure".
+5. About one in five questions should be unanswerable (`answerable` = `no`). These measure "not sure".
+   A question that is not about data privacy has `type` = `out_of_scope`. A data privacy question this
+   corpus does not answer keeps `type` = `lookup` or `scenario`, or may be marked `out_of_scope`.
 6. Spread questions across the instruments and topics. Do not cluster on one document.
 
 ## Labelling gold passages
@@ -35,7 +36,7 @@ only if a person edited and reviewed it, and it must be marked as such.
 3. List every passage that fully answers the question, including one in a different instrument.
 4. Prefer the operative provision. Label a draft passage or the 16-03 Summary as gold only if it is
    truly the only answer. A passage from a draft is not law.
-5. Unanswerable questions have an empty `gold` and `answerable` set to `false`.
+5. Unanswerable questions have an empty `gold` and `answerable` set to `no`.
 6. A second person checks each row and is named in `reviewer`.
 
 Labels come from the documents, so they survive re-chunking. The import fails as a whole if any label
@@ -43,20 +44,26 @@ does not resolve, and the metrics commands check them again.
 
 ## Columns
 
-Start from `eval/questions_template.csv`. Full definitions are in `eval/question_schema.json`.
+Start from `eval/questions_template.csv`. Full definitions are in `eval/question_schema.json`. All 12
+columns must be present, and no others. Blank rows are skipped.
 
-| Column | Values |
-|---|---|
-| `id` | Unique across all splits |
-| `question` | The question |
-| `language` | `en`, `fil`, `taglish` |
-| `type` | `definition`, `obligation`, `right`, `procedure`, `penalty`, `scenario`, `status`, `out_of_scope`, `not_covered` |
-| `answerable` | `true` or `false`; `false` only for `out_of_scope` and `not_covered` |
-| `gold` | Labels from `eval/gold_labels.csv`, separated by `;` |
-| `source` | `human`, or `rule` for code-generated rows (`train` only) |
-| `origin` | `human`, `ai_draft_edited`; empty only for `source=rule` |
-| `author`, `reviewer` | Names or initials |
-| `pair_id`, `topic`, `notes` | Optional |
+| Column | Values | Stored as |
+|---|---|---|
+| `id` | Unique across all splits | `id` |
+| `question` | The question | `question` |
+| `language` | `en`, `fil`, `taglish` | `language` |
+| `pair_id` | Optional | `pair_id` |
+| `type` | `lookup`, `scenario`, `out_of_scope` | `type` |
+| `answerable` | `yes` or `no`; `no` for every `out_of_scope` row | `answerable`, true or false |
+| `gold` | Labels from `eval/gold_labels.csv`, separated by `;` | `gold` |
+| `origin` | `human`, `ai_draft_edited` | `origin` |
+| `writer` | Name or initials | `author` |
+| `reviewer` | Name or initials; required for `dev` and `test` | `reviewer` |
+| `date` | Free text | `date` |
+| `notes` | Anything; for people only | Not read |
+
+Imported rows are stored with `source=human`. Rows with `source=rule` come from code, not from this CSV,
+and stay in `train`.
 
 ## Commands
 

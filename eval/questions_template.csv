@@ -1,1 +1,1 @@
-id,question,language,type,answerable,gold,source,origin,author,reviewer,pair_id,topic,notes
+id,question,language,pair_id,type,answerable,gold,origin,writer,reviewer,date,notes

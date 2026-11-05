@@ -22,9 +22,9 @@ CHUNKS = {"c1": _chunk("D1", "D1 s.1"), "c2": _chunk("D2", "D2 s.2"),
 
 
 def row(**over):
-    base = {"id": "PLACEHOLDER-1", "split": "dev", "question": "PLACEHOLDER", "language": "en", "type": "definition",
+    base = {"id": "PLACEHOLDER-1", "split": "dev", "question": "PLACEHOLDER", "language": "en", "type": "lookup",
             "answerable": True, "gold": ["D1 s.1"], "gold_doc_ids": ["D1"], "source": "human", "origin": "human",
-            "author": "a", "reviewer": "r", "pair_id": "", "topic": "", "notes": ""}
+            "author": "a", "reviewer": "r", "date": "", "pair_id": ""}
     return {**base, **over}
 
 
@@ -56,7 +56,10 @@ def test_valid_row_passes():
     ({"gold": ["D1 s.99"]}, "does not resolve"),
     ({"gold": ["D2 s.9"]}, "does not resolve"),
     ({"answerable": False}, "unanswerable question has gold"),
-    ({"type": "out_of_scope"}, "answerable must be false"),
+    ({"type": "out_of_scope"}, "answerable must be no"),
+    ({"type": "definition"}, "bad type"),
+    ({"language": "tl"}, "bad language"),
+    ({"answerable": "maybe"}, "answerable must be yes or no"),
     ({"source": "rule"}, "train only"),
     ({"origin": ""}, "origin must be"),
 ])
@@ -81,8 +84,8 @@ def _write_csv(path, rows):
 
 
 def _csv_row(**over):
-    base = {"id": "PLACEHOLDER-1", "question": "PLACEHOLDER", "language": "fil", "type": "definition", "answerable": "true",
-            "gold": "D1 s.1; D2 s.2", "source": "", "origin": "human", "author": "a", "reviewer": "r", "pair_id": "", "topic": "", "notes": ""}
+    base = {"id": "PLACEHOLDER-1", "question": "PLACEHOLDER", "language": "fil", "pair_id": "P1", "type": "lookup", "answerable": "yes",
+            "gold": "D1 s.1; D2 s.2", "origin": "human", "writer": "w", "reviewer": "r", "date": "D", "notes": "N"}
     return {**base, **over}
 
 
@@ -109,6 +112,66 @@ def test_import_resolves_labels_and_writes(tmp_path, monkeypatch):
     written = Q.load_split("dev", tmp_path)[0]
     assert written["gold"] == ["D1 s.1", "D2 s.2"] and written["gold_doc_ids"] == ["D1", "D2"]
     assert written["source"] == "human" and out.name == "dev.jsonl"
+    assert written["author"] == "w" and written["date"] == "D" and written["pair_id"] == "P1" and written["answerable"] is True
+    assert set(written) == set(Q.FIELDS) and "N" not in written.values()
+
+
+def test_template_has_the_owners_columns_and_no_rows():
+    lines = (ROOT / "eval" / "questions_template.csv").read_text().splitlines()
+    assert lines == ["id,question,language,pair_id,type,answerable,gold,origin,writer,reviewer,date,notes"]
+    assert lines[0].split(",") == Q.CSV_COLUMNS
+
+
+def test_import_skips_blank_rows_and_ignores_notes(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    blank = {c: "" for c in Q.CSV_COLUMNS}
+    notes_only = {**blank, "notes": "N"}
+    _write_csv(tmp_path / "in.csv", [blank, _csv_row(), notes_only, blank])
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert errs == [] and len(Q.load_split("dev", tmp_path)) == 1
+
+
+def test_import_of_only_blank_rows_writes_nothing(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    _write_csv(tmp_path / "in.csv", [{c: "" for c in Q.CSV_COLUMNS}])
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert out is None and errs == ["the CSV has no rows"]
+
+
+@pytest.mark.parametrize("over,needle", [
+    ({"answerable": "true"}, "answerable must be yes or no"),
+    ({"answerable": ""}, "answerable must be yes or no"),
+    ({"type": "definition"}, "bad type"),
+    ({"origin": ""}, "origin must be"),
+])
+def test_import_rejects_values_outside_the_allowed_lists(tmp_path, monkeypatch, over, needle):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    _write_csv(tmp_path / "in.csv", [_csv_row(**over)])
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert out is None and any(needle in e for e in errs)
+
+
+def test_unanswerable_rows_need_no_gold_and_may_be_any_type(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    _write_csv(tmp_path / "in.csv", [_csv_row(id="PLACEHOLDER-1", type="out_of_scope", answerable="no", gold=""),
+                                     _csv_row(id="PLACEHOLDER-2", type="scenario", answerable="no", gold="")])
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert errs == [] and [r["answerable"] for r in Q.load_split("dev", tmp_path)] == [False, False]
+
+
+def test_import_rejects_old_or_extra_columns(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    (tmp_path / "in.csv").write_text("id,question,language,type,answerable,gold,source,origin,author,reviewer,pair_id,topic,notes\n")
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert out is None and "missing" in errs[0] and "topic" in errs[0]
+
+
+def test_import_handles_short_and_overlong_rows(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    header = ",".join(Q.CSV_COLUMNS)
+    (tmp_path / "in.csv").write_text(f"{header}\nPLACEHOLDER-1,PLACEHOLDER\n,,,,,,,,,,,,extra\n")
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert out is None and any("more cells than columns" in e for e in errs) and any("PLACEHOLDER-1" in e for e in errs)
 
 
 def test_import_writes_nothing_if_any_row_is_bad(tmp_path, monkeypatch):
