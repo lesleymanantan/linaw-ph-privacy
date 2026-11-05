@@ -181,8 +181,8 @@ def test_requested_hints_exist_and_misleading_ones_stay_out():
     hints = _hints()
     assert {"DPO", "PIC", "PIP", "COP", "PIA", "DPA", "DSA"} <= set(hints)
     assert hints["DPA"] == "Data Privacy Act of 2012" and hints["DSA"] == "Data Sharing Agreement"
-    # SEC mostly means "section" (SEC. 2). The others have no full name linked to them in the corpus.
-    assert not {"SEC", "SPI", "PII", "ISO", "IEC", "NIST", "UPESO"} & set(hints)
+    # SEC mostly means "section" (SEC. 2). MCC has two wordings in the corpus. The others have no full name linked to them.
+    assert not {"SEC", "MCC", "SPI", "PII", "ISO", "IEC", "NIST", "UPESO"} & set(hints)
 
 
 def test_sec_heading_gets_no_hint():
