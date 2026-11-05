@@ -277,7 +277,7 @@ def _base(row: dict, kind: str, section: str, title: str, division: str, chunk: 
         "citation": f"{cite} ({label})" if label else cite,
         "instrument": row["title"], "short_cite": row["short_cite"],
         "authority": row["authority"], "status": row["status"], "label": label,
-        "replaced_by": row["replaced_by"], "supplemented_by": row["supplemented_by"],
+        "replaced_by": row["replaced_by"], "clarified_by": row["clarified_by"],
         "date_issued": row["date_issued"], "version": row["version"], "collection": row["collection"],
         "page_start": chunk[0].page if chunk else None, "page_end": chunk[-1].page if chunk else None,
         "text": "\n".join(l.text for l in chunk),

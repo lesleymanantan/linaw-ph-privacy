@@ -8,7 +8,7 @@ from ph_privacy_guide.config import ANNOTATION_LABEL, DRAFT_LABEL, PROCESSED, SU
 from ph_privacy_guide.ingest import sectioner as S
 
 ROW = {"doc_id": "X", "short_cite": "X", "type": "circular", "status": "unverified", "authority": "rule",
-       "replaced_by": "", "supplemented_by": "", "date_issued": "", "version": "", "collection": "privacy-law",
+       "replaced_by": "", "clarified_by": "", "date_issued": "", "version": "", "collection": "privacy-law",
        "title": "X", "parent_doc_id": ""}
 
 

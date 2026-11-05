@@ -38,6 +38,52 @@ LISTED_LABEL = "Listed by NPC, no repeal noted; not independently verified"
 LISTED_BASIS = ("Listed on the NPC advisories and circulars page (page dated 2026-09-21; retrieved 2026-10-25); "
                 "page marks no repeal; none found in the corpus; not independently verified")
 
+# Listed documents whose wording adds something to the plain label or basis. Exact text, checked by the catalogue.
+LISTED_VARIANTS = {
+    "NPC_Circular_16-03_Breach_Management": (
+        "Listed by NPC, no repeal noted. Advisory 2026-02 (2026-05) gives clarifications for requests under it, "
+        "which shows it is still applied. Not independently verified.",
+        LISTED_BASIS + "; Advisory 2026-02 (2026-05) gives clarifications for requests under it (s.2), "
+        "which shows it is still applied"),
+    "NPC_Circular_2022-04_Registration": (LISTED_LABEL, LISTED_BASIS + "; supersedes Circular 17-01 (s.40)"),
+    "NPC_Circular_2023-06_Security": (LISTED_LABEL, LISTED_BASIS + "; expressly repeals Circular 16-01 (s.39)"),
+    "NPC_Circular_2022-04_Annex1": (
+        LISTED_LABEL, "Annex of NPC Circular 2022-04, which refers to it in s.6 (see Annex 1); status follows the circular: "
+        + LISTED_BASIS),
+}
+RA_STATUS_TEXT = "Downloaded from NPC's DPA and IRR page; no amendment found in the corpus; not independently verified."
+IRR_AMENDED_LABEL = "Amended by NPC Circular 2020-03 (per NPC annotations in the text); otherwise not independently verified"
+
+# Warnings on every chunk of a document.
+DOCUMENT_WARNINGS = {
+    "NPC_Advisory_2017-03_PIA": ("A draft circular (not in force) would supersede this advisory if adopted. "
+                                 "Check the NPC site for the current position."),
+    "NPC_Circular_2022-04_Annex1": "Annex of NPC Circular 2022-04. Its status follows the circular.",
+}
+
+# Warnings quoting an annotation printed in the text. The quote must be in that section, or the build stops.
+# (doc_id, section, subsection prefix; "" covers the whole section) -> (what the annotation says, quote, doc_id it points to).
+TEXT_ANNOTATION_WARNINGS = {
+    ("IRR_RA10173", "3", "(f)"): (
+        "Amended", "(as amended by NPC Circular No. 2020-03)", "NPC_Circular_2020-03_Data_Sharing_Agreements"),
+    ("IRR_RA10173", "20", ""): (
+        "Superseded", "(The entire Section 20 is superseded by NPC Circular No. 2020-03)",
+        "NPC_Circular_2020-03_Data_Sharing_Agreements"),
+}
+
+# Cleaning rules: text removed from chunks only. Raw PDFs, page text and section records keep it.
+# Each rule matches one document, one section and one exact block of lines, and every removal is logged.
+CHUNK_CLEANING_RULES = [{
+    "rule": "advisory-2026-02-running-header",
+    "doc_id": "NPC_Advisory_2026-02_DBNMS_Clarification",
+    "section": "2",
+    "pattern": (r"^NPC Advisory No\. 2026-02 – Clarification on the\n"
+                r"Submission of Personal Data Breach Notification\n"
+                r"through Data Breach Notification Management\n"
+                r"System\n"
+                r"Page \d+ of \d+\n"),
+}]
+
 # Labels shown wherever these texts appear.
 ANNOTATION_LABEL = "NPC annotation"
 SUMMARY_LABEL = "NPC summary, not the rule text"

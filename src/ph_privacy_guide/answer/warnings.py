@@ -3,10 +3,10 @@ from __future__ import annotations
 
 import re
 
-from ph_privacy_guide.config import (DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, STATUS_LISTED, SUMMARY_LABEL,
-                                     TOOLKIT_LABEL)
+from ph_privacy_guide.config import (DOCUMENT_WARNINGS, DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, STATUS_LISTED,
+                                     SUMMARY_LABEL, TEXT_ANNOTATION_WARNINGS, TOOLKIT_LABEL)
 
-STATUS_WORDS = {"in_force": "in force", "repealed": "repealed", "amended": "amended",
+STATUS_WORDS = {"repealed": "repealed", "amended": "amended",
                 "draft": DRAFT_LABEL, "unverified": "not verified", STATUS_LISTED: LISTED_LABEL}
 
 
@@ -29,6 +29,19 @@ def annotation_warnings(row_type: str, footnotes: list[dict], cites: dict[str, s
     return out
 
 
+def text_annotation_warnings(chunk: dict, section_text: str, cites: dict[str, str]) -> list[str]:
+    """Quote an annotation printed in the section, on the chunks it covers. Stops if the quote is not there."""
+    out = []
+    if chunk["kind"] != "section":
+        return out
+    for (doc_id, section, prefix), (effect, quote, target) in TEXT_ANNOTATION_WARNINGS.items():
+        if chunk["doc_id"] == doc_id and chunk["section"] == section and chunk["subsection"].startswith(prefix):
+            if quote not in re.sub(r"\s+", " ", section_text):
+                raise ValueError(f"{doc_id} s.{section}: annotation not found in the text: {quote}")
+            out.append(f'{effect}: the NPC annotation in this text reads "{quote}". See {cites[target]}.')
+    return out
+
+
 def status_warnings(rec: dict, cites: dict[str, str]) -> list[str]:
     out = []
     if rec["status"] == "draft":
@@ -36,8 +49,10 @@ def status_warnings(rec: dict, cites: dict[str, str]) -> list[str]:
     if rec["status"] == "repealed":
         target = cites.get(rec["replaced_by"], rec["replaced_by"])
         out.append(f"REPEALED: replaced by {target}.")
-    if rec["supplemented_by"]:
-        out.append(f"Supplemented by {cites.get(rec['supplemented_by'], rec['supplemented_by'])}.")
+    if rec["clarified_by"]:
+        out.append(f"{cites.get(rec['clarified_by'], rec['clarified_by'])} gives clarifications for requests under this circular.")
+    if rec.get("doc_id") in DOCUMENT_WARNINGS:
+        out.append(DOCUMENT_WARNINGS[rec["doc_id"]])
     if rec["label"] == SUMMARY_LABEL:
         out.append(f"{SUMMARY_LABEL}.")
     if rec["label"] == TOOLKIT_LABEL:

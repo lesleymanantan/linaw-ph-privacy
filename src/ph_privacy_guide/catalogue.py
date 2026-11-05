@@ -10,17 +10,17 @@ import csv
 import hashlib
 import sys
 
-from ph_privacy_guide.config import (CATALOGUE, EXCLUDED_DIRNAME, LISTED_BASIS, LISTED_LABEL, ROOT, STATUS_LISTED,
-                                     allowed_pdfs)
+from ph_privacy_guide.config import (CATALOGUE, EXCLUDED_DIRNAME, LISTED_BASIS, LISTED_LABEL, LISTED_VARIANTS, ROOT,
+                                     STATUS_LISTED, allowed_pdfs)
 
 FIELDS = [
     "doc_id", "instrument_key", "short_cite", "title", "type", "issuer", "collection", "authority", "status", "status_label",
-    "status_basis", "replaced_by", "supersedes", "supplemented_by", "parent_doc_id",
+    "status_basis", "replaced_by", "supersedes", "clarified_by", "parent_doc_id",
     "date_issued", "date_effective", "version", "in_corpus", "file_path", "sha256",
     "source_url", "retrieved_on", "notes",
 ]
 AUTHORITIES = {"statute", "rule", "guidance", "policy", "draft"}
-STATUSES = {"in_force", "repealed", "amended", "draft", "unverified", STATUS_LISTED}
+STATUSES = {"repealed", "amended", "draft", "unverified", STATUS_LISTED}
 TYPES = {"statute", "irr", "circular", "annex", "advisory", "joint_advisory", "toolkit", "draft_circular"}
 
 
@@ -71,18 +71,20 @@ def validate(rows: list[dict]) -> list[str]:
             errs.append(f"{d}: status {r['status']} needs status_basis")
         if not r["status_label"]:
             errs.append(f"{d}: status_label is empty")
-        if r["status"] == STATUS_LISTED and (r["status_basis"] != LISTED_BASIS or r["status_label"] != LISTED_LABEL):
+        if r["status"] == STATUS_LISTED and (r["status_label"], r["status_basis"]) != LISTED_VARIANTS.get(d, (LISTED_LABEL, LISTED_BASIS)):
             errs.append(f"{d}: listed documents must use the exact basis and label")
         text = f"{r['status_label']} {r['status_basis']}".lower()
         if "listed as current" in text:
             errs.append(f"{d}: 'listed as current' is not allowed: being listed does not prove it")
-        if r["status"] == STATUS_LISTED and "in force" in text:
-            errs.append(f"{d}: a listed document may not be described as in force")
+        if r["status"] != "draft" and "in force" in text:
+            errs.append(f"{d}: only the draft's own label may use the words 'in force'")
+        if "supplement" in text:
+            errs.append(f"{d}: no document in the corpus says it supplements another")
         if r["status"] == "repealed" and not r["replaced_by"]:
             errs.append(f"{d}: repealed without replaced_by")
         if (r["collection"] == "drafts") != (r["status"] == "draft" and r["authority"] == "draft"):
             errs.append(f"{d}: drafts collection must have status=draft and authority=draft")
-        for ref_field in ("replaced_by", "supplemented_by", "parent_doc_id"):
+        for ref_field in ("replaced_by", "clarified_by", "parent_doc_id"):
             for ref in filter(None, r[ref_field].split(";")):
                 if ref not in idset:
                     errs.append(f"{d}: {ref_field} -> unknown doc_id {ref}")

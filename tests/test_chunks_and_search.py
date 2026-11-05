@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings
+from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings, text_annotation_warnings
 from ph_privacy_guide.config import (BLOCK_MAIN, BLOCK_PENDING, BLOCK_SUMMARY, DRAFT_LABEL, KEYWORD_ONLY_NOTE, MAIN_RESULTS,
                                      PROCESSED, ROOT, RRF_K, SIDE_BLOCK_MAX, SUMMARY_LABEL)
 from ph_privacy_guide.index import bm25
@@ -47,7 +47,7 @@ def test_long_text_without_items_is_packed_and_nothing_lost():
 
 
 def test_repealed_status_warning_names_the_replacement():
-    rec = {"status": "repealed", "replaced_by": "X", "supplemented_by": "", "label": ""}
+    rec = {"status": "repealed", "replaced_by": "X", "clarified_by": "", "label": ""}
     assert status_warnings(rec, {"X": "NPC Circular X"}) == ["REPEALED: replaced by NPC Circular X."]
 
 
@@ -66,6 +66,56 @@ def test_real_irr_notes_citing_16_01_warn_on_s30_and_s49():
     assert {c["section"] for c in warned} == {"30", "49"}
 
 
+def test_irr_warnings_quote_the_annotation_on_the_chunks_it_covers():
+    irr = [c for c in _chunks() if c["doc_id"] == "IRR_RA10173" and c["kind"] == "section"]
+    amended = '"(as amended by NPC Circular No. 2020-03)"'
+    superseded = '"(The entire Section 20 is superseded by NPC Circular No. 2020-03)"'
+    assert {c["citation"] for c in irr if any(amended in w for w in c["warnings"])} == {"IRR of RA 10173, s.3(f)"}
+    covered = {c["chunk_id"] for c in irr if any(superseded in w for w in c["warnings"])}
+    assert covered == {c["chunk_id"] for c in irr if c["section"] == "20"} and len(covered) == 5
+    assert all("See NPC Circular 2020-03." in w for c in irr for w in c["warnings"] if amended in w or superseded in w)
+
+
+def test_annotation_warning_stops_the_build_if_the_quote_is_not_in_the_text():
+    chunk = {"kind": "section", "doc_id": "IRR_RA10173", "section": "20", "subsection": "(a)"}
+    with pytest.raises(ValueError, match="annotation not found"):
+        text_annotation_warnings(chunk, "Section 20 without the note.", {"NPC_Circular_2020-03_Data_Sharing_Agreements": "X"})
+
+
+def test_document_warnings_on_advisory_2017_03_and_annex_1():
+    chunks = _chunks()
+    advisory = [c for c in chunks if c["doc_id"] == "NPC_Advisory_2017-03_PIA"]
+    text = "A draft circular (not in force) would supersede this advisory if adopted. Check the NPC site for the current position."
+    assert advisory and all(text in c["warnings"] and c["status_label"] == "not verified" for c in advisory)
+    annex = next(c for c in chunks if c["doc_id"] == "NPC_Circular_2022-04_Annex1")
+    assert "Annex of NPC Circular 2022-04. Its status follows the circular." in annex["warnings"]
+
+
+HEADER = ("NPC Advisory No. 2026-02 – Clarification on the\nSubmission of Personal Data Breach Notification\n"
+          "through Data Breach Notification Management\nSystem\nPage 2 of 3\n")
+ADVISORY = "NPC_Advisory_2026-02_DBNMS_Clarification"
+
+
+def test_cleaning_rule_removes_only_the_running_header():
+    text, removed = chunker.clean_section_text(ADVISORY, "section", "2", "advising the\n" + HEADER + "stakeholders of")
+    assert text == "advising the\nstakeholders of" and [r["removed_text"] for r in removed] == [HEADER]
+    for other in (("OTHER_DOC", "section", "2"), (ADVISORY, "section", "1"), (ADVISORY, "footnote", "2")):
+        assert chunker.clean_section_text(*other, HEADER) == (HEADER, [])
+    for near_miss in (HEADER.replace("Page 2 of 3\n", ""), HEADER.replace("2026-02", "2026-03"), "See " + HEADER):
+        assert chunker.clean_section_text(ADVISORY, "section", "2", near_miss) == (near_miss, [])
+
+
+def test_header_is_gone_from_chunks_and_kept_in_section_records():
+    chunks = [c for c in _chunks() if c["doc_id"] == ADVISORY]
+    target = next(c for c in chunks if c["citation"].endswith("s.2(B)"))
+    assert "advising the\nstakeholders of the fact" in target["text"]
+    assert "Page 2 of 3" not in target["text"] and "Page 2 of 3" not in target["index_text"]
+    log = chunker.cleaning_log()
+    assert len(log) == 1 and log[0]["removed_text"] == HEADER and log[0]["rule"] == "advisory-2026-02-running-header"
+    with open(PROCESSED / "sections" / f"{ADVISORY}.jsonl") as f:
+        assert any("Page 2 of 3" in json.loads(line)["text"] for line in f)
+
+
 def test_chunks_carry_the_catalogue_label_and_the_page_shows_it():
     from ph_privacy_guide.answer.format import format_hit
     from types import SimpleNamespace
@@ -75,9 +125,9 @@ def test_chunks_carry_the_catalogue_label_and_the_page_shows_it():
     text = format_hit(1, SimpleNamespace(chunk=sample))
     assert "Status: Listed by NPC, no repeal noted; not independently verified" in text
     breach = next(c for c in chunks if c["doc_id"] == "NPC_Circular_16-03_Breach_Management" and c["kind"] == "section")
-    assert "Status: in force, supplemented by Advisory 2026-02" in format_hit(1, SimpleNamespace(chunk=breach))
+    assert "Status: Listed by NPC, no repeal noted. Advisory 2026-02 (2026-05) gives clarifications" in format_hit(1, SimpleNamespace(chunk=breach))
     ra = next(c for c in chunks if c["doc_id"] == "RA10173_DPA_2012" and c["kind"] == "section")
-    assert "Status: not verified" in format_hit(1, SimpleNamespace(chunk=ra))
+    assert "Status: Downloaded from NPC's DPA and IRR page" in format_hit(1, SimpleNamespace(chunk=ra))
 
 
 def test_every_chunk_is_in_the_right_block():

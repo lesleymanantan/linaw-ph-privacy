@@ -29,8 +29,8 @@ from collections import Counter
 from tokenizers import Tokenizer
 
 from ph_privacy_guide import catalogue
-from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings
-from ph_privacy_guide.config import (ANNOTATION_LABEL, BLOCK_MAIN, BLOCK_PENDING, BLOCK_SUMMARY, DRAFT_LABEL,
+from ph_privacy_guide.answer.warnings import annotation_warnings, status_warnings, text_annotation_warnings
+from ph_privacy_guide.config import (ANNOTATION_LABEL, BLOCK_MAIN, BLOCK_PENDING, BLOCK_SUMMARY, CHUNK_CLEANING_RULES, DRAFT_LABEL,
                                      EMBEDDING_MAX_TOKENS, EMBEDDING_MODEL_DIR, EMBEDDING_PASSAGE_PREFIX,
                                      KEYWORD_ONLY_NOTE, MAX_OVERLAP_TOKENS, PROCESSED, REPEALED_FOOTNOTE_WARNINGS, ROOT,
                                      SEARCHABLE_KINDS, SUMMARY_LABEL, TOKEN_SAFETY_MARGIN, allowed_pdfs, result_block)
@@ -40,6 +40,7 @@ MAX_WORDS = 350
 MIN_LEAD_WORDS = 15
 CHUNKS = PROCESSED / "chunks.jsonl"
 GOLD_LABELS = ROOT / "eval" / "gold_labels.csv"
+CLEANING_LOG = ROOT / "reports" / "chunk_cleaning_log.csv"
 SENTENCE_END_RE = re.compile(r"(?<=[.;?!])\s+")
 DEFINITION_RE = re.compile(r"definition", re.I)
 INLINE_FIRST_ITEM_RE = re.compile(r"^(.*?[.–—-]\s*)(\(a\)\s.*)$")
@@ -223,6 +224,35 @@ def _locate(piece: list[str], pages: dict[int, str], lo: int, hi: int) -> tuple[
     return first, last if last is not None else hi
 
 
+def clean_section_text(doc_id: str, kind: str, section: str, text: str) -> tuple[str, list[dict]]:
+    """Apply the cleaning rules to one record. Returns the text for chunking and what was removed."""
+    removed: list[dict] = []
+    for rule in CHUNK_CLEANING_RULES:
+        if (doc_id, kind, section) == (rule["doc_id"], "section", rule["section"]):
+            pattern = re.compile(rule["pattern"], re.M)
+            removed += [{"rule": rule["rule"], "doc_id": doc_id, "section": section, "removed_text": m.group(0)}
+                        for m in pattern.finditer(text)]
+            text = pattern.sub("", text)
+    return text, removed
+
+
+def cleaning_log() -> list[dict]:
+    """Every removal the cleaning rules make, from the section records."""
+    removed: list[dict] = []
+    for rule in CHUNK_CLEANING_RULES:
+        with open(PROCESSED / "sections" / f"{rule['doc_id']}.jsonl") as f:
+            for rec in map(json.loads, f):
+                removed += clean_section_text(rec["doc_id"], rec["kind"], rec["section"], rec["text"])[1]
+    return removed
+
+
+def write_cleaning_log() -> None:
+    with open(CLEANING_LOG, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["rule", "doc_id", "section", "removed_text"], lineterminator="\n")
+        w.writeheader()
+        w.writerows(cleaning_log())
+
+
 def build_chunks() -> list[dict]:
     rows = catalogue.load()
     cites = {r["doc_id"]: r["short_cite"] for r in rows}
@@ -235,13 +265,14 @@ def build_chunks() -> list[dict]:
         with open(PROCESSED / "sections" / f"{row['doc_id']}.jsonl") as f:
             records = [json.loads(line) for line in f]
         notes = [r for r in records if r["kind"] == "footnote"]
+        section_text = {r["section"]: r["text"] for r in records if r["kind"] == "section"}
         page_text = _load_page_text(row["doc_id"])
         doc_chunks: list[dict] = []
         parents: dict[tuple[str, str], list[dict]] = {}
         for rec in records:
             if rec["kind"] == "footnote":
                 continue
-            lines = rec["text"].split("\n")
+            lines = clean_section_text(rec["doc_id"], rec["kind"], rec["section"], rec["text"])[0].split("\n")
             if row["type"] in WHOLE_DOC_TYPES or rec["kind"] in ("preamble", "signature"):
                 pieces = [("", lines)]
             else:
@@ -283,7 +314,7 @@ def build_chunks() -> list[dict]:
                     "title": rec["title"], "division": rec["division"],
                     "citation": f"{core}{' ' if rec['kind'] != 'section' and suffix.startswith('(') else ''}{suffix}{label_tail}",
                     "authority": rec["authority"], "status": rec["status"], "label": rec["label"],
-                    "replaced_by": rec["replaced_by"], "supplemented_by": rec["supplemented_by"],
+                    "replaced_by": rec["replaced_by"], "clarified_by": rec["clarified_by"],
                     "date_issued": rec["date_issued"], "version": rec["version"], "collection": rec["collection"],
                     "page_start": page_start, "page_end": page_end,
                     "searchable": rec["kind"] in SEARCHABLE_KINDS and not is_draft_annex and not heading_only,
@@ -307,7 +338,7 @@ def build_chunks() -> list[dict]:
             holder["annotations"].append(annotation)
             doc_chunks.append({
                 **{k: holder[k] for k in ("doc_id", "instrument", "short_cite", "authority", "status", "replaced_by",
-                                          "supplemented_by", "date_issued", "version", "collection")},
+                                          "clarified_by", "date_issued", "version", "collection")},
                 "chunk_id": f"{holder['chunk_id']}:fn{note['section']}", "kind": "footnote",
                 "section": note["parent_section"], "subsection": holder["subsection"],
                 "title": note["title"], "division": "", "citation": note["citation"],
@@ -319,7 +350,8 @@ def build_chunks() -> list[dict]:
             })
         for chunk in doc_chunks:
             chunk["status_label"] = row["status_label"]
-            chunk["warnings"] = status_warnings(chunk, cites) + annotation_warnings(row["type"], chunk["annotations"], cites)
+            chunk["warnings"] = (status_warnings(chunk, cites) + annotation_warnings(row["type"], chunk["annotations"], cites)
+                                 + text_annotation_warnings(chunk, section_text.get(chunk["section"], ""), cites))
         chunks.extend(doc_chunks)
     return chunks
 
@@ -361,12 +393,14 @@ def validate(chunks: list[dict]) -> list[dict]:
     for c in chunks:
         by_doc[c["doc_id"]] += nonspace_len(c["text"]) - c["overlap_chars"]
     diffs = {}
+    cleaning = cleaning_log()
     for doc in corpus:
         with open(PROCESSED / "sections" / f"{doc}.jsonl") as f:
             source = sum(nonspace_len(json.loads(line)["text"]) for line in f)
+        source -= sum(nonspace_len(r["removed_text"]) for r in cleaning if r["doc_id"] == doc)
         if source != by_doc[doc]:
             diffs[doc] = source - by_doc[doc]
-    add("Chunk text adds up to section text, not counting overlap", not diffs, f"differences {diffs or 'none'}")
+    add("Chunk text adds up to section text, not counting overlap or logged cleaning", not diffs, f"differences {diffs or 'none'}")
 
     # Everything the model reads fits its limit, except Annex 1 by decision.
     tokenizer = _tokenizer()
@@ -440,7 +474,11 @@ def validate(chunks: list[dict]) -> list[dict]:
             f"{len(citing)} notes on {len(warned)} chunks: {[c['citation'] for c in warned]}")
 
     supp = [c for c in chunks if c["doc_id"] == "NPC_Circular_16-03_Breach_Management" and c["kind"] != "footnote"]
-    add("16-03 chunks show Supplemented by Advisory 2026-02", all(any("Advisory 2026-02" in w for w in c["warnings"]) for c in supp), f"{len(supp)} chunks")
+    add("16-03 chunks point to the clarifications in Advisory 2026-02", all(any("Advisory 2026-02 gives clarifications" in w for w in c["warnings"]) for c in supp), f"{len(supp)} chunks")
+
+    add("Each cleaning rule removed exactly one block", len(cleaning) == len(CHUNK_CLEANING_RULES), f"{len(cleaning)} removals, logged in reports/chunk_cleaning_log.csv")
+    leftover = [c["chunk_id"] for c in chunks if re.search(r"^Page \d+ of \d+$", c["text"], re.M)]
+    add("No 'Page x of y' line left in chunk text", not leftover, f"{len(leftover)} chunks {leftover[:5]}")
 
     toolkit = [c for c in chunks if c["doc_id"] == "NPC_Toolkit_Ch2_PIA_0618" and c["kind"] != "footnote"]
     add("Toolkit tagged guidance, with its label", all(c["authority"] == "guidance" and "educational" in c["label"] for c in toolkit), f"{len(toolkit)} chunks")
@@ -510,6 +548,7 @@ def write_gold_labels(chunks: list[dict]) -> int:
 def main() -> None:
     chunks = build_chunks()
     write_gold_labels(chunks)
+    write_cleaning_log()
     with open(CHUNKS, "w") as f:
         for c in chunks:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")

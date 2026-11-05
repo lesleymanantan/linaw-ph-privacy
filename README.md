@@ -8,7 +8,10 @@ status, and says **"Not sure"** when confidence is low.
 Status labels mean what they say and no more. "Listed by NPC, no repeal noted; not independently
 verified" means the document is on the NPC advisories and circulars page with no repeal marked, and no
 repeal of it was found in this corpus. It does not prove the document is current: that page also lists
-repealed circulars with no repeal note. "Not verified" means no status has been established.
+repealed circulars with no repeal note. "Not verified" means no status has been established. "Amended by
+NPC Circular 2020-03 (per NPC annotations in the text)" rests on annotations printed in the later annotated
+copy of the IRR used here; the rest of that text is not independently verified. No label says a document is
+in force, except the draft's "draft, not in force".
 
 > **Status: early development.** Hybrid search and a local page work, but search quality has not been
 > measured yet. **"Not sure" is not active:** its threshold will be set on the human-written dev questions,
