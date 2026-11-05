@@ -45,7 +45,8 @@ does not resolve, and the metrics commands check them again.
 ## Columns
 
 Start from `eval/questions_template.csv`. Full definitions are in `eval/question_schema.json`. All 12
-columns must be present, and no others. Blank rows are skipped.
+columns must be present, and no others. A row with an empty `question` is skipped, however much else is
+filled in, so unfinished rows can stay in the file. The import lists any it skipped, apart from fully blank ones.
 
 | Column | Values | Stored as |
 |---|---|---|

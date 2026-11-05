@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Import human-written questions from CSV. Usage: import_questions.py FILE.csv --split dev
 
-Blank rows are skipped and notes are not read. All other rows must be valid or nothing is written.
+Rows with an empty question are skipped and listed, and notes are not read. All other rows must be
+valid or nothing is written.
 See eval/GUIDELINES.md.
 """
 import argparse
 import sys
 from pathlib import Path
 
-from ph_privacy_guide.evaluate.questions import SPLITS, import_csv
+from ph_privacy_guide.evaluate.questions import SPLITS, import_csv, skipped_rows
 
 
 def main() -> int:
@@ -17,6 +18,9 @@ def main() -> int:
     parser.add_argument("--split", required=True, choices=SPLITS)
     args = parser.parse_args()
     path, errors = import_csv(args.csv, args.split)
+    skipped = skipped_rows(args.csv)
+    if skipped:
+        print(f"Skipped {len(skipped)} rows with no question: {', '.join(skipped)}")
     if errors:
         print(f"{len(errors)} problems; nothing was written:")
         print("\n".join(f"- {e}" for e in errors))

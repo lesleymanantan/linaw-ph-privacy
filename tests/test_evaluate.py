@@ -131,6 +131,25 @@ def test_import_skips_blank_rows_and_ignores_notes(tmp_path, monkeypatch):
     assert errs == [] and len(Q.load_split("dev", tmp_path)) == 1
 
 
+def test_import_skips_half_filled_rows_and_lists_them(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    empty = {c: "" for c in Q.CSV_COLUMNS}
+    half = [{**empty, "id": f"PLACEHOLDER-{n}", "writer": "w"} for n in (4, 5, 6)]
+    full = [_csv_row(id=f"PLACEHOLDER-{n}") for n in (1, 2, 3)]
+    _write_csv(tmp_path / "in.csv", full[:1] + half[:1] + full[1:] + half[1:] + [empty])
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert errs == []
+    assert [r["id"] for r in Q.load_split("dev", tmp_path)] == ["PLACEHOLDER-1", "PLACEHOLDER-2", "PLACEHOLDER-3"]
+    assert Q.skipped_rows(tmp_path / "in.csv") == ["PLACEHOLDER-4", "PLACEHOLDER-5", "PLACEHOLDER-6"]
+
+
+def test_a_filled_row_missing_something_else_still_fails_the_import(tmp_path, monkeypatch):
+    monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
+    _write_csv(tmp_path / "in.csv", [_csv_row(), _csv_row(id="PLACEHOLDER-2", language="")])
+    out, errs = Q.import_csv(tmp_path / "in.csv", "dev", tmp_path)
+    assert out is None and any("bad language" in e for e in errs)
+
+
 def test_import_of_only_blank_rows_writes_nothing(tmp_path, monkeypatch):
     monkeypatch.setattr(Q, "load_chunks", lambda: CHUNKS)
     _write_csv(tmp_path / "in.csv", [{c: "" for c in Q.CSV_COLUMNS}])

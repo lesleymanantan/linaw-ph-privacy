@@ -110,7 +110,10 @@ def split_gold_cell(cell: str) -> list[str]:
 
 
 def csv_to_rows(path: Path, split: str, chunks: dict[str, dict]) -> tuple[list[dict], list[str]]:
-    """Map the owner's columns to the schema: writer becomes author, source is human, notes are not read."""
+    """Map the owner's columns to the schema: writer becomes author, source is human, notes are not read.
+
+    A row with an empty question is skipped, however much else is filled in.
+    """
     rows, errs = [], []  # unresolved gold is caught by validate_row, and fails the whole import
     with open(path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
@@ -125,7 +128,7 @@ def csv_to_rows(path: Path, split: str, chunks: dict[str, dict]) -> tuple[list[d
                 errs.append(f"line {line}: more cells than columns")
                 continue
             cell = {c: (raw[c] or "").strip() for c in CSV_COLUMNS if c not in IGNORED_COLUMNS}
-            if not any(cell.values()):
+            if not cell["question"]:
                 continue
             gold = split_gold_cell(cell["gold"])
             rows.append({
@@ -137,6 +140,15 @@ def csv_to_rows(path: Path, split: str, chunks: dict[str, dict]) -> tuple[list[d
                 "date": cell["date"], "pair_id": cell["pair_id"],
             })
     return rows, errs
+
+
+def skipped_rows(path: Path) -> list[str]:
+    """The rows an import skips for having no question, other than fully blank ones, by id or line number."""
+    with open(path, newline="", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        return [(raw.get("id") or "").strip() or f"line {reader.line_num}" for raw in reader
+                if not (raw.get("question") or "").strip() and not raw.get(None)
+                and any((raw.get(c) or "").strip() for c in CSV_COLUMNS if c not in IGNORED_COLUMNS)]
 
 
 def write_split(rows: list[dict], split: str, directory: Path = QUESTIONS_DIR) -> Path:
