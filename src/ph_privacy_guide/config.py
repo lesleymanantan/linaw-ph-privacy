@@ -69,11 +69,12 @@ SECTION_WARNINGS = {("NPC_Circular_2023-06_Security", section): PIA_PENDING_WARN
 
 # Warnings quoting an annotation printed in the text. The quote must be in that section, or the build stops.
 # (doc_id, section, subsection prefix; "" covers the whole section) -> (what the annotation says, quote, doc_id it points to).
+ANNOTATION_SUPERSEDED = "Superseded"
 TEXT_ANNOTATION_WARNINGS = {
     ("IRR_RA10173", "3", "(f)"): (
         "Amended", "(as amended by NPC Circular No. 2020-03)", "NPC_Circular_2020-03_Data_Sharing_Agreements"),
     ("IRR_RA10173", "20", ""): (
-        "Superseded", "(The entire Section 20 is superseded by NPC Circular No. 2020-03)",
+        ANNOTATION_SUPERSEDED, "(The entire Section 20 is superseded by NPC Circular No. 2020-03)",
         "NPC_Circular_2020-03_Data_Sharing_Agreements"),
 }
 

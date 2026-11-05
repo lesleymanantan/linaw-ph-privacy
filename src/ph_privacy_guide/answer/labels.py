@@ -10,7 +10,7 @@ import html
 import re
 from functools import lru_cache
 
-from ph_privacy_guide.answer.warnings import status_text
+from ph_privacy_guide.answer.warnings import marked_superseded, status_text
 from ph_privacy_guide.config import LABELS_CSV, LISTED_LABEL
 
 LANGUAGES = ("en", "fil")
@@ -36,6 +36,8 @@ def has_translation(lang: str) -> bool:
 
 def type_text(chunk: dict, lang: str = DEFAULT_LANGUAGE) -> str:
     key = "summary" if chunk.get("kind") == "summary" else chunk["authority"]
+    if key == "rule" and marked_superseded(chunk):
+        key = "rule_superseded"
     return label(f"type.{key}", lang) if f"type.{key}" in load_labels() else chunk["authority"]
 
 

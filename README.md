@@ -3,7 +3,7 @@
 A local, offline tool that finds the passages of Philippine data privacy law and National Privacy
 Commission (NPC) issuances that relate to a plain-language question in English or Filipino. It
 shows the exact text with its source, its type (Law, Binding rule, NPC guidance, NPC summary, Draft, not
-law) and its status, and says **"Not sure"** when confidence is low.
+law, or "Rule (marked superseded, see warning)" where an NPC annotation says so) and its status, and says **"Not sure"** when confidence is low.
 
 Status labels mean what they say and no more. "NPC lists this document and notes no repeal. We have not
 checked it ourselves." (recorded in the catalogue as "Listed by NPC, no repeal noted; not independently
@@ -97,8 +97,9 @@ The page also has:
 - **Official document links.** "Open the official document" opens the address in `catalogue/catalogue.csv` in
   a new tab, at the right page for a PDF. The tool never fetches it. A link appears only for an https address
   on privacy.gov.ph; addresses are never guessed, and none has been supplied yet (`source_url` is `TBS`).
-- **Abbreviation hints.** DPO, PIC, PIP, COP, PIA, IRR, NPC, PMP and NCERT show their full names when you
-  hover over them. This changes the display only, not the stored text.
+- **Abbreviation hints.** Abbreviations the documents define, such as DPO, PIC and DPA, show their full names
+  when you hover over them in passages, annotations, warnings and notes. This changes the display only, not
+  the stored text. `reports/abbreviation_sources.csv` gives the passage behind each one.
 - **An EN/FIL switch for interface labels.** Labels are in `data/i18n/labels.csv`. An empty `fil` cell falls
   back to English, and the column is empty for now, so both settings look the same until people fill it in.
   Passages, warnings and notes stay in their original English and are never translated.

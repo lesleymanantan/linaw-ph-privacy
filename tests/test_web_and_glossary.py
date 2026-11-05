@@ -153,15 +153,65 @@ def test_abbreviations_are_wrapped_for_display_only():
     page = web._hit_html(1, SimpleNamespace(chunk=chunk))
     assert chunk["text"] == text
     assert '<abbr title="Personal Information Controller">PICs</abbr> &amp; <abbr title="Data Protection Officer">DPO</abbr>' in page
-    assert '<abbr title="National Privacy Commission">NPC</abbr>-IC' in page and "EPIC and pic stay." in page
+    assert '<abbr title="National Privacy Commission">NPC</abbr>-<abbr title="Insurance Commission">IC</abbr>' in page
+    assert "EPIC and pic stay." in page
 
 
-def test_every_abbreviation_full_name_comes_from_the_corpus_and_the_requested_ones_exist():
+def _hints():
+    return {k[5:]: v["en"] for k, v in labels.load_labels().items() if k.startswith("abbr.")}
+
+
+def test_every_hint_has_a_source_passage_that_gives_the_abbreviation_and_its_full_name():
     with open(ROOT / "data" / "processed" / "chunks.jsonl") as f:
-        corpus = re.sub(r"\s+", " ", " ".join(json.loads(line)["text"] for line in f)).lower()
-    names = {k[5:]: v["en"] for k, v in labels.load_labels().items() if k.startswith("abbr.")}
-    assert {"DPO", "PIC", "PIP", "COP", "PIA"} <= set(names)
-    assert all(name.lower() in corpus for name in names.values())
+        chunks = [json.loads(line) for line in f]
+    text_by_citation = {}
+    for c in chunks:
+        flat = re.sub(r"\s+", " ", re.sub(r"([a-z])-\n([a-z])", r"\1\2", c["text"]))
+        text_by_citation.setdefault(c["citation"], []).append(flat)
+    with open(ROOT / "reports" / "abbreviation_sources.csv", newline="") as f:
+        sources = list(csv.DictReader(f))
+    assert {r["abbreviation"]: r["full_name"] for r in sources} == _hints()
+    for r in sources:
+        assert any(r["quote"] in text for text in text_by_citation[r["citation"]]), r["abbreviation"]
+        assert r["full_name"].lower() in re.sub(r"\s+", " ", r["quote"]).lower() and r["abbreviation"] in r["quote"]
+        assert "DRAFT" not in r["citation"], r["abbreviation"]
+
+
+def test_requested_hints_exist_and_misleading_ones_stay_out():
+    hints = _hints()
+    assert {"DPO", "PIC", "PIP", "COP", "PIA", "DPA", "DSA"} <= set(hints)
+    assert hints["DPA"] == "Data Privacy Act of 2012" and hints["DSA"] == "Data Sharing Agreement"
+    # SEC mostly means "section" (SEC. 2). The others have no full name linked to them in the corpus.
+    assert not {"SEC", "SPI", "PII", "ISO", "IEC", "NIST", "UPESO"} & set(hints)
+
+
+def test_sec_heading_gets_no_hint():
+    assert "<abbr" not in labels.abbreviate("SEC. 22. Heading")
+
+
+def test_hints_stay_out_of_headings_and_source_lines():
+    chunk = {**BASE, "text": "The DPA and a DSA", "warnings": ["NPC warning"], "citation": "NPC DPA DSA, s.10"}
+    page = web._hit_html(1, SimpleNamespace(chunk=chunk))
+    assert '<abbr title="Data Privacy Act of 2012">DPA</abbr> and a <abbr title="Data Sharing Agreement">DSA</abbr>' in page
+    assert '<abbr title="National Privacy Commission">NPC</abbr> warning' in page
+    assert "<h2>1. NPC DPA DSA, s.10</h2>" in page
+    assert '<div class="meta">Source: NPC DPA DSA, section 10, pages 7-8 (issued 5 Dec 2022)</div>' in page
+    for line in re.findall(r'<div class="meta">.*?</div>', page):
+        assert "<abbr" not in line
+
+
+def test_type_shows_marked_superseded_only_where_the_annotation_says_so():
+    with open(ROOT / "data" / "processed" / "chunks.jsonl") as f:
+        chunks = [json.loads(line) for line in f]
+    marked = [c for c in chunks if c["kind"] != "footnote" and labels.type_text(c) == "Rule (marked superseded, see warning)"]
+    assert sorted(c["citation"] for c in marked) == [f"IRR of RA 10173, s.20{s}" for s in ("", "(a)", "(b)", "(c)", "(d)")]
+    warning = 'Superseded: the NPC annotation in this text reads "(The entire Section 20 is superseded by NPC Circular No. 2020-03)". See NPC Circular 2020-03.'
+    assert all(warning in c["warnings"] for c in marked)
+    amended = next(c for c in chunks if c["citation"] == "IRR of RA 10173, s.3(f)")
+    assert labels.type_text(amended) == "Binding rule"
+    other = next(c for c in chunks if c["citation"] == "IRR of RA 10173, s.22")
+    assert labels.type_text(other) == "Binding rule"
+    assert all(c["status"] == "amended" and c["block"] == "main" for c in marked)
 
 
 @pytest.mark.parametrize("url,page,expected", [

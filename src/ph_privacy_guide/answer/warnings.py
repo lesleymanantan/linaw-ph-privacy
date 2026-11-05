@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 
-from ph_privacy_guide.config import (DOCUMENT_WARNINGS, DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, SECTION_WARNINGS,
+from ph_privacy_guide.config import (ANNOTATION_SUPERSEDED, DOCUMENT_WARNINGS, DRAFT_LABEL, LISTED_LABEL, REPEALED_FOOTNOTE_WARNINGS, SECTION_WARNINGS,
                                      STATUS_LISTED, SUMMARY_LABEL, TEXT_ANNOTATION_WARNINGS, TOOLKIT_LABEL)
 
 STATUS_WORDS = {"repealed": "repealed", "amended": "amended",
@@ -29,16 +29,27 @@ def annotation_warnings(row_type: str, footnotes: list[dict], cites: dict[str, s
     return out
 
 
+def _annotations_on(chunk: dict) -> list[tuple[str, str, str, str]]:
+    """The configured text annotations covering this chunk, as (doc_id and section label, effect, quote, target)."""
+    if chunk.get("kind") != "section":
+        return []
+    return [(f"{doc_id} s.{section}", effect, quote, target)
+            for (doc_id, section, prefix), (effect, quote, target) in TEXT_ANNOTATION_WARNINGS.items()
+            if chunk.get("doc_id") == doc_id and chunk.get("section") == section and chunk.get("subsection", "").startswith(prefix)]
+
+
+def marked_superseded(chunk: dict) -> bool:
+    """True where an NPC annotation printed in the text marks this section as superseded."""
+    return any(effect == ANNOTATION_SUPERSEDED for _, effect, _, _ in _annotations_on(chunk))
+
+
 def text_annotation_warnings(chunk: dict, section_text: str, cites: dict[str, str]) -> list[str]:
     """Quote an annotation printed in the section, on the chunks it covers. Stops if the quote is not there."""
     out = []
-    if chunk["kind"] != "section":
-        return out
-    for (doc_id, section, prefix), (effect, quote, target) in TEXT_ANNOTATION_WARNINGS.items():
-        if chunk["doc_id"] == doc_id and chunk["section"] == section and chunk["subsection"].startswith(prefix):
-            if quote not in re.sub(r"\s+", " ", section_text):
-                raise ValueError(f"{doc_id} s.{section}: annotation not found in the text: {quote}")
-            out.append(f'{effect}: the NPC annotation in this text reads "{quote}". See {cites[target]}.')
+    for where, effect, quote, target in _annotations_on(chunk):
+        if quote not in re.sub(r"\s+", " ", section_text):
+            raise ValueError(f"{where}: annotation not found in the text: {quote}")
+        out.append(f'{effect}: the NPC annotation in this text reads "{quote}". See {cites[target]}.')
     return out
 
 
