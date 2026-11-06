@@ -128,7 +128,7 @@ scripts/uv sync
 
 See `eval/GUIDELINES.md`. The repository has no evaluation questions yet: people write them.
 
-## AI assistance
+## AI in this tool
 
 No AI model is used by the tool itself at runtime other than the local
 embedding model listed in `MODELS.md`.
