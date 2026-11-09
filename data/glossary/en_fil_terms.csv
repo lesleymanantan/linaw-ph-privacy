@@ -18,7 +18,7 @@ Compliance Check,"NPC Circular 2020-03, s.2(C)",NPC_Circular_2020-03_Data_Sharin
 Compliance Officer for Privacy,"NPC Circular 2022-04, s.2(C)",NPC_Circular_2022-04_Registration:section:2:c,3,,,,
 Conflict of Interest,"NPC Advisory 2017-01, Definition of Terms (d)",NPC_Advisory_2017-01_DPO:part:definition-of-terms:d,1,,,,
 Consent fatigue,"NPC Circular 2023-04, s.2(B)",NPC_Circular_2023-04_Consent:section:2:b,1,,,,
-Consent of the data subject,"RA 10173, s.3(b)",RA10173_DPA_2012:section:3:b,3,,,,
+Consent of the data subject,"RA 10173, s.3(b)",RA10173_DPA_2012:section:3:b,3,pahintulot,pagsang-ayon; permiso; paalam; pagpayag,"NPC Data Privacy Competency Program, Tagalog Ep. 4; reviewed by Lesley",Lesley
 Content-Based Deceptive Design Pattern,"NPC Advisory 2023-01, s.2(D)",NPC_Advisory_2023-01_Deceptive_Design:section:2:d,1,,,,
 Context dependent notice,"NPC Circular 2023-04, s.2(C)",NPC_Circular_2023-04_Consent:section:2:c,1,,,,
 Control Framework,"NPC Circular 2023-06, s.3(F)",NPC_Circular_2023-06_Security:section:3:f,2,,,,
@@ -26,11 +26,11 @@ Data Center,"NPC Circular 2023-06, s.3(G)",NPC_Circular_2023-06_Security:section
 Data Governance,"NPC Advisory 2021-02, s.4(C)",NPC_Advisory_2021-02_ASEAN_Clauses_DMF:section:4:c,1,,,,
 Data Management System,"NPC Advisory 2021-02, s.4(B)",NPC_Advisory_2021-02_ASEAN_Clauses_DMF:section:4:b,1,,,,
 Data processing systems,"IRR of RA 10173, s.3(e)",IRR_RA10173:section:3:e,1,,,,
-Data Protection Officer,"NPC Circular 16-03, s.3(C)",NPC_Circular_16-03_Breach_Management:section:3:c,4,,,,
+Data Protection Officer,"NPC Circular 16-03, s.3(C)",NPC_Circular_16-03_Breach_Management:section:3:c,4,DPO,opisyal sa data privacy; tagapamahala ng data privacy,BALAI Labs wording; reviewed by Lesley,Lesley
 Data Scraping,"NPC Advisory 2026-01, s.2(A)",NPC_Advisory_2026-01_Data_Scraping:section:2:a,1,,,,
-Data sharing,"IRR of RA 10173, s.3(f)",IRR_RA10173:section:3:f,3,,,,
+Data sharing,"IRR of RA 10173, s.3(f)",IRR_RA10173:section:3:f,3,pagbabahagi ng data,ibahagi; i-share; ibigay sa iba; ipakita sa iba,BALAI Labs wording; reviewed by Lesley,Lesley
 Data Sharing Agreement,"NPC Circular 2020-03, s.2(G)",NPC_Circular_2020-03_Data_Sharing_Agreements:section:2:g,2,,,,
-Data subject,"RA 10173, s.3(c)",RA10173_DPA_2012:section:3:c,4,,,,
+Data subject,"RA 10173, s.3(c)",RA10173_DPA_2012:section:3:c,4,may-ari ng data,taong may-ari ng impormasyon,BALAI Labs wording; reviewed by Lesley,Lesley
 Deceptive Design Patterns,"NPC Circular 2023-04, s.2(D)",NPC_Circular_2023-04_Consent:section:2:d,2,,,,
 Digital Interface,"NPC Advisory 2023-01, s.2(E)",NPC_Advisory_2023-01_Deceptive_Design:section:2:e,1,,,,
 Direct marketing,"RA 10173, s.3(d)",RA10173_DPA_2012:section:3:d,2,,,,
@@ -56,7 +56,7 @@ Off-The-Shelf Software,"NPC Circular 2023-06, s.3(L)",NPC_Circular_2023-06_Secur
 Operating in the country,"NPC Circular 2022-04, s.2(J)",NPC_Circular_2022-04_Registration:section:2:j,1,,,,
 Password Policy,"NPC Circular 2023-06, s.3(M)",NPC_Circular_2023-06_Security:section:3:m,1,,,,
 Personal data,"IRR of RA 10173, s.3(j)",IRR_RA10173:section:3:j,6,,,,
-Personal data breach,"IRR of RA 10173, s.3(k)",IRR_RA10173:section:3:k,2,,,,
+Personal data breach,"IRR of RA 10173, s.3(k)",IRR_RA10173:section:3:k,2,data breach,security breach; na-hack; nahack; hina-hack; hacked; nawala; nawala ang data; ninakaw; nanakaw; nag-leak; na-leak; leak; pinasok; napasok ang system,BALAI Labs wording; reviewed by Lesley,Lesley
 Personal information,"RA 10173, s.3(g)",RA10173_DPA_2012:section:3:g,5,,,,
 Personal information controller,"RA 10173, s.3(h)",RA10173_DPA_2012:section:3:h,7,,,,
 Personal information processor,"RA 10173, s.3(i)",RA10173_DPA_2012:section:3:i,7,,,,
@@ -67,18 +67,18 @@ Privacy Engineering,"NPC Circular 2023-06, s.3(N)",NPC_Circular_2023-06_Security
 Privacy Impact Assessment,"NPC Circular 16-03, s.3(I)",NPC_Circular_16-03_Breach_Management:section:3:i,3,,,,
 Privacy Management Program,"NPC Advisory 2017-03, Definition of Terms (L)",NPC_Advisory_2017-03_PIA:part:definition-of-terms:l,1,,,,
 Privacy Management Program (PMP),"NPC Circular 2023-06, s.3(Q)",NPC_Circular_2023-06_Security:section:3:q,1,,,,
-Privacy Notice,"NPC Advisory 2025-02, s.3(G)",NPC_Advisory_2025-02_Privacy_Engineering:section:3:g,1,,,,
+Privacy Notice,"NPC Advisory 2025-02, s.3(G)",NPC_Advisory_2025-02_Privacy_Engineering:section:3:g,1,privacy notice,abiso sa privacy; paunawa sa privacy; abiso tungkol sa privacy,"NPC Data Privacy Competency Program, Tagalog Ep. 4; reviewed by Lesley",Lesley
 Privacy-by-Default,"NPC Circular 2023-06, s.3(P)",NPC_Circular_2023-06_Security:section:3:p,2,,,,
 Privacy-by-Design,"NPC Circular 2023-06, s.3(O)",NPC_Circular_2023-06_Security:section:3:o,2,,,,
 Private entity,"NPC Circular 2020-03, s.2(Q)",NPC_Circular_2020-03_Data_Sharing_Agreements:section:2:q,2,,,,
 Privileged information,"RA 10173, s.3(k)",RA10173_DPA_2012:section:3:k,5,,,,
-Processing,"RA 10173, s.3(j)",RA10173_DPA_2012:section:3:j,5,,,,
+Processing,"RA 10173, s.3(j)",RA10173_DPA_2012:section:3:j,5,pagproseso,magproseso; pinoproseso; pagpoproseso,"NPC Data Privacy Competency Program, Tagalog Ep. 4; reviewed by Lesley",Lesley
 Profiling,"IRR of RA 10173, s.3(p)",IRR_RA10173:section:3:p,2,,,,
 Pseudonymization,"NPC Advisory 2025-02, s.3(H)",NPC_Advisory_2025-02_Privacy_Engineering:section:3:h,1,,,,
 Public authority,"IRR of RA 10173, s.3(r)",IRR_RA10173:section:3:r,2,,,,
 Public space,"NPC Circular 2024-02, s.2(G)",NPC_Circular_2024-02_CCTV:section:2:g,1,,,,
 Publicly available personal data,"NPC Advisory 2026-01, s.2(B)",NPC_Advisory_2026-01_Data_Scraping:section:2:b,1,,,,
-Registration information,"NPC Circular 2022-04, s.2(M)",NPC_Circular_2022-04_Registration:section:2:m,1,,,,
+Registration information,"NPC Circular 2022-04, s.2(M)",NPC_Circular_2022-04_Registration:section:2:m,1,magparegister,magrehistro; pagpaparehistro; magregister; irehistro; rehistro,BALAI Labs wording; reviewed by Lesley,Lesley
 Research,"NPC Circular 2023-04, s.2(H)",NPC_Circular_2023-04_Consent:section:2:h,1,,,,
 Risk,"NPC Advisory 2017-03, Definition of Terms (O)",NPC_Advisory_2017-03_PIA:part:definition-of-terms:o,1,,,,
 Risk Rating,"NPC Advisory 2017-03, Definition of Terms (P)",NPC_Advisory_2017-03_PIA:part:definition-of-terms:p,1,,,,
