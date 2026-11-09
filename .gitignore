@@ -14,3 +14,7 @@ models/
 # local spreadsheets and their Excel lock files
 *.xlsx
 ~$*
+
+# dev evaluation outputs (final_*.json stays committable)
+results/eval/*_dev.json
+results/eval/*_dev_confidence.json
