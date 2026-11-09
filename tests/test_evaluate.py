@@ -1,6 +1,7 @@
 """Evaluation tooling. Rows here are placeholders, not questions: the repository holds no questions."""
 import csv
 import json
+import runpy
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -29,7 +30,11 @@ def row(**over):
 
 
 def test_repository_holds_no_questions():
-    assert Q.load_split("train") == [] and Q.load_split("dev") == [] and Q.load_split("test") == []
+    """No question file is committed. Local, uncommitted files under eval/questions/ are allowed."""
+    out = subprocess.run(["git", "ls-files", "eval/questions"], cwd=ROOT, capture_output=True, text=True)
+    if out.returncode != 0:
+        pytest.skip("not a git checkout")
+    assert out.stdout.strip() == ""
 
 
 def test_schema_file_matches_code():
@@ -272,17 +277,34 @@ def test_dev_command_takes_no_file_argument():
     assert out.returncode != 0 and "takes no arguments" in out.stderr
 
 
-def test_dev_command_says_when_there_are_no_questions():
-    out = subprocess.run([sys.executable, str(ROOT / "scripts" / "evaluate.py")], capture_output=True, text=True)
-    assert out.returncode == 1 and "No dev questions" in out.stdout
+def _run_script_without_questions(script: str, function, tmp_path, monkeypatch, capsys) -> tuple[int, str]:
+    """Run the real script file with no arguments, pointed at an empty questions folder and a temporary results
+    folder, so it never reads eval/questions/dev.jsonl or writes into results/eval/."""
+    empty, results = tmp_path / "questions", tmp_path / "results"
+    empty.mkdir()
+    real_results = sorted(metrics.RESULTS_DIR.glob("*")) if metrics.RESULTS_DIR.exists() else []
+    monkeypatch.setattr(function, "__defaults__", (None, empty))
+    monkeypatch.setattr(metrics, "RESULTS_DIR", results)
+    monkeypatch.setattr(sys, "argv", [script])
+    with pytest.raises(SystemExit) as exit_:
+        runpy.run_path(script, run_name="__main__")
+    assert not results.exists()
+    monkeypatch.undo()
+    assert (sorted(metrics.RESULTS_DIR.glob("*")) if metrics.RESULTS_DIR.exists() else []) == real_results
+    return exit_.value.code, capsys.readouterr().out
 
 
-def test_confidence_report_takes_no_file_argument_and_needs_dev():
+def test_dev_command_says_when_there_are_no_questions(tmp_path, monkeypatch, capsys):
+    code, out = _run_script_without_questions(str(ROOT / "scripts" / "evaluate.py"), metrics.run_dev, tmp_path, monkeypatch, capsys)
+    assert code == 1 and "No dev questions" in out
+
+
+def test_confidence_report_takes_no_file_argument_and_needs_dev(tmp_path, monkeypatch, capsys):
     script = str(ROOT / "scripts" / "confidence_report.py")
     out = subprocess.run([sys.executable, script, "eval/questions/test.jsonl"], capture_output=True, text=True)
     assert out.returncode != 0 and "takes no arguments" in out.stderr
-    out = subprocess.run([sys.executable, script], capture_output=True, text=True)
-    assert out.returncode == 1 and "No dev questions" in out.stdout
+    code, out = _run_script_without_questions(script, metrics.confidence_report, tmp_path, monkeypatch, capsys)
+    assert code == 1 and "No dev questions" in out
 
 
 def test_final_refuses_while_no_threshold_is_set(tmp_path, capsys, monkeypatch):
