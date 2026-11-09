@@ -96,8 +96,9 @@ The page also has:
 
 - **Official document links.** "Open the official document" opens the address in `catalogue/catalogue.csv` in
   a new tab, at the right page for a PDF. The tool never fetches it. A link appears only for an https address
-  on privacy.gov.ph; addresses are never guessed. They come from `data/reference/npc_page_links_5Nov.csv`.
-  RA 10173, the IRR, the draft circular and the Toolkit are not in that list, so they show no link.
+  on privacy.gov.ph; addresses are never guessed. Most come from `data/reference/npc_page_links_5Nov.csv`.
+  RA 10173, the IRR, the draft circular and the Toolkit are not in that list: their addresses were supplied by
+  the project owner, who downloaded each one on 9 Nov 2026 and found it identical (same sha256) to our saved copy.
 - **Abbreviation hints.** Abbreviations the documents define, such as DPO, PIC and DPA, show their full names
   when you hover over them in passages, annotations, warnings and notes. This changes the display only, not
   the stored text. `reports/abbreviation_sources.csv` gives the passage behind each one.

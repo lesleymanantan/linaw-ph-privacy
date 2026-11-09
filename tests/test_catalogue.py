@@ -116,12 +116,24 @@ def test_annex_follows_its_circular_and_the_rest_stay_not_verified():
         assert rows[key]["status"] == "repealed" and rows[key]["status_label"] == "repealed"
 
 
-def test_source_urls_are_copied_exactly_from_the_npc_links_list():
+# Not on the NPC links list. Supplied by the project owner, who downloaded each on 2026-11-09 and found it identical
+# (same sha256) to the saved copy in data/raw/.
+OWNER_CHECKED_URLS = {
+    "RA10173_DPA_2012": "https://privacy.gov.ph/wp-content/uploads/2024/06/DPA-of-2012_1.pdf",
+    "IRR_RA10173": "https://privacy.gov.ph/wp-content/uploads/2023/06/IRR_RA-10173-as-amended.pdf",
+    "DRAFT_Updated_PIA_Guidelines_Circular":
+        "https://privacy.gov.ph/wp-content/uploads/2026/08/For-Public-Consultation-Draft-Circular-Updated-PIA-Guidelines.pdf",
+    "NPC_Toolkit_Ch2_PIA_0618": "https://privacy.gov.ph/wp-content/uploads/2022/01/NPC_PIA_0618.pdf",
+}
+
+
+def test_source_urls_are_copied_exactly_from_the_npc_links_list_or_the_owner_checked_list():
     with open(ROOT / "data" / "reference" / "npc_page_links_5Nov.csv", newline="", encoding="utf-8-sig") as f:
         listed = {row["url"] for row in csv.DictReader(f)}
     rows = catalogue.load()
-    filled = [r for r in rows if r["source_url"] != "TBS"]
-    assert len(filled) == 28 and all(r["source_url"] in listed for r in filled)
-    assert len({r["source_url"] for r in filled}) == 28
-    assert {r["doc_id"] for r in rows if r["source_url"] == "TBS"} == {
-        "RA10173_DPA_2012", "IRR_RA10173", "DRAFT_Updated_PIA_Guidelines_Circular", "NPC_Toolkit_Ch2_PIA_0618"}
+    assert all(r["source_url"] != "TBS" for r in rows) and len({r["source_url"] for r in rows}) == len(rows) == 32
+    for r in rows:
+        if r["doc_id"] in OWNER_CHECKED_URLS:
+            assert r["source_url"] == OWNER_CHECKED_URLS[r["doc_id"]] and r["retrieved_on"] == "2026-11-09", r["doc_id"]
+        else:
+            assert r["source_url"] in listed and r["retrieved_on"] in ("TBS", ""), r["doc_id"]
