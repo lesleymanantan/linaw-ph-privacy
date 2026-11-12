@@ -1,6 +1,13 @@
 # Pending
 
-Open items as of 2026-11-09.
+Open items as of 2026-11-12.
+
+## Rename to linaw-ph-privacy
+- Rename the GitHub repository from `ph-privacy-guide` to `linaw-ph-privacy` (project owner, in GitHub
+  settings), then point the local remote at `https://github.com/lesleymanantan/linaw-ph-privacy.git`.
+- Then confirm the renamed repository opens. It stays private for now.
+- The local folder is still named `ph-privacy-guide`, and `eval/question_schema.json` still has the old name in
+  its title; both were left as they are on purpose.
 
 ## Before freezing the test split
 - `tests/test_evaluate.py::test_repository_holds_no_questions` fails if any file under `eval/questions/` is

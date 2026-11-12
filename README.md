@@ -1,4 +1,6 @@
-# ph-privacy-guide
+# Linaw
+
+Linaw is Filipino for 'clarity'.
 
 A local, offline tool that finds the passages of Philippine data privacy law and National Privacy
 Commission (NPC) issuances that relate to a plain-language question in English or Filipino. It
@@ -78,7 +80,7 @@ once.
 Start the local page, then open http://127.0.0.1:8765/ in your browser. Press Ctrl-C to stop it.
 
 ```sh
-cd ph-privacy-guide
+cd linaw-ph-privacy
 .venv/bin/python -m ph_privacy_guide.app.web
 ```
 

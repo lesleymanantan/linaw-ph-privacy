@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-11-12
+
+- **Renamed to Linaw.** The project is now called Linaw, and the repository and package name is
+  `linaw-ph-privacy` (was `ph-privacy-guide`). Changed: README title and setup line, NOTICE, the page title in
+  `data/i18n/labels.csv`, `pyproject.toml`, `uv.lock`, the package docstring and the offline error message.
+  The README now says "Linaw is Filipino for 'clarity'." The Python module stays `ph_privacy_guide`, so all
+  commands are unchanged. Legal document names, citations and source URLs are unchanged.
+- **Backup.** Branch `backup-nov12-pre-rename` (`c17c2d4`) pushed to origin before the rename.
+- **Glossary freeze.** `data/glossary/GLOSSARY_FREEZE.md` records the sha256 of `en_fil_terms.csv` and its 8
+  filled rows as of 2026-11-11.
+
 ## 2026-11-09
 
 - **Dev set.** 49 human-written dev questions imported locally into `eval/questions/dev.jsonl`

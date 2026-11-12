@@ -1,5 +1,5 @@
 [project]
-name = "ph-privacy-guide"
+name = "linaw-ph-privacy"
 version = "0.0.1"
 description = "Offline retrieval of Philippine data privacy law and NPC guidance passages, with citation, authority tag and status. No text generation."
 readme = "README.md"

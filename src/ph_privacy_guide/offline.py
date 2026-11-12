@@ -10,7 +10,7 @@ class NetworkBlocked(RuntimeError):
 
 
 def _refuse(*_args, **_kwargs):
-    raise NetworkBlocked("ph-privacy-guide makes no network calls at runtime")
+    raise NetworkBlocked("Linaw makes no network calls at runtime")
 
 
 def enforce_offline() -> None:
