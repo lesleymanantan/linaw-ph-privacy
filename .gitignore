@@ -21,3 +21,6 @@ results/eval/*_dev_confidence.json
 
 # local rules file (not published)
 CLAUDE.md
+
+# upload copies for claude.ai (not published)
+linaw-*.md

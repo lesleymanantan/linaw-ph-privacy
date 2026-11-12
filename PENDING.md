@@ -2,12 +2,16 @@
 
 Open items as of 2026-11-12.
 
-## Rename to linaw-ph-privacy
-- Rename the GitHub repository from `ph-privacy-guide` to `linaw-ph-privacy` (project owner, in GitHub
-  settings), then point the local remote at `https://github.com/lesleymanantan/linaw-ph-privacy.git`.
-- Then confirm the renamed repository opens. It stays private for now.
-- The local folder is still named `ph-privacy-guide`, and `eval/question_schema.json` still has the old name in
-  its title; both were left as they are on purpose.
+## Done since 2026-11-09
+- The GitHub repository is renamed to `linaw-ph-privacy`, and the local remote points at
+  `https://github.com/lesleymanantan/linaw-ph-privacy.git`. Push and pull work. It stays private for now.
+- The glossary freeze is recorded in `data/glossary/GLOSSARY_FREEZE.md` (sha256 of `en_fil_terms.csv` and its
+  8 filled rows, 2026-11-11).
+
+## Rename leftovers
+- The local folder is still named `ph-privacy-guide`.
+- After the final test run: change the title in `eval/question_schema.json` from "ph-privacy-guide evaluation
+  question" to the new name. `eval/` stays untouched until then.
 
 ## Before freezing the test split
 - `tests/test_evaluate.py::test_repository_holds_no_questions` fails if any file under `eval/questions/` is
