@@ -231,14 +231,20 @@ def final_preconditions(root: Path, directory: Path, results_dir: Path = RESULTS
     return actual, problems
 
 
+NO_THRESHOLD_NOTE = ("No \"not sure\" threshold was set (--allow-no-threshold). Every question gets results, "
+                     "so abstention is 0 by construction.")
+
+
 def run_final(flag: bool, search=None, root: Path = config.ROOT, directory: Path = QUESTIONS_DIR,
-              results_dir: Path = RESULTS_DIR) -> int:
+              results_dir: Path = RESULTS_DIR, allow_no_threshold: bool = False) -> int:
     if not flag:
         print("The test split runs only with --final. Nothing was run.")
         return 2
     digest, problems = final_preconditions(root, directory, results_dir)
-    if config.NOT_SURE_CONFIDENCE_THRESHOLD is None:
-        problems.append("NOT_SURE_CONFIDENCE_THRESHOLD is not set; set it from the dev set first")
+    no_threshold = config.NOT_SURE_CONFIDENCE_THRESHOLD is None
+    if no_threshold and not allow_no_threshold:
+        problems.append("NOT_SURE_CONFIDENCE_THRESHOLD is not set; set it from the dev set first, "
+                        "or pass --allow-no-threshold to run without one")
     if problems:
         print("Refusing the final run:\n" + "\n".join(f"- {p}" for p in problems))
         return 2
@@ -251,12 +257,19 @@ def run_final(flag: bool, search=None, root: Path = config.ROOT, directory: Path
     if search is None:
         search = _default_search()
     scored = run_questions(rows, search, chunks)
+    if no_threshold and any(s["not_sure"] for s in scored):
+        print("Stopped: a result said \"not sure\" although no threshold is set. Nothing was saved.")
+        return 1
     groups = summarise_groups(scored)
+    threshold = ({"set": False, "allow_no_threshold": True, "abstention_by_construction": 0.0, "note": NO_THRESHOLD_NOTE}
+                 if no_threshold else {"set": True, "value": config.NOT_SURE_CONFIDENCE_THRESHOLD})
     results_dir.mkdir(parents=True, exist_ok=True)
     out = results_dir / f"final_{digest[:12]}_{_commit(root)}.json"
-    out.write_text(json.dumps({"split": "test", "questions_sha256": digest, "settings": settings(), "summary": groups,
-                               "questions": scored}, indent=2, ensure_ascii=False))
+    out.write_text(json.dumps({"split": "test", "questions_sha256": digest, "settings": settings(), "threshold": threshold,
+                               "summary": groups, "questions": scored}, indent=2, ensure_ascii=False))
     print(_table(groups))
+    if no_threshold:
+        print("\n" + NO_THRESHOLD_NOTE)
     print(f"\nSaved {out}")
     return 0
 

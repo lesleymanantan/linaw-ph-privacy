@@ -335,6 +335,72 @@ def test_final_refuses_while_no_threshold_is_set(tmp_path, capsys, monkeypatch):
     assert "NOT_SURE_CONFIDENCE_THRESHOLD" in capsys.readouterr().out
 
 
+def test_final_refusal_names_the_no_threshold_option(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(metrics.config, "NOT_SURE_CONFIDENCE_THRESHOLD", None)
+    assert metrics.run_final(True, search=lambda _: None, root=tmp_path, directory=tmp_path, results_dir=tmp_path) == 2
+    assert "--allow-no-threshold" in capsys.readouterr().out
+
+
+def _frozen_repo(tmp_path):
+    git, directory, data = _repo(tmp_path)
+    data.write_text(json.dumps(row(id="PLACEHOLDER-T", split="test")) + "\n"
+                    + json.dumps(row(id="PLACEHOLDER-U", split="test", type="out_of_scope", answerable=False,
+                                     gold=[], gold_doc_ids=[])) + "\n")
+    (directory / "test.sha256").write_text(metrics.file_sha256(data) + "\n")
+    git("add", "-A")
+    git("commit", "-qm", "freeze")
+    return directory
+
+
+def test_final_runs_without_a_threshold_only_with_the_option_and_records_it(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(metrics.config, "NOT_SURE_CONFIDENCE_THRESHOLD", None)
+    monkeypatch.setattr(metrics, "load_chunks", lambda: CHUNKS)
+    directory, results = _frozen_repo(tmp_path), tmp_path / "results"
+    search = lambda _: _result(["c1"])
+
+    assert metrics.run_final(True, search=search, root=tmp_path, directory=directory, results_dir=results) == 2
+    assert not results.exists()
+
+    assert metrics.run_final(True, search=search, root=tmp_path, directory=directory, results_dir=results,
+                             allow_no_threshold=True) == 0
+    [saved] = results.glob("final_*.json")
+    out = json.loads(saved.read_text())
+    assert out["threshold"] == {"set": False, "allow_no_threshold": True, "abstention_by_construction": 0.0,
+                                "note": metrics.NO_THRESHOLD_NOTE}
+    assert out["settings"]["not_sure_confidence_threshold"] is None
+    assert out["summary"]["all"]["abstention_rate"] == 0.0 and out["summary"]["all"]["recall@1"] == 1.0
+    assert "abstention is 0 by construction" in capsys.readouterr().out
+
+    assert metrics.run_final(True, search=search, root=tmp_path, directory=directory, results_dir=results,
+                             allow_no_threshold=True) == 2
+    assert "runs once" in capsys.readouterr().out
+
+
+def test_final_without_a_threshold_stops_if_anything_says_not_sure(tmp_path, monkeypatch):
+    monkeypatch.setattr(metrics.config, "NOT_SURE_CONFIDENCE_THRESHOLD", None)
+    monkeypatch.setattr(metrics, "load_chunks", lambda: CHUNKS)
+    directory, results = _frozen_repo(tmp_path), tmp_path / "results"
+    unsure = lambda _: SimpleNamespace(**{**vars(_result(["c1"])), "not_sure": True})
+    assert metrics.run_final(True, search=unsure, root=tmp_path, directory=directory, results_dir=results,
+                             allow_no_threshold=True) == 1
+    assert not results.exists()
+
+
+def test_final_records_a_set_threshold(tmp_path, monkeypatch):
+    monkeypatch.setattr(metrics.config, "NOT_SURE_CONFIDENCE_THRESHOLD", 0.25)
+    monkeypatch.setattr(metrics, "load_chunks", lambda: CHUNKS)
+    directory, results = _frozen_repo(tmp_path), tmp_path / "results"
+    assert metrics.run_final(True, search=lambda _: _result(["c1"]), root=tmp_path, directory=directory,
+                             results_dir=results) == 0
+    [saved] = results.glob("final_*.json")
+    assert json.loads(saved.read_text())["threshold"] == {"set": True, "value": 0.25}
+
+
+def test_final_script_offers_the_no_threshold_option():
+    out = subprocess.run([sys.executable, str(ROOT / "scripts" / "evaluate_final.py"), "--help"], capture_output=True, text=True)
+    assert out.returncode == 0 and "--allow-no-threshold" in out.stdout
+
+
 def test_final_needs_the_flag(tmp_path, capsys):
     assert metrics.run_final(False, search=lambda _: None, root=tmp_path, directory=tmp_path) == 2
     assert "--final" in capsys.readouterr().out
