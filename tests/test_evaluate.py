@@ -1,4 +1,5 @@
-"""Evaluation tooling. Rows here are placeholders, not questions: the repository holds no questions."""
+"""Evaluation tooling. Rows here are placeholders, not questions. The only question files the repository may
+hold are the frozen test split, eval/questions/test.jsonl and eval/questions/test.sha256."""
 import csv
 import json
 import runpy
@@ -29,12 +30,33 @@ def row(**over):
     return {**base, **over}
 
 
+COMMITTABLE_QUESTION_FILES = {"eval/questions/test.jsonl", "eval/questions/test.sha256"}
+
+
+def _not_allowed(tracked: list[str]) -> list[str]:
+    return sorted(set(tracked) - COMMITTABLE_QUESTION_FILES)
+
+
+@pytest.mark.parametrize("tracked,bad", [
+    ([], []),
+    (["eval/questions/test.jsonl", "eval/questions/test.sha256"], []),
+    (["eval/questions/test.jsonl"], []),
+    (["eval/questions/dev.jsonl"], ["eval/questions/dev.jsonl"]),
+    (["eval/questions/test.jsonl", "eval/questions/train.jsonl"], ["eval/questions/train.jsonl"]),
+    (["eval/questions/test.csv"], ["eval/questions/test.csv"]),
+    (["eval/questions/old/test.jsonl"], ["eval/questions/old/test.jsonl"]),
+])
+def test_only_the_frozen_test_split_is_committable(tracked, bad):
+    assert _not_allowed(tracked) == bad
+
+
 def test_repository_holds_no_questions():
-    """No question file is committed. Local, uncommitted files under eval/questions/ are allowed."""
+    """Only eval/questions/test.jsonl and eval/questions/test.sha256 may be committed under eval/questions/.
+    Local, uncommitted files there are allowed."""
     out = subprocess.run(["git", "ls-files", "eval/questions"], cwd=ROOT, capture_output=True, text=True)
     if out.returncode != 0:
         pytest.skip("not a git checkout")
-    assert out.stdout.strip() == ""
+    assert _not_allowed(out.stdout.split()) == []
 
 
 def test_schema_file_matches_code():
