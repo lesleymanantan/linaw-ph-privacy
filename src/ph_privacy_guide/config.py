@@ -138,8 +138,9 @@ RRF_WEIGHT_BM25 = 1.0
 RRF_WEIGHT_EMBEDDING = 1.0
 
 # When True, a reviewed Filipino glossary phrase in the question adds its English term's tokens to the keyword
-# search terms only. The embedding query and the term list do not change. Off until the dev set says otherwise.
-USE_GLOSSARY = False
+# search terms only. The embedding query and the term list do not change. Turned on by the project owner from
+# the untuned dev results (recall@3 0.28 off, 0.36 on), with all 8 reviewed rows kept.
+USE_GLOSSARY = True
 
 # "Not sure" comes from a score-based confidence (retrieve/confidence.py). Equal weights are a default,
 # not a finding. The threshold stays None until the dev set exists, and may be set only from dev.

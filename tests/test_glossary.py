@@ -120,11 +120,11 @@ def test_phrases_match_whole_and_ignore_case(tmp_path, query, expands):
     assert bool(glossary.expansion_terms(query, entries)) is expands
 
 
-def test_the_switch_is_off_by_default_and_runs_record_it(monkeypatch):
-    assert config.USE_GLOSSARY is False
-    assert metrics.settings()["use_glossary"] is False
-    monkeypatch.setattr(config, "USE_GLOSSARY", True)
+def test_the_switch_is_on_by_default_and_runs_record_it(monkeypatch):
+    assert config.USE_GLOSSARY is True
     assert metrics.settings()["use_glossary"] is True
+    monkeypatch.setattr(config, "USE_GLOSSARY", False)
+    assert metrics.settings()["use_glossary"] is False
 
 
 @pytest.fixture(scope="module")
@@ -157,7 +157,7 @@ def test_a_placeholder_expands_keywords_only_when_on(searcher, monkeypatch, tmp_
     monkeypatch.setattr(bm25, "score", lambda index, terms: keyword_calls.append(list(terms)) or real_score(index, terms))
     monkeypatch.setattr(searcher.embedder, "encode_query", lambda text: embedded.append(text) or real_encode(text))
 
-    off = searcher.search(PLACEHOLDER)
+    off = searcher.search(PLACEHOLDER, use_glossary=False)
     on = searcher.search(PLACEHOLDER, use_glossary=True)
 
     assert keyword_calls == [[PLACEHOLDER], [PLACEHOLDER, "acceptable", "use", "policy"]]
@@ -171,7 +171,7 @@ def test_a_placeholder_expands_keywords_only_when_on(searcher, monkeypatch, tmp_
 @needs_index
 def test_filled_rows_change_nothing_while_the_switch_is_off(searcher, monkeypatch, tmp_path):
     query = "data sharing agreement"
-    before = searcher.search(query)
+    before = searcher.search(query, use_glossary=False)
     entries = _entries(tmp_path, fil_term="data sharing", fil_source="A source", fil_reviewer="A reviewer")
     monkeypatch.setitem(searcher.__dict__, "glossary_entries", entries)
-    _same(searcher.search(query), before)
+    _same(searcher.search(query, use_glossary=False), before)
