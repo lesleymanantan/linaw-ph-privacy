@@ -1,28 +1,26 @@
 # Pending
 
-Open items as of 2026-11-12.
+Open items as of 2026-11-17.
 
 ## Done since 2026-11-09
 - The GitHub repository is renamed to `linaw-ph-privacy`, and the local remote points at
   `https://github.com/lesleymanantan/linaw-ph-privacy.git`. Push and pull work. It stays private for now.
 - The glossary freeze is recorded in `data/glossary/GLOSSARY_FREEZE.md` (sha256 of `en_fil_terms.csv` and its
   8 filled rows, 2026-11-11).
+- The test guard is changed: `test_repository_holds_no_questions` allows exactly `eval/questions/test.jsonl` and
+  `eval/questions/test.sha256`, and nothing else under `eval/questions/`.
+- `USE_GLOSSARY` is decided: `True`, with all 8 reviewed rows kept (see CHANGELOG, 2026-11-17).
+
+## Known limits for the final run
+- `NOT_SURE_CONFIDENCE_THRESHOLD` stays `None` for the final run. "Not sure" is not active, so every search
+  shows results, and abstention is 0 by construction.
 
 ## Rename leftovers
 - The local folder is still named `ph-privacy-guide`.
 - After the final test run: change the title in `eval/question_schema.json` from "ph-privacy-guide evaluation
   question" to the new name. `eval/` stays untouched until then.
 
-## Before freezing the test split
-- `tests/test_evaluate.py::test_repository_holds_no_questions` fails if any file under `eval/questions/` is
-  committed. `eval/GUIDELINES.md` says to commit `test.jsonl` and `test.sha256` when freezing, so the test must
-  first be changed to allow exactly those two files.
-
 ## Evaluation and tuning (dev set only)
-- Set `NOT_SURE_CONFIDENCE_THRESHOLD` from the dev set. It is still `None`.
-- Decide on `USE_GLOSSARY` from the dev results. The `DPO` entry improved two DPO questions (DEV-016, DEV-036)
-  but pushed three registration questions down (DEV-003, DEV-014, DEV-034). `privacy notice` fired five times
-  and changed nothing.
 - Revisit whether the superseded IRR s.20 should still rank first.
 
 ## Catalogue and sources

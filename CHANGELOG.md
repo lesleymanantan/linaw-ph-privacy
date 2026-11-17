@@ -1,5 +1,37 @@
 # Changelog
 
+## 2026-11-17
+
+- **Glossary expansion on.** `USE_GLOSSARY` is now `True`, a decision by the project owner. All 8 reviewed rows
+  (44 phrases) are kept. Untuned dev figures, same 49-question dev set (39 with gold), glossary off then on:
+
+  | Recall@3 | Off | On |
+  |---|---|---|
+  | All (39) | 0.28 | 0.36 |
+  | English (18) | 0.50 | 0.50 |
+  | Taglish (15) | 0.13 | 0.20 |
+  | Filipino (6) | 0 | 0.33 |
+
+  Eight dev questions changed rank (rank of the first gold passage in the full list, off then on):
+
+  | Question | Language | Phrase | Rank |
+  |---|---|---|---|
+  | DEV-016 | Filipino | DPO | 6 to 1 |
+  | DEV-018 | Taglish | magparegister | 10 to 1 |
+  | DEV-036 | Filipino | DPO | 7 to 3 |
+  | DEV-012 | English | hacked | 82 to 26 |
+  | DEV-013 | Taglish | security breach | 75 to 71 |
+  | DEV-014 | English | DPO | 2 to 3 (worse) |
+  | DEV-003 | English | DPO | 15 to 18 (worse) |
+  | DEV-034 | Taglish | DPO | 10 to 13 (worse) |
+
+  `privacy notice` matched five questions and changed nothing. The glossary tests now pass the switch
+  explicitly where they compare on and off.
+- **Test guard.** `test_repository_holds_no_questions` now allows exactly `eval/questions/test.jsonl` and
+  `eval/questions/test.sha256` to be committed, and nothing else under `eval/questions/`.
+- **ROADMAP.md added**, listing known gaps and open questions.
+- Local `dost_questions.txt` and `dost_results.txt` are gitignored.
+
 ## 2026-11-12
 
 - **Renamed to Linaw.** The project is now called Linaw, and the repository and package name is

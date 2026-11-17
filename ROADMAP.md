@@ -9,8 +9,8 @@ dropped or stay open.
 - **The glossary is small, and adding to it needs a change to how it is built.** It holds only English terms
   that the corpus defines, so concepts the documents do not define in a definitions section (for example,
   correcting or erasing your data, complaints, fines or children's data) have no row to attach a Filipino term
-  to. Filipino terms come only from human reviewers. Keyword expansion from the glossary is switched off until
-  the dev set shows it helps more than it hurts.
+  to. Filipino terms come only from human reviewers. Keyword expansion from the glossary is on; on the dev set
+  it helped more Filipino and Taglish questions than it hurt, but it also moved some English questions down.
 - **Bare terms rank poorly.** A short query such as "DPA" does not reliably bring up the most relevant passage
   first.
 
