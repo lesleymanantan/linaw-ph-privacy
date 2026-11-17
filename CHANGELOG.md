@@ -2,6 +2,24 @@
 
 ## 2026-11-17
 
+- **Test split frozen.** 30 human-written test questions (10 English, 9 Filipino, 11 Taglish; 27 answerable,
+  3 not; all `origin=human`) imported to `eval/questions/test.jsonl`, with `test.sha256`
+  (`8937357c5b76…`), committed together in `8c78b43`.
+- **Final run.** `scripts/evaluate_final.py --final --allow-no-threshold`, run once at `8c78b43`. Result:
+  `results/eval/final_8937357c5b76_8c78b43.json`. Settings: glossary on, RRF k=60 with equal weights, no "not
+  sure" threshold. Figures over answerable questions, with 95% bootstrap intervals:
+
+  | | All (27) | English (10) | Filipino (7) | Taglish (10) |
+  |---|---|---|---|---|
+  | Recall@1 | 0.33 [0.15, 0.52] | 0.40 [0.10, 0.70] | 0.14 [0.00, 0.43] | 0.40 [0.10, 0.70] |
+  | Recall@3 | 0.41 [0.22, 0.59] | 0.40 [0.10, 0.70] | 0.29 [0.00, 0.57] | 0.50 [0.20, 0.80] |
+  | Recall@5 | 0.48 [0.30, 0.67] | 0.60 [0.30, 0.90] | 0.29 [0.00, 0.57] | 0.50 [0.20, 0.80] |
+  | MRR | 0.39 [0.21, 0.56] | 0.45 [0.15, 0.72] | 0.21 [0.00, 0.50] | 0.45 [0.20, 0.75] |
+
+  Abstention is 0 by construction, because no threshold is set. The false-confident rate is 0.63 overall.
+- **`--allow-no-threshold`.** The final run can now go ahead without a "not sure" threshold, but only with this
+  option. The result file records that no threshold was set and that abstention is 0 by construction, and the
+  run stops without saving if any result says "not sure" anyway.
 - **Glossary expansion on.** `USE_GLOSSARY` is now `True`, a decision by the project owner. All 8 reviewed rows
   (44 phrases) are kept. Untuned dev figures, same 49-question dev set (39 with gold), glossary off then on:
 

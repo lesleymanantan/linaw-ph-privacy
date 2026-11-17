@@ -10,15 +10,26 @@ Open items as of 2026-11-17.
 - The test guard is changed: `test_repository_holds_no_questions` allows exactly `eval/questions/test.jsonl` and
   `eval/questions/test.sha256`, and nothing else under `eval/questions/`.
 - `USE_GLOSSARY` is decided: `True`, with all 8 reviewed rows kept (see CHANGELOG, 2026-11-17).
+- The test split is frozen (`8c78b43`), and the final run is done once, with `--allow-no-threshold`:
+  `results/eval/final_8937357c5b76_8c78b43.json`. Recall@3 is 0.41 overall (CHANGELOG, 2026-11-17). It must not be
+  run again on this frozen file.
 
-## Known limits for the final run
-- `NOT_SURE_CONFIDENCE_THRESHOLD` stays `None` for the final run. "Not sure" is not active, so every search
-  shows results, and abstention is 0 by construction.
+## Known limits of the final result
+- No "not sure" threshold was set. Every question got results, so abstention is 0 by construction, and the
+  false-confident rate is 0.63 overall.
+- The test set is small (30 questions, 27 answerable, 7 to 10 per language), so the 95% intervals are wide.
+- Filipino is the weakest group (recall@3 0.29, 7 answerable questions).
+- The glossary, RRF settings and result layout were fixed before the test split was imported. Nothing was tuned
+  on it.
+
+## After the final run
+- Change the title in `eval/question_schema.json` from "ph-privacy-guide evaluation question" to the new name.
+- `eval/GUIDELINES.md` still says the final run needs a "not sure" threshold. Mention `--allow-no-threshold`
+  there.
+- Push the freeze, the final result and the notes. Nothing since `eba9add` is on `origin/master` yet.
 
 ## Rename leftovers
 - The local folder is still named `ph-privacy-guide`.
-- After the final test run: change the title in `eval/question_schema.json` from "ph-privacy-guide evaluation
-  question" to the new name. `eval/` stays untouched until then.
 
 ## Evaluation and tuning (dev set only)
 - Revisit whether the superseded IRR s.20 should still rank first.
