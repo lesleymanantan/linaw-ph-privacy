@@ -24,3 +24,7 @@ CLAUDE.md
 
 # upload copies for claude.ai (not published)
 linaw-*.md
+
+# local question and result files (not published)
+/dost_questions.txt
+/dost_results.txt
