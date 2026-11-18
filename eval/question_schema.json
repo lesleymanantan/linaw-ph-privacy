@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "ph-privacy-guide evaluation question",
+  "title": "Linaw evaluation question",
   "description": "One row of eval/questions/{train,dev,test}.jsonl. Enforced by ph_privacy_guide.evaluate.questions. See eval/GUIDELINES.md.",
   "type": "object",
   "additionalProperties": false,
