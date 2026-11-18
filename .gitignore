@@ -22,9 +22,17 @@ results/eval/*_dev_confidence.json
 # local rules file (not published)
 CLAUDE.md
 
-# upload copies for claude.ai (not published)
+# upload copies (not published)
 linaw-*.md
 
 # local question and result files (not published)
 /dost_questions.txt
 /dost_results.txt
+
+# question files: only the frozen test split is committed
+eval/questions/*
+!eval/questions/test.jsonl
+!eval/questions/test.sha256
+
+# R session history
+.Rhistory
