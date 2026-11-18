@@ -1,6 +1,6 @@
 # Pending
 
-Open items as of 2026-11-17.
+Open items as of 2026-11-18.
 
 ## Done since 2026-11-09
 - The GitHub repository is renamed to `linaw-ph-privacy`, and the local remote points at
@@ -13,6 +13,9 @@ Open items as of 2026-11-17.
 - The test split is frozen (`8c78b43`), and the final run is done once, with `--allow-no-threshold`:
   `results/eval/final_8937357c5b76_8c78b43.json`. Recall@3 is 0.41 overall (CHANGELOG, 2026-11-17). It must not be
   run again on this frozen file.
+- The title in `eval/question_schema.json` is now "Linaw evaluation question" (`46052ab`).
+- `eval/GUIDELINES.md` now describes `--allow-no-threshold` for the final run (`f9bd5dc`).
+- The freeze, the final result and the notes are pushed to `origin/master` (up to `f9bd5dc`).
 
 ## Known limits of the final result
 - No "not sure" threshold was set. Every question got results, so abstention is 0 by construction, and the
@@ -21,12 +24,6 @@ Open items as of 2026-11-17.
 - Filipino is the weakest group (recall@3 0.29, 7 answerable questions).
 - The glossary, RRF settings and result layout were fixed before the test split was imported. Nothing was tuned
   on it.
-
-## After the final run
-- Change the title in `eval/question_schema.json` from "ph-privacy-guide evaluation question" to the new name.
-- `eval/GUIDELINES.md` still says the final run needs a "not sure" threshold. Mention `--allow-no-threshold`
-  there.
-- Push the freeze, the final result and the notes. Nothing since `eba9add` is on `origin/master` yet.
 
 ## Rename leftovers
 - The local folder is still named `ph-privacy-guide`.
