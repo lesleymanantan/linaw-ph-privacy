@@ -74,6 +74,7 @@ and stay in `train`.
 .venv/bin/python scripts/confidence_report.py                               # dev only; what thresholds would do
 .venv/bin/python scripts/freeze_test.py                                     # writes eval/questions/test.sha256
 .venv/bin/python scripts/evaluate_final.py --final                          # test, once
+.venv/bin/python scripts/evaluate_final.py --final --allow-no-threshold     # test, once, with no threshold set
 ```
 
 ## The test split
@@ -81,7 +82,9 @@ and stay in `train`.
 1. Finish all tuning on `dev` first. Nothing is ever tuned on `test`, and neither are the sample searches.
 2. Import `test.csv`, run `freeze_test.py`, and commit `test.jsonl` and `test.sha256` together.
 3. `evaluate_final.py` runs only with `--final`, only if both files are committed and unchanged and the
-   hash matches, only once a "not sure" threshold is set, and only once per frozen file.
+   hash matches, and only once per frozen file. It also needs a "not sure" threshold, unless you pass
+   `--allow-no-threshold`. With that option the run goes ahead without a threshold, every question gets
+   results, and the result file records that no threshold was set and that abstention is 0 by construction.
 4. Report the result as it is, whatever it is. If the test questions change, say so in the report.
 
 ## Metrics
