@@ -76,8 +76,13 @@ def test_side_blocks_have_their_own_headings_below_the_main_results(base_url):
     assert body.index("NPC summary, not the rule text") > body.index("Pending change")
 
 
+def test_page_title_and_heading(base_url):
+    body = _get(base_url + "/")[1]
+    assert "<title>Linaw - PH Privacy Guide</title>" in body and "<h1>Linaw - PH Privacy Guide</h1>" in body
+
+
 def test_page_says_when_not_sure_is_switched_off(base_url):
-    banner = 'The "not sure" check is switched off for now, so these results may not answer your question.'
+    banner = "Linaw does not yet check whether results answer your question. Read them carefully."
     assert banner in _get(base_url + "/?q=term")[1].replace("&quot;", '"')
     assert banner not in _get(base_url + "/?q=calibrated")[1].replace("&quot;", '"')
     assert "A plain note" in _get(base_url + "/?q=term")[1]

@@ -1,6 +1,6 @@
 # Pending
 
-Open items as of 2026-11-18.
+Open items as of 2026-11-20.
 
 ## Done since 2026-11-09
 - The GitHub repository is renamed to `linaw-ph-privacy`, and the local remote points at
@@ -24,6 +24,9 @@ Open items as of 2026-11-18.
 - Filipino is the weakest group (recall@3 0.29, 7 answerable questions).
 - The glossary, RRF settings and result layout were fixed before the test split was imported. Nothing was tuned
   on it.
+
+## Interface text
+- Filipino text for banner.threshold_off is still to be written by the project owner.
 
 ## Rename leftovers
 - The local folder is still named `ph-privacy-guide`.

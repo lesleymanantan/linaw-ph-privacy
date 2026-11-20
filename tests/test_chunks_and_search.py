@@ -317,7 +317,7 @@ def test_the_bar_does_not_move_with_k(searcher):
 def test_without_a_threshold_passages_show_with_a_plain_note(searcher):
     result = searcher.search("xyzzy plugh")
     assert not result.not_sure and not result.calibrated and result.hits
-    assert 'The "not sure" check is switched off for now, so these results may not answer your question.' in format_result("xyzzy plugh", result)
+    assert "Linaw does not yet check whether results answer your question. Read them carefully." in format_result("xyzzy plugh", result)
 
 
 @needs_index

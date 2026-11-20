@@ -1,5 +1,5 @@
 key,en,fil
-page.title,Linaw,
+page.title,Linaw - PH Privacy Guide,
 page.intro_before,Finds passages of Philippine data privacy law and National Privacy Commission guidance.,
 page.not_legal_advice,Not legal advice.,
 page.intro_after,Shows source text only and can miss provisions. Runs on this computer; your question stays here.,
@@ -7,7 +7,7 @@ page.limit_note,Not legal advice. Read the full instrument and check privacy.gov
 page.question,Your question,
 page.search,Search,
 page.language,Interface language,
-banner.threshold_off,"The ""not sure"" check is switched off for now, so these results may not answer your question.",
+banner.threshold_off,Linaw does not yet check whether results answer your question. Read them carefully.,
 results.english_note,Passages are shown in the original English text.,
 not_sure.heading,Not sure,
 not_sure.no_passage,No passage is shown.,
