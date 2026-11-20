@@ -81,6 +81,18 @@ def test_page_title_and_heading(base_url):
     assert "<title>Linaw - PH Privacy Guide</title>" in body and "<h1>Linaw - PH Privacy Guide</h1>" in body
 
 
+BANNER_EN = "Linaw does not yet check whether results answer your question. Read them carefully."
+BANNER_FIL = "Hindi pa sinusuri ng Linaw kung sumasagot ang mga resulta sa iyong tanong. Basahin ito nang mabuti."
+
+
+def test_the_banner_follows_the_page_language(base_url):
+    en = _get(base_url + "/?q=term&lang=en")[1]
+    fil = _get(base_url + "/?q=term&lang=fil")[1]
+    assert BANNER_EN in en and BANNER_FIL not in en
+    assert BANNER_FIL in fil and BANNER_EN not in fil
+    assert "<title>Linaw - PH Privacy Guide</title>" in fil and "<h1>Linaw - PH Privacy Guide</h1>" in fil
+
+
 def test_page_says_when_not_sure_is_switched_off(base_url):
     banner = "Linaw does not yet check whether results answer your question. Read them carefully."
     assert banner in _get(base_url + "/?q=term")[1].replace("&quot;", '"')
@@ -249,13 +261,16 @@ def test_catalogue_rejects_an_address_that_is_not_official():
     assert any("source_url" in e for e in catalogue.validate(rows))
 
 
-def test_labels_file_has_the_columns_and_no_filipino_yet():
-    # Filipino is written by people. Remove the last assert once they fill the column.
-    with open(ROOT / "data" / "i18n" / "labels.csv", newline="") as f:
+FILLED_FIL_LABELS = {"banner.threshold_off"}  # approved by the project owner; add keys here as people fill them
+
+
+def test_labels_file_has_the_columns_and_only_approved_filipino():
+    # Filipino is written or approved by people. Every fil cell not listed above must stay empty.
+    with open(ROOT / "data" / "i18n" / "labels.csv", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         rows = list(reader)
     assert reader.fieldnames == ["key", "en", "fil"] and all(r["key"] and r["en"] for r in rows)
-    assert all(r["fil"] == "" for r in rows)
+    assert {r["key"] for r in rows if r["fil"]} == FILLED_FIL_LABELS
 
 
 def test_filipino_falls_back_to_english_and_uses_a_label_when_there_is_one(monkeypatch):

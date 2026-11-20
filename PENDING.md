@@ -26,7 +26,9 @@ Open items as of 2026-11-20.
   on it.
 
 ## Interface text
-- Filipino text for banner.threshold_off is still to be written by the project owner.
+- The Filipino text for banner.threshold_off was approved by the project owner. Other fil labels are still empty.
+- The FIL page now sets lang=fil although most of its text is still English. Mark the English text with lang=en when
+  more Filipino labels are added.
 
 ## Rename leftovers
 - The local folder is still named `ph-privacy-guide`.

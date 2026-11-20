@@ -321,6 +321,16 @@ def test_without_a_threshold_passages_show_with_a_plain_note(searcher):
 
 
 @needs_index
+def test_the_cli_prints_the_english_banner():
+    """The command line has no language option: it always shows the English labels."""
+    out = subprocess.run([sys.executable, "-m", "ph_privacy_guide.app.cli", "xyzzy plugh"], capture_output=True, text=True,
+                         timeout=120)
+    assert out.returncode == 0, out.stderr
+    assert "Linaw does not yet check whether results answer your question. Read them carefully." in out.stdout
+    assert "Hindi pa sinusuri ng Linaw" not in out.stdout
+
+
+@needs_index
 def test_filipino_terms_are_not_gated_on_english_overlap(searcher):
     result = searcher.search("pahintulot karapatan")
     assert result.features["term_coverage"] == 0.0
